@@ -1,0 +1,25 @@
+package com.javaguru.appointmentbooking.entity.enums;
+
+public enum Permission {
+
+    USER_CREATE,
+    USER_VIEW,
+    USER_UPDATE,
+    USER_DELETE,
+
+    BRANCH_CREATE,
+    BRANCH_VIEW,
+    BRANCH_UPDATE,
+    BRANCH_DELETE,
+
+    APPOINTMENT_BOOK,
+    APPOINTMENT_VIEW_OWN,
+    APPOINTMENT_VIEW,
+    APPOINTMENT_CONFIRM,
+    APPOINTMENT_COMPLETE,
+
+    SERVICE_CREATE,
+    SERVICE_VIEW,
+    SERVICE_UPDATE,
+    SERVICE_DELETE,
+}
