@@ -1,0 +1,130 @@
+<div class="page-header">
+
+  <h1>Branches</h1>
+
+  <button
+    mat-raised-button
+    color="primary"
+    routerLink="/branches/create">
+
+    Create Branch
+
+  </button>
+
+</div>
+
+<table
+  mat-table
+  [dataSource]="branches()">
+
+  <ng-container matColumnDef="branchCode">
+
+    <th mat-header-cell *matHeaderCellDef>
+      Code
+    </th>
+
+    <td mat-cell *matCellDef="let branch">
+      {{ branch.branchCode }}
+    </td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+
+    <th mat-header-cell *matHeaderCellDef>
+      Name
+    </th>
+
+    <td mat-cell *matCellDef="let branch">
+      {{ branch.name }}
+    </td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="city">
+
+    <th mat-header-cell *matHeaderCellDef>
+      City
+    </th>
+
+    <td mat-cell *matCellDef="let branch">
+      {{ branch.city }}
+    </td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="contactNumber">
+
+    <th mat-header-cell *matHeaderCellDef>
+      Contact
+    </th>
+
+    <td mat-cell *matCellDef="let branch">
+      {{ branch.contactNumber }}
+    </td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="active">
+
+    <th mat-header-cell *matHeaderCellDef>
+      Status
+    </th>
+
+    <td mat-cell *matCellDef="let branch">
+
+      @if (branch.active) {
+
+        Active
+
+      } @else {
+
+        Inactive
+
+      }
+
+    </td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+
+    <th mat-header-cell *matHeaderCellDef>
+      Actions
+    </th>
+
+    <td mat-cell *matCellDef="let branch">
+
+      <button
+        mat-icon-button
+        color="primary"
+        [routerLink]="[
+          '/branches',
+          branch.id,
+          'edit'
+        ]">
+
+        <mat-icon>
+          edit
+        </mat-icon>
+
+      </button>
+
+    </td>
+
+  </ng-container>
+
+  <tr
+    mat-header-row
+    *matHeaderRowDef="displayedColumns">
+  </tr>
+
+  <tr
+    mat-row
+    *matRowDef="
+      let row;
+      columns: displayedColumns;
+    ">
+  </tr>
+
+</table>

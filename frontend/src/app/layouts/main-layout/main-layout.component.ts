@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
   imports: [
+    SidebarComponent,
     RouterOutlet,
-    RouterLink,
     MatToolbarModule,
     MatSidenavModule,
     MatListModule
