@@ -1,0 +1,79 @@
+<h1>Reporting Dashboard</h1>
+
+@if (report(); as report) {
+
+  <div class="dashboard-grid">
+
+    <mat-card>
+
+      <mat-card-title>
+        Booked
+      </mat-card-title>
+
+      <mat-card-content>
+
+        {{ report.booked }}
+
+      </mat-card-content>
+
+    </mat-card>
+
+    <mat-card>
+
+      <mat-card-title>
+        Confirmed
+      </mat-card-title>
+
+      <mat-card-content>
+
+        {{ report.confirmed }}
+
+      </mat-card-content>
+
+    </mat-card>
+
+    <mat-card>
+
+      <mat-card-title>
+        Completed
+      </mat-card-title>
+
+      <mat-card-content>
+
+        {{ report.completed }}
+
+      </mat-card-content>
+
+    </mat-card>
+
+    <mat-card>
+
+      <mat-card-title>
+        Cancelled
+      </mat-card-title>
+
+      <mat-card-content>
+
+        {{ report.cancelled }}
+
+      </mat-card-content>
+
+    </mat-card>
+
+    <mat-card>
+
+      <mat-card-title>
+        Rescheduled
+      </mat-card-title>
+
+      <mat-card-content>
+
+        {{ report.rescheduled }}
+
+      </mat-card-content>
+
+    </mat-card>
+
+  </div>
+
+}

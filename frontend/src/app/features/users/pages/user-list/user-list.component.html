@@ -14,7 +14,6 @@
     </button>
 
   </div>
-
   <mat-form-field
     appearance="outline"
     class="search-field">
@@ -29,6 +28,12 @@
       (input)="filterUsers($event)">
 
   </mat-form-field>
+
+  @if (loading()) {
+
+  <app-loading-spinner />
+
+}
 
   <table
     mat-table

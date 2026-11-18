@@ -15,6 +15,9 @@ import { MatInputModule } from '@angular/material/input';
 
 import { UserService } from '../../services/user.service';
 import { UserResponse } from '../../models/user-response.model';
+import {
+  LoadingSpinnerComponent
+} from '../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-user-list',
@@ -25,13 +28,15 @@ import { UserResponse } from '../../models/user-response.model';
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    LoadingSpinnerComponent
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
 export class UserListComponent implements OnInit {
 
+  readonly loading = signal(false);
   private readonly userService =
     inject(UserService);
 
@@ -58,17 +63,29 @@ export class UserListComponent implements OnInit {
 
   private loadUsers(): void {
 
-    this.userService
-      .getUsers()
-      .subscribe(users => {
+  this.loading.set(true);
 
-        this.allUsers.set(users);
+  this.userService
+    .getUsers()
+    .subscribe({
+
+      next: users => {
 
         this.users.set(users);
 
-      });
+        this.loading.set(false);
 
-  }
+      },
+
+      error: () => {
+
+        this.loading.set(false);
+
+      }
+
+    });
+
+}
 
   filterUsers(
     event: Event

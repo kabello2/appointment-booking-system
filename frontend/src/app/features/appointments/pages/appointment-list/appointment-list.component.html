@@ -1,0 +1,197 @@
+<div class="page-header">
+
+  <h1>Appointments</h1>
+
+  <button
+    mat-raised-button
+    color="primary"
+    routerLink="/appointments/create">
+
+    Book Appointment
+
+  </button>
+
+</div>
+<mat-form-field
+  appearance="outline"
+  class="search-field">
+
+  <mat-label>
+
+    Search Appointments
+
+  </mat-label>
+
+  <input
+    matInput
+    (input)="filterAppointments($event)">
+
+</mat-form-field>
+<table
+  mat-table
+  [dataSource]="appointments()">
+
+  <ng-container matColumnDef="appointmentNumber">
+
+    <th mat-header-cell *matHeaderCellDef>
+      Number
+    </th>
+
+    <td mat-cell *matCellDef="let appointment">
+      {{ appointment.appointmentNumber }}
+    </td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="appointmentDate">
+
+    <th mat-header-cell *matHeaderCellDef>
+      Date
+    </th>
+
+    <td mat-cell *matCellDef="let appointment">
+      {{ appointment.appointmentDate }}
+    </td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="serviceName">
+
+    <th mat-header-cell *matHeaderCellDef>
+      Service
+    </th>
+
+    <td mat-cell *matCellDef="let appointment">
+      {{ appointment.serviceName }}
+    </td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="consultantName">
+
+    <th mat-header-cell *matHeaderCellDef>
+      Consultant
+    </th>
+
+    <td mat-cell *matCellDef="let appointment">
+      {{ appointment.consultantName }}
+    </td>
+
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+
+  <th mat-header-cell *matHeaderCellDef>
+
+    Status
+
+  </th>
+
+  <td mat-cell *matCellDef="let appointment">
+
+    <span
+      class="status-chip"
+      [class.pending]="appointment.status === 'PENDING'"
+      [class.confirmed]="appointment.status === 'CONFIRMED'"
+      [class.completed]="appointment.status === 'COMPLETED'"
+      [class.cancelled]="appointment.status === 'CANCELLED'">
+
+      {{ appointment.status }}
+
+    </span>
+
+  </td>
+
+</ng-container>
+
+<ng-container matColumnDef="actions">
+
+  <th mat-header-cell *matHeaderCellDef>
+
+    Actions
+
+  </th>
+
+  <td mat-cell *matCellDef="let appointment">
+
+    @if (appointment.status === 'PENDING') {
+
+      <button
+        mat-icon-button
+        color="primary"
+        (click)="confirmAppointment(appointment)">
+
+        <mat-icon>
+          check
+        </mat-icon>
+
+      </button>
+
+    }
+
+    @if (appointment.status === 'CONFIRMED') {
+
+      <button
+        mat-icon-button
+        color="accent"
+        (click)="completeAppointment(appointment)">
+
+        <mat-icon>
+          task_alt
+        </mat-icon>
+
+      </button>
+
+    }
+
+    @if (
+      appointment.status !== 'CANCELLED'
+      &&
+      appointment.status !== 'COMPLETED'
+    ) {
+
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="cancelAppointment(appointment)">
+
+        <mat-icon>
+          cancel
+        </mat-icon>
+
+      </button>
+
+      <button
+  mat-icon-button
+  color="primary"
+  [routerLink]="[
+    '/appointments',
+    appointment.id
+  ]">
+
+  <mat-icon>
+    visibility
+  </mat-icon>
+
+</button>
+
+    }
+
+  </td>
+
+</ng-container>
+
+  <tr
+    mat-header-row
+    *matHeaderRowDef="displayedColumns">
+  </tr>
+
+  <tr
+    mat-row
+    *matRowDef="
+      let row;
+      columns: displayedColumns;
+    ">
+  </tr>
+
+</table>

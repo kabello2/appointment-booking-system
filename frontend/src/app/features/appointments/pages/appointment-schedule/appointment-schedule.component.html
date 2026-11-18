@@ -1,0 +1,91 @@
+<div class="page-container">
+
+  <h1>My Schedule</h1>
+
+  @for (
+    group of groupedAppointments();
+    track group[0]
+  ) {
+
+    <section class="schedule-day">
+
+      <h2>
+        {{ group[0] }}
+      </h2>
+
+      <div class="appointments">
+
+        @for (
+          appointment of group[1];
+          track appointment.id
+        ) {
+
+          <mat-card>
+
+            <mat-card-title>
+
+              {{ appointment.serviceName }}
+
+            </mat-card-title>
+
+            <mat-card-content>
+
+              <p>
+
+                <strong>Time:</strong>
+
+                {{ appointment.startTime }}
+                -
+                {{ appointment.endTime }}
+
+              </p>
+
+              <p>
+
+                <strong>Branch:</strong>
+
+                {{ appointment.branchName }}
+
+              </p>
+
+              <p>
+
+                <strong>Status:</strong>
+
+                <span
+                  class="status"
+                  [class.pending]="appointment.status === 'PENDING'"
+                  [class.confirmed]="appointment.status === 'CONFIRMED'"
+                  [class.completed]="appointment.status === 'COMPLETED'"
+                  [class.cancelled]="appointment.status === 'CANCELLED'">
+
+                  {{ appointment.status }}
+
+                </span>
+
+              </p>
+
+            </mat-card-content>
+            <a
+                mat-button
+                color="primary"
+                [routerLink]="[
+                '/appointments',
+                appointment.id
+            ]">
+
+                View Details
+
+            </a>
+
+          </mat-card>
+
+        }
+
+      </div>
+
+    </section>
+
+  }
+
+</div>

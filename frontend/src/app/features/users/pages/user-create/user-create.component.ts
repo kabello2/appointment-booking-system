@@ -31,6 +31,7 @@ import {
 } from '@angular/material/select';
 
 import { UserService } from '../../services/user.service';
+import { SnackbarService } from '../../../../core/services/snackbar.service';
 
 @Component({
   selector: 'app-user-create',
@@ -49,6 +50,7 @@ import { UserService } from '../../services/user.service';
 })
 export class UserCreateComponent {
 
+  private readonly snackbar = inject(SnackbarService);
   private readonly fb =
     inject(FormBuilder);
 
@@ -59,7 +61,7 @@ export class UserCreateComponent {
     inject(Router);
 
   readonly roles = [
-    'ADMIN',
+    'ROLE_ADMIN',
     'CONSULTANT',
     'CUSTOMER'
   ];
@@ -120,6 +122,10 @@ export class UserCreateComponent {
       .subscribe({
 
         next: () => {
+            this.snackbar.success(
+                'User created successfully'
+            );
+
 
           this.router.navigate([
             '/users'

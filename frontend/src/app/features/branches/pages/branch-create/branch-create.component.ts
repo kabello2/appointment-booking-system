@@ -25,6 +25,7 @@ import {
 import {
   BranchService
 } from '../../services/branch.service';
+import { SnackbarService } from '../../../../core/services/snackbar.service';
 
 @Component({
   selector: 'app-branch-create',
@@ -40,6 +41,7 @@ import {
 })
 export class BranchCreateComponent {
 
+  private readonly snackbar = inject(SnackbarService);
   private readonly fb =
     inject(FormBuilder);
 
@@ -101,6 +103,10 @@ export class BranchCreateComponent {
       .subscribe({
 
         next: () => {
+            this.snackbar.success(
+                'Branch created successfully'
+            );
+
 
           this.router.navigate([
             '/branches'

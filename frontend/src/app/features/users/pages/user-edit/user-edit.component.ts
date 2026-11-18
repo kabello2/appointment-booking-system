@@ -34,7 +34,7 @@ import {
 import {
   UserService
 } from '../../services/user.service';
-
+import { SnackbarService } from '../../../../core/services/snackbar.service';
 @Component({
   selector: 'app-user-edit',
   standalone: true,
@@ -51,6 +51,7 @@ import {
 export class UserEditComponent
 implements OnInit {
 
+  private readonly snackbar = inject(SnackbarService);
   private readonly fb =
     inject(FormBuilder);
 
@@ -66,7 +67,7 @@ implements OnInit {
   private userId!: string;
 
   readonly roles = [
-    'ADMIN',
+    'ROLE_ADMIN',
     'CONSULTANT',
     'CUSTOMER'
   ];
@@ -167,6 +168,10 @@ private loadUser(): void {
 
         next: () => {
 
+
+            this.snackbar.success(
+                'User updated successfully'
+            );
           this.router.navigate([
             '/users'
           ]);

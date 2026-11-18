@@ -48,6 +48,10 @@ export class SidebarComponent {
       if (!user) {
         return [];
       }
+      console.log(
+  this.authState.currentUser()
+);
+
 
       return NAVIGATION_ITEMS.filter(
         item =>

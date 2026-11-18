@@ -1,0 +1,94 @@
+<div class="page-container">
+
+  <h1>Create Service</h1>
+
+  <form [formGroup]="form">
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Service Code
+      </mat-label>
+
+      <input
+        matInput
+        formControlName="serviceCode">
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Service Name
+      </mat-label>
+
+      <input
+        matInput
+        formControlName="name">
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Description
+      </mat-label>
+
+      <textarea
+        matInput
+        rows="4"
+        formControlName="description">
+      </textarea>
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Duration (Minutes)
+      </mat-label>
+
+      <input
+        type="number"
+        matInput
+        formControlName="durationMinutes">
+
+      @if (form.controls.durationMinutes.hasError('min')) {
+
+        <mat-error>
+
+          Duration must be at least 15 minutes
+
+        </mat-error>
+
+      }
+
+    </mat-form-field>
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        mat-stroked-button
+        (click)="cancel()">
+
+        Cancel
+
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        [disabled]="form.invalid"
+        (click)="save()">
+
+        Create Service
+
+      </button>
+
+    </div>
+
+  </form>
+
+</div>

@@ -1,0 +1,43 @@
+.search-field {
+
+  width: 400px;
+
+  margin-bottom: 1rem;
+
+}
+
+.status-chip {
+
+  padding: 0.4rem 0.8rem;
+
+  border-radius: 16px;
+
+  color: white;
+
+  font-weight: 600;
+
+}
+
+.pending {
+
+  background: #f9a825;
+
+}
+
+.confirmed {
+
+  background: #1976d2;
+
+}
+
+.completed {
+
+  background: #2e7d32;
+
+}
+
+.cancelled {
+
+  background: #d32f2f;
+
+}

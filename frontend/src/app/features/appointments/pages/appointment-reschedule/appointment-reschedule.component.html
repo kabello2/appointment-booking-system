@@ -1,0 +1,104 @@
+<div class="page-container">
+
+  <h1>Reschedule Appointment</h1>
+
+  <form [formGroup]="form">
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        New Date
+      </mat-label>
+
+      <input
+        matInput
+        type="date"
+        formControlName="appointmentDate"
+        (change)="loadSlots()">
+
+      @if (
+        form.controls.appointmentDate.hasError(
+          'required'
+        )
+      ) {
+
+        <mat-error>
+
+          Appointment date is required
+
+        </mat-error>
+
+      }
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Available Slot
+      </mat-label>
+
+      <mat-select
+        formControlName="startTime">
+
+        @for (
+          slot of availableSlots();
+          track slot.startTime
+        ) {
+
+          <mat-option
+            [value]="slot.startTime">
+
+            {{ slot.startTime }}
+            -
+            {{ slot.endTime }}
+
+          </mat-option>
+
+        }
+
+      </mat-select>
+
+      @if (
+        form.controls.startTime.hasError(
+          'required'
+        )
+      ) {
+
+        <mat-error>
+
+          Time slot is required
+
+        </mat-error>
+
+      }
+
+    </mat-form-field>
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        mat-stroked-button
+        (click)="cancel()">
+
+        Cancel
+
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        [disabled]="form.invalid"
+        (click)="save()">
+
+        Reschedule
+
+      </button>
+
+    </div>
+
+  </form>
+
+</div>

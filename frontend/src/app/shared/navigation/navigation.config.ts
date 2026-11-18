@@ -8,28 +8,58 @@ NavigationItem[] = [
     route: '/dashboard',
     icon: 'dashboard',
     roles: [
-      'ADMIN',
+      'ROLE_ADMIN',
       'CONSULTANT',
       'CUSTOMER'
     ]
   },
 
   {
-    label: 'Appointments',
-    route: '/appointments',
+  label: 'Appointments',
+  route: '/appointments',
+  icon: 'event',
+  roles: [
+    'ROLE_ADMIN',
+    'CONSULTANT',
+    'CUSTOMER'
+  ]
+},
+
+  {
+    label: 'Appointment Dashboard',
+    route: '/appointments/dashboard',
     icon: 'event',
     roles: [
-      'ADMIN',
-      'CONSULTANT'
+      'ROLE_ADMIN',
+      'CONSULTANT',
+      'CUSTOMER'
     ]
   },
+
+  {
+  label: 'My Schedule',
+  route: '/appointments/schedule',
+  icon: 'calendar_month',
+  roles: [
+    'ROLE_CONSULTANT'
+  ]
+},
+
+  {
+  label: 'My Work Queue',
+  route: '/appointments/work-queue',
+  icon: 'assignment',
+  roles: [
+    'CONSULTANT'
+  ]
+},
 
   {
     label: 'Branches',
     route: '/branches',
     icon: 'business',
     roles: [
-      'ADMIN'
+      'ROLE_ADMIN'
     ]
   },
 
@@ -38,7 +68,7 @@ NavigationItem[] = [
     route: '/services',
     icon: 'build',
     roles: [
-      'ADMIN'
+      'ROLE_ADMIN'
     ]
   },
 
@@ -47,7 +77,7 @@ NavigationItem[] = [
     route: '/users',
     icon: 'group',
     roles: [
-      'ADMIN'
+      'ROLE_ADMIN'
     ]
   },
 
@@ -56,7 +86,34 @@ NavigationItem[] = [
     route: '/reports',
     icon: 'bar_chart',
     roles: [
-      'ADMIN'
+      'ROLE_ADMIN'
     ]
-  }
+  },
+
+  {
+  label: 'Branch Report',
+  route: '/reports/branches',
+  icon: 'analytics',
+  roles: [
+    'ROLE_ADMIN'
+  ]
+},
+{
+  label: 'Service Report',
+  route: '/reports/services',
+  icon: 'insights',
+  roles: [
+    'ROLE_ADMIN'
+  ]
+},
+
+{
+  label: 'Daily Report',
+  route: '/reports/daily',
+  icon: 'calendar_view_day',
+  roles: [
+    'ROLE_ADMIN'
+  ]
+}
+
 ];
