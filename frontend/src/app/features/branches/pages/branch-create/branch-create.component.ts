@@ -26,6 +26,7 @@ import {
   BranchService
 } from '../../services/branch.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { FormErrorUtils } from '../../../../shared/utils/form-error.utils';
 
 @Component({
   selector: 'app-branch-create',
@@ -86,6 +87,24 @@ export class BranchCreateComponent {
 
     });
 
+  ngOnInit(): void {
+    Object.keys(this.form.controls)
+  .forEach(controlName => {
+
+    this.form
+      .get(controlName)
+      ?.valueChanges
+      .subscribe(() => {
+
+        FormErrorUtils.clearServerErrors(
+          this.form.get(controlName)
+        );
+
+      });
+
+  });
+  }  
+
   save(): void {
 
     if (this.form.invalid) {
@@ -112,7 +131,14 @@ export class BranchCreateComponent {
             '/branches'
           ]);
 
-        }
+        }, error: error => {
+
+  FormErrorUtils.applyServerErrors(
+    this.form,
+    error.error?.validationErrors ?? {}
+  );
+
+}
 
       });
 

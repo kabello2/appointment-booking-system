@@ -46,6 +46,7 @@ import {
 import { UserService } from '../../services/user.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { ValidationPatterns } from '../../../../shared/validators/validation.constants';
+import { FormErrorUtils } from '../../../../shared/utils/form-error.utils';
 
 @Component({
   selector: 'app-user-create',
@@ -90,8 +91,6 @@ export class UserCreateComponent {
   }
   ];
   protected hidePassword = true;
-  validationErrors:
-  Record<string, string> = {};
 
   readonly form =
     this.fb.group({
@@ -155,20 +154,20 @@ export class UserCreateComponent {
   this.observeRoleChanges();
   
   Object.keys(this.form.controls)
-    .forEach(controlName => {
+  .forEach(controlName => {
 
-      this.form
-        .get(controlName)
-        ?.valueChanges
-        .subscribe(() => {
+    this.form
+      .get(controlName)
+      ?.valueChanges
+      .subscribe(() => {
 
-          delete this.validationErrors[
-            controlName
-          ];
+        FormErrorUtils.clearServerErrors(
+          this.form.get(controlName)
+        );
 
-        });
+      });
 
-    });
+  });
 
 }  
 
@@ -247,8 +246,10 @@ private observeRoleChanges(): void {
 
         }, error: error => {
 
-  this.validationErrors =
-    error.error.validationErrors ?? {};
+  FormErrorUtils.applyServerErrors(
+  this.form,
+  error.error?.validationErrors ?? {}
+);
 
 }
 

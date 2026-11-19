@@ -26,6 +26,7 @@ import {
   ServiceOfferingService
 } from '../../services/service-offering.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { FormErrorUtils } from '../../../../shared/utils/form-error.utils';
 
 @Component({
   selector: 'app-service-create',
@@ -76,6 +77,24 @@ export class ServiceCreateComponent {
 
     });
 
+ngOnInit(): void {
+Object.keys(this.form.controls)
+  .forEach(controlName => {
+
+    this.form
+      .get(controlName)
+      ?.valueChanges
+      .subscribe(() => {
+
+        FormErrorUtils.clearServerErrors(
+          this.form.get(controlName)
+        );
+
+      });
+
+  });
+  }  
+
   save(): void {
 
     if (this.form.invalid) {
@@ -102,7 +121,14 @@ export class ServiceCreateComponent {
             '/services'
           ]);
 
-        }
+        }, error: error => {
+
+  FormErrorUtils.applyServerErrors(
+    this.form,
+    error.error?.validationErrors ?? {}
+  );
+
+}
 
       });
 

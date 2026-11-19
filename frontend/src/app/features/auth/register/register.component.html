@@ -102,11 +102,11 @@
 
 }
 
-@if(validationErrors['phoneNumber']) {
+@if(form.controls.phoneNumber.getError('server')) {
 
   <mat-error>
 
-    {{ validationErrors['phoneNumber'] }}
+    {{ form.controls.phoneNumber.getError('server') }}
 
   </mat-error>
 

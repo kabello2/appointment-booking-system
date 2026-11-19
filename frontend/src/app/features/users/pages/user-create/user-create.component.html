@@ -91,11 +91,12 @@
 
 }
 
-@if(validationErrors['phoneNumber']) {
+
+@if(form.controls.phoneNumber.getError('server')) {
 
   <mat-error>
 
-    {{ validationErrors['phoneNumber'] }}
+    {{ form.controls.phoneNumber.getError('server') }}
 
   </mat-error>
 
@@ -226,11 +227,11 @@
 
 }
 
-@if(validationErrors['password']) {
+@if(form.controls.password.getError('server')) {
 
   <mat-error>
 
-    {{ validationErrors['password'] }}
+    {{ form.controls.password.getError('server') }}
 
   </mat-error>
 

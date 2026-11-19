@@ -55,6 +55,7 @@ import {
   AvailableSlotResponse
 } from '../../models/available-slot-response.model';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { FormErrorUtils } from '../../../../shared/utils/form-error.utils';
 
 @Component({
   selector: 'app-appointment-create',
@@ -127,6 +128,22 @@ implements OnInit {
     this.loadBranches();
 
     this.loadServices();
+
+    Object.keys(this.form.controls)
+  .forEach(controlName => {
+
+    this.form
+      .get(controlName)
+      ?.valueChanges
+      .subscribe(() => {
+
+        FormErrorUtils.clearServerErrors(
+          this.form.get(controlName)
+        );
+
+      });
+
+  });
 
   }
 
@@ -210,7 +227,14 @@ implements OnInit {
             '/appointments'
           ]);
 
-        }
+        }, error: error => {
+
+  FormErrorUtils.applyServerErrors(
+    this.form,
+    error.error?.validationErrors ?? {}
+  );
+
+}
 
       });
 

@@ -36,6 +36,7 @@ import {
   SnackbarService
 } from '../../../core/services/snackbar.service';
 import { ValidationPatterns } from '../../../shared/validators/validation.constants';
+import { FormErrorUtils } from '../../../shared/utils/form-error.utils';
 
 @Component({
   selector: 'app-register',
@@ -123,20 +124,20 @@ export class RegisterComponent {
   ngOnInit(): void {
 
   Object.keys(this.form.controls)
-    .forEach(controlName => {
+  .forEach(controlName => {
 
-      this.form
-        .get(controlName)
-        ?.valueChanges
-        .subscribe(() => {
+    this.form
+      .get(controlName)
+      ?.valueChanges
+      .subscribe(() => {
 
-          delete this.validationErrors[
-            controlName
-          ];
+        FormErrorUtils.clearServerErrors(
+          this.form.get(controlName)
+        );
 
-        });
+      });
 
-    });
+  });
 
 }  
 
@@ -182,29 +183,14 @@ export class RegisterComponent {
             '/auth/login'
           ]);
 
-        },error: error => {
+        }, error: error => {
 
-  const validationErrors =
-    error.error?.validationErrors ?? {};
-
-  Object.entries(validationErrors)
-    .forEach(([field, message]) => {
-
-      const control =
-        this.form.get(field);
-
-      if (control) {
-
-        control.setErrors({
-          ...(control.errors ?? {}),
-          server: message
-        });
-
-      }
-
-    });
-
-}
+ 
+  FormErrorUtils.applyServerErrors(
+    this.form,
+    error.error?.validationErrors ?? {}
+  );
+            }
 
 
 
