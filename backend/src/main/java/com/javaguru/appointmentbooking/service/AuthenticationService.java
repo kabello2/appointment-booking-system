@@ -73,7 +73,7 @@ public class AuthenticationService {
                 savedUser.getPhoneNumber(),
                 savedUser.getRole(),
                 savedUser.isEnabled(),
-                savedUser.getBranch().getId()
+                savedUser.getBranch() != null ? savedUser.getBranch().getId() : null
         );
     }
     public AuthenticationResponse login(

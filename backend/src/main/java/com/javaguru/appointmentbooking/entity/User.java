@@ -61,7 +61,7 @@ public class User extends BaseAggregateRoot {
 
     private boolean emailVerified;
 
-    private Integer failedLoginAttempts;
+    private Integer failedLoginAttempts = 0;
 
     private LocalDateTime lockedUntil;
 

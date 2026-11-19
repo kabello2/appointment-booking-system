@@ -1,13 +1,15 @@
 package com.javaguru.appointmentbooking.controller;
 
+import com.javaguru.appointmentbooking.dto.request.CreateUserRequest;
 import com.javaguru.appointmentbooking.dto.request.UpdateUserRequest;
 import com.javaguru.appointmentbooking.dto.response.UserResponse;
 import com.javaguru.appointmentbooking.service.UserManagementService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,18 @@ import java.util.UUID;
 public class UserController {
 
     private final UserManagementService userManagementService;
+
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('USER_CREATE')")
+    public ResponseEntity<UserResponse> createUser(
+            @Valid
+            @RequestBody
+            CreateUserRequest request) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userManagementService.createUser(request));
+    }
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER_VIEW')")
@@ -60,6 +74,6 @@ public class UserController {
     public ResponseEntity<UserResponse> current(
             Authentication authentication) {
 
-        return ResponseEntity.ok(userManagementService.getUserByEmail(authentication.name()));
+        return ResponseEntity.ok(userManagementService.getUserByEmail(authentication.getName()));
     }
 }

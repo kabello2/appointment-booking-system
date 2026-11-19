@@ -11,11 +11,11 @@ import java.util.List;
 )
 public interface BranchMapper {
 
-    BranchResponse toResponse(
-            Branch branch
-    );
-
-    List<BranchResponse> toResponseList(
-            List<Branch> branches
-    );
+//    BranchResponse toResponse(
+//            Branch branch
+//    );
+//
+//    List<BranchResponse> toResponseList(
+//            List<Branch> branches
+//    );
 }

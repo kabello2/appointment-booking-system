@@ -32,65 +32,48 @@ public class UserManagementService {
     private final BranchRepository branchRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse createConsultant(CreateConsultantRequest request) {
-
-        if (userRepository.existsByEmail(request.email())) {
-            throw new UserAlreadyExistsException("Consultant already exists.");
-        }
-        Branch branch = branchRepository.findById(request.branchId())
-                        .orElseThrow(() -> new BranchNotFoundException("Branch not found."));
-
-        User consultant = new User();
-        consultant.setFirstName(request.firstName());
-        consultant.setLastName(request.lastName());
-        consultant.setEmail(request.email());
-        consultant.setPhoneNumber(request.phoneNumber());
-        consultant.setPasswordHash(passwordEncoder.encode(request.password()));
-        consultant.setRole(Role.ROLE_CONSULTANT);
-        consultant.setBranch(branch);
-        consultant.setEnabled(true);
-        User saved = userRepository.save(consultant);
-        return mapToResponse(saved);
-    }
-
     @Transactional
-    public UserResponse createAdmin(
+    public UserResponse createUser(
             CreateUserRequest request) {
 
-        if (userRepository.existsByEmail(
-                request.email())) {
+        if (userRepository.existsByEmail(request.email())) {
 
             throw new UserAlreadyExistsException(
                     "User already exists."
             );
         }
 
-        User admin = new User();
+        User user = new User();
 
-        admin.setFirstName(
+        if (request.role() == Role.ROLE_CONSULTANT) {
+
+            Branch branch = branchRepository.findById(request.branchId())
+                    .orElseThrow(() -> new BranchNotFoundException("Branch not found."));
+
+            user.setBranch(branch);
+        }
+
+        user.setFirstName(
                 request.firstName());
 
-        admin.setLastName(
+        user.setLastName(
                 request.lastName());
 
-        admin.setEmail(
+        user.setEmail(
                 request.email());
 
-        admin.setPhoneNumber(
+        user.setPhoneNumber(
                 request.phoneNumber());
 
-        admin.setPasswordHash(
+        user.setPasswordHash(
                 passwordEncoder.encode(
                         request.password())
         );
 
-        admin.setRole(
-                Role.ROLE_ADMIN);
-
-        admin.setEnabled(true);
+        user.setEnabled(true);
 
         User saved =
-                userRepository.save(admin);
+                userRepository.save(user);
 
         return mapToResponse(saved);
     }
@@ -159,6 +142,17 @@ public class UserManagementService {
                             request.email()
                     )
             );
+        }
+
+        if (request.role() == Role.ROLE_CONSULTANT
+                && (user.getBranch() != null && request.branchId() != null)
+                && !user.getBranch().getId().equals(request.branchId())) {
+
+            Branch branch = branchRepository.findById(request.branchId())
+                    .orElseThrow(() -> new BranchNotFoundException("Branch not found."));
+
+            user.setBranch(branch);
+
         }
 
         user.setFirstName(request.firstName());
