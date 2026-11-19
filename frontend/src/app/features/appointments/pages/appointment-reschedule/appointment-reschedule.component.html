@@ -10,12 +10,6 @@
         New Date
       </mat-label>
 
-      <input
-        matInput
-        type="date"
-        formControlName="appointmentDate"
-        (change)="loadSlots()">
-
       @if (
         form.controls.appointmentDate.hasError(
           'required'

@@ -100,33 +100,6 @@ implements OnInit {
 
   }
 
-  loadSlots(): void {
-
-    const appointmentDate =
-      this.form.controls
-        .appointmentDate
-        .value;
-
-    if (!appointmentDate) {
-      return;
-    }
-
-    this.appointmentService
-      .getAvailableSlots(
-        appointmentDate
-      )
-      .subscribe({
-
-        next: slots => {
-
-          this.availableSlots
-            .set(slots);
-
-        }
-
-      });
-
-  }
 
   save(): void {
 

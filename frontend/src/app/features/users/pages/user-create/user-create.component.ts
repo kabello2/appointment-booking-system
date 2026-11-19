@@ -30,8 +30,22 @@ import {
   MatSelectModule
 } from '@angular/material/select';
 
+import {
+  BranchService
+} from '../../../branches/services/branch.service';
+
+
+import {
+  signal
+} from '@angular/core';
+
+import {
+  BranchResponse
+} from '../../../branches/models/branch-response.model';
+
 import { UserService } from '../../services/user.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { ValidationPatterns } from '../../../../shared/validators/validation.constants';
 
 @Component({
   selector: 'app-user-create',
@@ -43,6 +57,7 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
     MatIconModule,
     MatInputModule,
     MatInputModule,
+    MatSelectModule,
     MatSelectModule
   ],
   templateUrl: './user-create.component.html',
@@ -50,6 +65,10 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 })
 export class UserCreateComponent {
 
+  private readonly branchService =
+  inject(BranchService);
+  readonly branches =
+  signal<BranchResponse[]>([]);
   private readonly snackbar = inject(SnackbarService);
   private readonly fb =
     inject(FormBuilder);
@@ -61,23 +80,36 @@ export class UserCreateComponent {
     inject(Router);
 
   readonly roles = [
-    'ROLE_ADMIN',
-    'CONSULTANT',
-    'CUSTOMER'
+  {
+    label: 'Administrator',
+    value: 'ROLE_ADMIN'
+  },
+  {
+    label: 'Consultant',
+    value: 'ROLE_CONSULTANT'
+  }
   ];
   protected hidePassword = true;
+  validationErrors:
+  Record<string, string> = {};
 
   readonly form =
     this.fb.group({
 
       firstName: [
         '',
-        Validators.required
+        [
+        Validators.required,
+        Validators.maxLength(100)
+        ]
       ],
 
       lastName: [
         '',
-        Validators.required
+        [
+        Validators.required,
+        Validators.maxLength(100)
+        ]
       ],
 
       email: [
@@ -89,21 +121,103 @@ export class UserCreateComponent {
       ],
 
       phoneNumber: [
-        '',
-        Validators.required
+        '', [
+        Validators.required,
+        Validators.pattern(
+          ValidationPatterns.SOUTH_AFRICAN_PHONE
+        )
+      ]
       ],
 
       role: [
         '',
         Validators.required
       ],
+      
+      branchId: [''],
 
       password: [
         '',
-        Validators.required
+      [
+        Validators.required,
+        Validators.pattern(
+          ValidationPatterns.PASSWORD_COMPLEXITY
+        )
+      ]
       ]
 
     });
+
+  ngOnInit(): void {
+
+  this.loadBranches();
+
+  this.observeRoleChanges();
+  
+  Object.keys(this.form.controls)
+    .forEach(controlName => {
+
+      this.form
+        .get(controlName)
+        ?.valueChanges
+        .subscribe(() => {
+
+          delete this.validationErrors[
+            controlName
+          ];
+
+        });
+
+    });
+
+}  
+
+private loadBranches(): void {
+
+  this.branchService
+    .getBranches()
+    .subscribe({
+
+      next: branches => {
+
+        this.branches.set(branches);
+
+      }
+
+    });
+
+}
+
+private observeRoleChanges(): void {
+
+  this.form.controls.role
+    .valueChanges
+    .subscribe(role => {
+
+      const branchControl =
+        this.form.controls.branchId;
+
+      if (
+        role === 'ROLE_CONSULTANT'
+      ) {
+
+        branchControl.setValidators(
+          Validators.required
+        );
+
+      } else {
+
+        branchControl.clearValidators();
+
+        branchControl.setValue('');
+
+      }
+
+      branchControl.updateValueAndValidity();
+
+    });
+
+}
 
   save(): void {
 
@@ -131,7 +245,12 @@ export class UserCreateComponent {
             '/users'
           ]);
 
-        }
+        }, error: error => {
+
+  this.validationErrors =
+    error.error.validationErrors ?? {};
+
+}
 
       });
 

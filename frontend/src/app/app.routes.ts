@@ -13,10 +13,10 @@ import { UserCreateComponent } from './features/users/pages/user-create/user-cre
 import {
   UserEditComponent
 }
-from './features/users/pages/user-edit/user-edit.component';
+  from './features/users/pages/user-edit/user-edit.component';
 
 import { BranchCreateComponent }
-from './features/branches/pages/branch-create/branch-create.component';
+  from './features/branches/pages/branch-create/branch-create.component';
 import {
   BranchEditComponent
 } from './features/branches/pages/branch-edit/branch-edit.component';
@@ -34,7 +34,7 @@ import {
 import {
   AppointmentDashboardComponent
 }
-from './features/appointments/pages/appointment-dashboard/appointment-dashboard.component';
+  from './features/appointments/pages/appointment-dashboard/appointment-dashboard.component';
 
 import {
   AppointmentDetailsComponent
@@ -72,14 +72,21 @@ import {
   AppointmentReportComponent
 } from './features/reports/pages/appointment-report/appointment-report.component';
 
+import {
+  RegisterComponent
+} from './features/auth/register/register.component';
+
+import {
+  LandingComponent
+} from './features/landing/landing.component';
+
 export const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
+    component: LandingComponent
   },
-
+  
   {
     path: 'auth',
     component: AuthLayoutComponent,
@@ -88,6 +95,11 @@ export const routes: Routes = [
       {
         path: 'login',
         component: LoginComponent
+      },
+
+      {
+        path: 'register',
+        component: RegisterComponent
       }
     ]
   },
@@ -104,7 +116,7 @@ export const routes: Routes = [
       }
     ]
   },
-  
+
   {
     path: 'users',
     component: UserListComponent,
@@ -116,117 +128,117 @@ export const routes: Routes = [
     component: UserCreateComponent,
     canActivate: [authGuard]
   },
-  
+
   {
     path: 'users/:id/edit',
     component: UserEditComponent,
     canActivate: [authGuard]
   },
-  
+
   {
     path: 'branches',
     component: BranchListComponent,
     canActivate: [authGuard]
   },
   {
-  path: 'branches/:id/edit',
-  component: BranchEditComponent,
-  canActivate: [authGuard]
-},
+    path: 'branches/:id/edit',
+    component: BranchEditComponent,
+    canActivate: [authGuard]
+  },
 
-{
-  path: 'branches/create',
-  component: BranchCreateComponent,
-  canActivate: [authGuard]
-},
-  
+  {
+    path: 'branches/create',
+    component: BranchCreateComponent,
+    canActivate: [authGuard]
+  },
+
   {
     path: 'services',
     component: ServiceListComponent,
     canActivate: [authGuard]
   },
-  
+
   {
     path: 'services/create',
     component: ServiceCreateComponent,
-  canActivate: [authGuard]
+    canActivate: [authGuard]
   },
-  
+
   {
     path: 'appointments',
     component: AppointmentListComponent,
-  canActivate: [authGuard]
+    canActivate: [authGuard]
   },
 
   {
-  path: 'appointments/create',
-  component: AppointmentCreateComponent,
-  canActivate: [authGuard]
-},
+    path: 'appointments/create',
+    component: AppointmentCreateComponent,
+    canActivate: [authGuard]
+  },
 
-{
-  path: 'appointments/dashboard',
-  component: AppointmentDashboardComponent,
-  canActivate: [authGuard]
-},
+  {
+    path: 'appointments/dashboard',
+    component: AppointmentDashboardComponent,
+    canActivate: [authGuard]
+  },
 
-{
-  path: 'appointments/:id',
-  component: AppointmentDetailsComponent,
-  canActivate: [authGuard]
-},
+  {
+    path: 'appointments/:id',
+    component: AppointmentDetailsComponent,
+    canActivate: [authGuard]
+  },
 
-{
-  path: 'appointments/:id/reschedule',
-  component: AppointmentRescheduleComponent,
-  canActivate: [authGuard]
-},
+  {
+    path: 'appointments/:id/reschedule',
+    component: AppointmentRescheduleComponent,
+    canActivate: [authGuard]
+  },
 
-{
-  path: 'appointments/schedule',
-  component: AppointmentScheduleComponent,
-  canActivate: [authGuard]
-},
+  {
+    path: 'appointments/schedule',
+    component: AppointmentScheduleComponent,
+    canActivate: [authGuard]
+  },
 
-{
-  path: 'appointments/work-queue',
-  component: ConsultantWorkQueueComponent,
-  canActivate: [authGuard]
-},
-  
+  {
+    path: 'appointments/work-queue',
+    component: ConsultantWorkQueueComponent,
+    canActivate: [authGuard]
+  },
+
   {
     path: 'reports',
     component: ReportDashboardComponent,
-  canActivate: [authGuard]
+    canActivate: [authGuard]
   },
 
   {
-  path: 'reports/branches',
-  component: BranchReportComponent,
-  canActivate: [authGuard]
-},
+    path: 'reports/branches',
+    component: BranchReportComponent,
+    canActivate: [authGuard]
+  },
 
-{
-  path: 'reports/services',
-  component: ServiceReportComponent,
-  canActivate: [authGuard]
-},
+  {
+    path: 'reports/services',
+    component: ServiceReportComponent,
+    canActivate: [authGuard]
+  },
 
-{
-  path: 'reports/daily',
-  component: AppointmentReportComponent,
-  canActivate: [authGuard]
-},
-  
+  {
+    path: 'reports/daily',
+    component: AppointmentReportComponent,
+    canActivate: [authGuard]
+  },
+
   {
     path: 'notifications',
     component: NotificationListComponent,
-  canActivate: [authGuard]
+    canActivate: [authGuard]
   },
 
-{
-  path: 'notifications/dashboard',
-  component: NotificationDashboardComponent,
-  canActivate: [authGuard]
-}
+  {
+    path: 'notifications/dashboard',
+    component: NotificationDashboardComponent,
+    canActivate: [authGuard]
+  }
 ];

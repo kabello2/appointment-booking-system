@@ -12,4 +12,6 @@ export interface CreateUserRequest {
 
   password: string;
 
+  branchId?: string | null;
+
 }

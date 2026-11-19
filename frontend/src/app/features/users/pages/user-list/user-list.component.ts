@@ -18,6 +18,9 @@ import { UserResponse } from '../../models/user-response.model';
 import {
   LoadingSpinnerComponent
 } from '../../../../shared/components/loading-spinner/loading-spinner.component';
+import {
+  RoleDisplayPipe
+} from '../../../../shared/pipes/role-display.pipe';
 
 @Component({
   selector: 'app-user-list',
@@ -29,7 +32,8 @@ import {
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    RoleDisplayPipe
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'

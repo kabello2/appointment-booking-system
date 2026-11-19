@@ -127,12 +127,15 @@ export class AppointmentService {
   }
 
   getAvailableSlots(
+    branchId: string,
     appointmentDate: string
   ) {
 
     return this.http.get<AvailableSlotResponse[]>(
 
-      `${this.apiUrl}/appointments/available-slots?appointmentDate=${appointmentDate}`
+      `${this.apiUrl}/appointments/available-slots`
+    + `?branchId=${branchId}`
+    + `&appointmentDate=${appointmentDate}`
 
     );
 

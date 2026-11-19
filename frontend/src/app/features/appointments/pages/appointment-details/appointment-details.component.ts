@@ -35,6 +35,9 @@ import {
 } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { RouterLink } from '@angular/router';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { Location }
+from '@angular/common';
+
 
 @Component({
   selector: 'app-appointment-details',
@@ -50,6 +53,7 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 export class AppointmentDetailsComponent
 implements OnInit {
 
+  private readonly location = inject(Location);
   private readonly snackbar = inject(SnackbarService);
   private readonly route =
     inject(ActivatedRoute);
@@ -243,5 +247,11 @@ implements OnInit {
     ]);
 
   }
+
+  goBack(): void {
+
+  this.location.back();
+
+}
 
 }

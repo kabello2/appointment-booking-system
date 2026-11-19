@@ -1,0 +1,41 @@
+.landing-container {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  min-height: 100vh;
+
+  background: #f5f7fa;
+
+}
+
+.landing-card {
+
+  width: 500px;
+
+  padding: 2rem;
+
+  text-align: center;
+
+}
+
+.subtitle {
+
+  color: #616161;
+
+  margin-bottom: 2rem;
+
+}
+
+.actions {
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 1rem;
+
+}

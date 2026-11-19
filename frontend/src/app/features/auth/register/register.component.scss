@@ -1,0 +1,37 @@
+.auth-container {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  min-height: 100vh;
+
+}
+
+mat-card {
+
+  width: 450px;
+
+  padding: 2rem;
+
+}
+
+form {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1rem;
+
+}
+
+.login-link {
+
+  margin-top: 1rem;
+
+  text-align: center;
+
+}

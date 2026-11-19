@@ -1,7 +1,7 @@
 import {
   Component
 }
-from '@angular/core';
+  from '@angular/core';
 
 import {
   ReactiveFormsModule,
@@ -9,37 +9,39 @@ import {
   FormGroup,
   Validators
 }
-from '@angular/forms';
+  from '@angular/forms';
 
 import {
   Router
 }
-from '@angular/router';
+  from '@angular/router';
 
 import {
   MatCardModule
 }
-from '@angular/material/card';
+  from '@angular/material/card';
 
 import {
   MatFormFieldModule
 }
-from '@angular/material/form-field';
+  from '@angular/material/form-field';
 
 import {
   MatInputModule
 }
-from '@angular/material/input';
+  from '@angular/material/input';
 
 import {
   MatButtonModule
 }
-from '@angular/material/button';
+  from '@angular/material/button';
+
+import { RouterLink } from '@angular/router';  
 
 import {
   AuthService
 }
-from '../../../core/services/auth.service';
+  from '../../../core/services/auth.service';
 
 import { inject } from '@angular/core';
 
@@ -51,7 +53,8 @@ import { inject } from '@angular/core';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    RouterLink
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -94,27 +97,27 @@ export class LoginComponent {
     this.authService.login(
       this.loginForm.getRawValue() as any
     )
-    .subscribe({
+      .subscribe({
 
-      next: () => {
+        next: () => {
 
-        this.router.navigate([
-          '/dashboard'
-        ]);
+          this.router.navigate([
+            '/dashboard'
+          ]);
 
-      },
+        },
 
-      error: () => {
+        error: () => {
 
-        this.loading = false;
+          this.loading = false;
 
-        alert(
-          'Invalid credentials'
-        );
+          alert(
+            'Invalid credentials'
+          );
 
-      }
+        }
 
-    });
+      });
 
   }
 

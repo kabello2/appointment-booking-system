@@ -12,6 +12,8 @@ import { LoginRequest } from '../models/login-request.model';
 
 import { AuthResponse } from '../models/auth-response.model';
 import { AuthUser } from '../models/auth-user.model';
+import { CreateUserRequest } from '../../features/users/models/create-user-request.model';
+import { UserResponse } from '../../features/users/models/user-response.model';
 
 import { TokenService } from './token.service';
 import { UserService } from './user.service';
@@ -83,6 +85,19 @@ export class AuthService {
 
         return this.tokenService
             .isAuthenticated();
+
+    }
+
+    register(
+        request: CreateUserRequest
+    ): Observable<UserResponse> {
+
+        return this.http.post<UserResponse>(
+
+            `${this.authUrl}/register`,
+            request
+
+        );
 
     }
 

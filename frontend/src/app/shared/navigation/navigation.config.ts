@@ -9,8 +9,8 @@ NavigationItem[] = [
     icon: 'dashboard',
     roles: [
       'ROLE_ADMIN',
-      'CONSULTANT',
-      'CUSTOMER'
+      'ROLE_CONSULTANT',
+      'ROLE_CUSTOMER'
     ]
   },
 
@@ -20,8 +20,8 @@ NavigationItem[] = [
   icon: 'event',
   roles: [
     'ROLE_ADMIN',
-    'CONSULTANT',
-    'CUSTOMER'
+    'ROLE_CONSULTANT',
+    'ROLE_CUSTOMER'
   ]
 },
 
@@ -31,8 +31,8 @@ NavigationItem[] = [
     icon: 'event',
     roles: [
       'ROLE_ADMIN',
-      'CONSULTANT',
-      'CUSTOMER'
+      'ROLE_CONSULTANT',
+      'ROLE_CUSTOMER'
     ]
   },
 
@@ -50,7 +50,7 @@ NavigationItem[] = [
   route: '/appointments/work-queue',
   icon: 'assignment',
   roles: [
-    'CONSULTANT'
+    'ROLE_CONSULTANT'
   ]
 },
 

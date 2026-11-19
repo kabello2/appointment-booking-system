@@ -156,25 +156,33 @@ implements OnInit {
 
   loadSlots(): void {
 
-    const date =
-      this.form.controls
-        .appointmentDate
-        .value;
+  const branchId =
+    this.form.controls.branchId.value;
 
-    if (!date) {
-      return;
-    }
+  const appointmentDate =
+    this.form.controls.appointmentDate.value;
 
-    this.appointmentService
-      .getAvailableSlots(date)
-      .subscribe(slots => {
+  if (
+    !branchId ||
+    !appointmentDate
+  ) {
+    return;
+  }
+
+  this.appointmentService
+    .getAvailableSlots(
+      branchId,
+      appointmentDate
+    )
+    .subscribe(slots => {
 
         this.availableSlots
           .set(slots);
 
       });
 
-  }
+}
+
 
   save(): void {
 
