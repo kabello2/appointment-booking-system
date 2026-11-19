@@ -39,7 +39,7 @@ import {
     './notification-list.component.scss'
 })
 export class NotificationListComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly notificationService =
     inject(NotificationService);

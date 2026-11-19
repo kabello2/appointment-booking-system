@@ -49,8 +49,8 @@ export class SidebarComponent {
         return [];
       }
       console.log(
-  this.authState.currentUser()
-);
+        this.authState.currentUser()
+      );
 
 
       return NAVIGATION_ITEMS.filter(

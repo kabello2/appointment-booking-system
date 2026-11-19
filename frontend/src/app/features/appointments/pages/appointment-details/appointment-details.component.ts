@@ -36,7 +36,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { Location }
-from '@angular/common';
+  from '@angular/common';
 
 
 @Component({
@@ -51,7 +51,7 @@ from '@angular/common';
   styleUrl: './appointment-details.component.scss'
 })
 export class AppointmentDetailsComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly location = inject(Location);
   private readonly snackbar = inject(SnackbarService);
@@ -135,9 +135,9 @@ implements OnInit {
             appointment.id
           )
           .subscribe(() => {
-            
+
             this.snackbar.success(
-                'Appointment confirmed successfully'
+              'Appointment confirmed successfully'
             );
 
             this.loadAppointment();
@@ -184,7 +184,7 @@ implements OnInit {
           .subscribe(() => {
 
             this.snackbar.success(
-                'Appointment completed successfully'
+              'Appointment completed successfully'
             );
             this.loadAppointment();
 
@@ -230,7 +230,7 @@ implements OnInit {
           .subscribe(() => {
 
             this.snackbar.success(
-                'Appointment cancelled successfully'
+              'Appointment cancelled successfully'
             );
             this.loadAppointment();
 
@@ -250,8 +250,8 @@ implements OnInit {
 
   goBack(): void {
 
-  this.location.back();
+    this.location.back();
 
-}
+  }
 
 }

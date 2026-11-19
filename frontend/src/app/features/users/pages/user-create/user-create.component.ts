@@ -67,9 +67,9 @@ import { FormErrorUtils } from '../../../../shared/utils/form-error.utils';
 export class UserCreateComponent {
 
   private readonly branchService =
-  inject(BranchService);
+    inject(BranchService);
   readonly branches =
-  signal<BranchResponse[]>([]);
+    signal<BranchResponse[]>([]);
   private readonly snackbar = inject(SnackbarService);
   private readonly fb =
     inject(FormBuilder);
@@ -81,14 +81,14 @@ export class UserCreateComponent {
     inject(Router);
 
   readonly roles = [
-  {
-    label: 'Administrator',
-    value: 'ROLE_ADMIN'
-  },
-  {
-    label: 'Consultant',
-    value: 'ROLE_CONSULTANT'
-  }
+    {
+      label: 'Administrator',
+      value: 'ROLE_ADMIN'
+    },
+    {
+      label: 'Consultant',
+      value: 'ROLE_CONSULTANT'
+    }
   ];
   protected hidePassword = true;
 
@@ -98,16 +98,16 @@ export class UserCreateComponent {
       firstName: [
         '',
         [
-        Validators.required,
-        Validators.maxLength(100)
+          Validators.required,
+          Validators.maxLength(100)
         ]
       ],
 
       lastName: [
         '',
         [
-        Validators.required,
-        Validators.maxLength(100)
+          Validators.required,
+          Validators.maxLength(100)
         ]
       ],
 
@@ -121,110 +121,110 @@ export class UserCreateComponent {
 
       phoneNumber: [
         '', [
-        Validators.required,
-        Validators.pattern(
-          ValidationPatterns.SOUTH_AFRICAN_PHONE
-        )
-      ]
+          Validators.required,
+          Validators.pattern(
+            ValidationPatterns.SOUTH_AFRICAN_PHONE
+          )
+        ]
       ],
 
       role: [
         '',
         Validators.required
       ],
-      
+
       branchId: [''],
 
       password: [
         '',
-      [
-        Validators.required,
-        Validators.pattern(
-          ValidationPatterns.PASSWORD_COMPLEXITY
-        )
-      ]
+        [
+          Validators.required,
+          Validators.pattern(
+            ValidationPatterns.PASSWORD_COMPLEXITY
+          )
+        ]
       ]
 
     });
 
   ngOnInit(): void {
 
-  this.loadBranches();
+    this.loadBranches();
 
-  this.observeRoleChanges();
-  
-  Object.keys(this.form.controls)
-  .forEach(controlName => {
+    this.observeRoleChanges();
 
-    this.form
-      .get(controlName)
-      ?.valueChanges
-      .subscribe(() => {
+    Object.keys(this.form.controls)
+      .forEach(controlName => {
 
-        FormErrorUtils.clearServerErrors(
-          this.form.get(controlName)
-        );
+        this.form
+          .get(controlName)
+          ?.valueChanges
+          .subscribe(() => {
+
+            FormErrorUtils.clearServerErrors(
+              this.form.get(controlName)
+            );
+
+          });
 
       });
 
-  });
+  }
 
-}  
+  private loadBranches(): void {
 
-private loadBranches(): void {
+    this.branchService
+      .getBranches()
+      .subscribe({
 
-  this.branchService
-    .getBranches()
-    .subscribe({
+        next: branches => {
 
-      next: branches => {
+          this.branches.set(branches);
 
-        this.branches.set(branches);
+        }
 
-      }
+      });
 
-    });
+  }
 
-}
+  private observeRoleChanges(): void {
 
-private observeRoleChanges(): void {
+    this.form.controls.role
+      .valueChanges
+      .subscribe(role => {
 
-  this.form.controls.role
-    .valueChanges
-    .subscribe(role => {
+        const branchControl =
+          this.form.controls.branchId;
 
-      const branchControl =
-        this.form.controls.branchId;
+        if (
+          role === 'ROLE_CONSULTANT'
+        ) {
 
-      if (
-        role === 'ROLE_CONSULTANT'
-      ) {
+          branchControl.setValidators(
+            Validators.required
+          );
 
-        branchControl.setValidators(
-          Validators.required
-        );
+        } else {
 
-      } else {
+          branchControl.clearValidators();
 
-        branchControl.clearValidators();
+          branchControl.setValue('');
 
-        branchControl.setValue('');
+        }
 
-      }
+        branchControl.updateValueAndValidity();
 
-      branchControl.updateValueAndValidity();
+      });
 
-    });
-
-}
+  }
 
   save(): void {
 
     if (this.form.invalid) {
 
-        this.form.markAllAsTouched();
+      this.form.markAllAsTouched();
 
-        return;
+      return;
 
     }
 
@@ -235,9 +235,9 @@ private observeRoleChanges(): void {
       .subscribe({
 
         next: () => {
-            this.snackbar.success(
-                'User created successfully'
-            );
+          this.snackbar.success(
+            'User created successfully'
+          );
 
 
           this.router.navigate([
@@ -246,12 +246,12 @@ private observeRoleChanges(): void {
 
         }, error: error => {
 
-  FormErrorUtils.applyServerErrors(
-  this.form,
-  error.error?.validationErrors ?? {}
-);
+          FormErrorUtils.applyServerErrors(
+            this.form,
+            error.error?.validationErrors ?? {}
+          );
 
-}
+        }
 
       });
 
@@ -259,10 +259,10 @@ private observeRoleChanges(): void {
 
   cancel(): void {
 
-  this.router.navigate([
-    '/users'
-  ]);
+    this.router.navigate([
+      '/users'
+    ]);
 
-}
+  }
 
 }

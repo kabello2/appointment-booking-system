@@ -27,7 +27,7 @@ import {
   styleUrl: './appointment-report.component.scss'
 })
 export class AppointmentReportComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly reportingService =
     inject(ReportingService);

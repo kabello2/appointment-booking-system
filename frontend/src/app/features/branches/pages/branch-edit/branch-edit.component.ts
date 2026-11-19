@@ -169,9 +169,9 @@ export class BranchEditComponent implements OnInit {
 
         next: () => {
 
-            this.snackbar.success(
-                'Branch updated successfully'
-            );
+          this.snackbar.success(
+            'Branch updated successfully'
+          );
 
           this.router.navigate([
             '/branches'

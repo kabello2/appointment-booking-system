@@ -4,10 +4,7 @@
 
     <h1>Services</h1>
 
-    <button
-      mat-raised-button
-      color="primary"
-      routerLink="/services/create">
+    <button mat-raised-button color="primary" routerLink="/services/create">
 
       Create Service
 
@@ -15,25 +12,17 @@
 
   </div>
 
-  <mat-form-field
-    appearance="outline"
-    class="search-field">
+  <mat-form-field appearance="outline" class="search-field">
 
     <mat-label>
       Search Services
     </mat-label>
 
-    <input
-      matInput
-      placeholder="Search by code or name"
-      (input)="filterServices($event)">
+    <input matInput placeholder="Search by code or name" (input)="filterServices($event)">
 
   </mat-form-field>
 
-  <table
-    mat-table
-    [dataSource]="services()"
-    class="mat-elevation-z2">
+  <table mat-table [dataSource]="services()" class="mat-elevation-z2">
 
     <ng-container matColumnDef="serviceCode">
 
@@ -81,15 +70,15 @@
 
         @if (service.active) {
 
-          <span class="status-active">
-            Active
-          </span>
+        <span class="status-active">
+          Active
+        </span>
 
         } @else {
 
-          <span class="status-inactive">
-            Inactive
-          </span>
+        <span class="status-inactive">
+          Inactive
+        </span>
 
         }
 
@@ -105,10 +94,7 @@
 
       <td mat-cell *matCellDef="let service">
 
-        <button
-          mat-icon-button
-          color="warn"
-          (click)="deleteService(service)">
+        <button mat-icon-button color="warn" (click)="deleteService(service)">
 
           <mat-icon>
             delete
@@ -120,14 +106,10 @@
 
     </ng-container>
 
-    <tr
-      mat-header-row
-      *matHeaderRowDef="displayedColumns">
+    <tr mat-header-row *matHeaderRowDef="displayedColumns">
     </tr>
 
-    <tr
-      mat-row
-      *matRowDef="
+    <tr mat-row *matRowDef="
         let row;
         columns: displayedColumns;
       ">

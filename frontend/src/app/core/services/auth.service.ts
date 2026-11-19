@@ -73,10 +73,12 @@ export class AuthService {
 
     logout(): void {
 
+        this.authState.clear();
+
         this.tokenService.clearToken();
 
         this.router.navigate([
-            '/auth/login'
+            '/'
         ]);
 
     }

@@ -86,7 +86,7 @@ export const routes: Routes = [
     path: '',
     component: LandingComponent
   },
-  
+
   {
     path: 'auth',
     component: AuthLayoutComponent,
@@ -107,138 +107,139 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
+    canActivate: [authGuard],
 
     children: [
       {
         path: 'dashboard',
         component: DashboardComponent,
         canActivate: [authGuard]
+      },
+
+      {
+        path: 'users',
+        component: UserListComponent,
+        canActivate: [authGuard],
+      },
+
+      {
+        path: 'users/create',
+        component: UserCreateComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'users/:id/edit',
+        component: UserEditComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'branches',
+        component: BranchListComponent,
+        canActivate: [authGuard]
+      },
+      {
+        path: 'branches/:id/edit',
+        component: BranchEditComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'branches/create',
+        component: BranchCreateComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'services',
+        component: ServiceListComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'services/create',
+        component: ServiceCreateComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'appointments',
+        component: AppointmentListComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'appointments/create',
+        component: AppointmentCreateComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'appointments/dashboard',
+        component: AppointmentDashboardComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'appointments/:id',
+        component: AppointmentDetailsComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'appointments/:id/reschedule',
+        component: AppointmentRescheduleComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'appointments/schedule',
+        component: AppointmentScheduleComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'appointments/work/queue',
+        component: ConsultantWorkQueueComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'reports',
+        component: ReportDashboardComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'reports/branches',
+        component: BranchReportComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'reports/services',
+        component: ServiceReportComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'reports/daily',
+        component: AppointmentReportComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'notifications',
+        component: NotificationListComponent,
+        canActivate: [authGuard]
+      },
+
+      {
+        path: 'notifications/dashboard',
+        component: NotificationDashboardComponent,
+        canActivate: [authGuard]
       }
     ]
-  },
-
-  {
-    path: 'users',
-    component: UserListComponent,
-    canActivate: [authGuard],
-  },
-
-  {
-    path: 'users/create',
-    component: UserCreateComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'users/:id/edit',
-    component: UserEditComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'branches',
-    component: BranchListComponent,
-    canActivate: [authGuard]
-  },
-  {
-    path: 'branches/:id/edit',
-    component: BranchEditComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'branches/create',
-    component: BranchCreateComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'services',
-    component: ServiceListComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'services/create',
-    component: ServiceCreateComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'appointments',
-    component: AppointmentListComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'appointments/create',
-    component: AppointmentCreateComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'appointments/dashboard',
-    component: AppointmentDashboardComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'appointments/:id',
-    component: AppointmentDetailsComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'appointments/:id/reschedule',
-    component: AppointmentRescheduleComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'appointments/schedule',
-    component: AppointmentScheduleComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'appointments/work-queue',
-    component: ConsultantWorkQueueComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'reports',
-    component: ReportDashboardComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'reports/branches',
-    component: BranchReportComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'reports/services',
-    component: ServiceReportComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'reports/daily',
-    component: AppointmentReportComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'notifications',
-    component: NotificationListComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'notifications/dashboard',
-    component: NotificationDashboardComponent,
-    canActivate: [authGuard]
   }
 ];

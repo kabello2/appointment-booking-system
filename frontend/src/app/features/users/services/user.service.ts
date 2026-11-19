@@ -9,10 +9,10 @@ import { environment } from '../../../../environments/environment';
 import { UserResponse } from '../models/user-response.model';
 
 import { CreateUserRequest }
-from '../models/create-user-request.model';
+  from '../models/create-user-request.model';
 
 import { UpdateUserRequest }
-from '../models/update-user-request.model';
+  from '../models/update-user-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -50,55 +50,55 @@ export class UserService {
   }
 
   updateUser(
-  id: string,
-  request: UpdateUserRequest
-) {
+    id: string,
+    request: UpdateUserRequest
+  ) {
 
-  return this.http.put(
+    return this.http.put(
 
-    `${this.apiUrl}/admin/users/${id}`,
-    request
+      `${this.apiUrl}/admin/users/${id}`,
+      request
 
-  );
+    );
 
-}
+  }
 
-enableUser(
-  id: string
-) {
+  enableUser(
+    id: string
+  ) {
 
-  return this.http.patch(
+    return this.http.patch(
 
-    `${this.apiUrl}/admin/users/${id}/enable`,
-    {}
+      `${this.apiUrl}/admin/users/${id}/enable`,
+      {}
 
-  );
+    );
 
-}
+  }
 
-disableUser(
-  id: string
-) {
+  disableUser(
+    id: string
+  ) {
 
-  return this.http.patch(
+    return this.http.patch(
 
-    `${this.apiUrl}/admin/users/${id}/disable`,
-    {}
+      `${this.apiUrl}/admin/users/${id}/disable`,
+      {}
 
-  );
+    );
 
-}
+  }
 
-getUserById(
-  userId: string
-) {
+  getUserById(
+    userId: string
+  ) {
 
-  return this.http.get<UserResponse>(
+    return this.http.get<UserResponse>(
 
-    `${this.apiUrl}/admin/users/${userId}`
+      `${this.apiUrl}/admin/users/${userId}`
 
-  );
+    );
 
-}
+  }
 
 }

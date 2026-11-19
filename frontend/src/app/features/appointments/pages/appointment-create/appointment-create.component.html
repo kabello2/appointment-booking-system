@@ -10,20 +10,18 @@
         Branch
       </mat-label>
 
-      <mat-select
-        formControlName="branchId">
+      <mat-select formControlName="branchId">
 
         @for (
-          branch of branches();
-          track branch.id
+        branch of branches();
+        track branch.id
         ) {
 
-          <mat-option
-            [value]="branch.id">
+        <mat-option [value]="branch.id">
 
-            {{ branch.name }}
+          {{ branch.name }}
 
-          </mat-option>
+        </mat-option>
 
         }
 
@@ -37,20 +35,18 @@
         Service
       </mat-label>
 
-      <mat-select
-        formControlName="serviceOfferingId">
+      <mat-select formControlName="serviceOfferingId">
 
         @for (
-          service of services();
-          track service.id
+        service of services();
+        track service.id
         ) {
 
-          <mat-option
-            [value]="service.id">
+        <mat-option [value]="service.id">
 
-            {{ service.name }}
+          {{ service.name }}
 
-          </mat-option>
+        </mat-option>
 
         }
 
@@ -64,11 +60,7 @@
         Appointment Date
       </mat-label>
 
-      <input
-        matInput
-        type="date"
-        formControlName="appointmentDate"
-        (change)="loadSlots()">
+      <input matInput type="date" formControlName="appointmentDate" (change)="loadSlots()">
 
     </mat-form-field>
 
@@ -78,22 +70,20 @@
         Available Time Slot
       </mat-label>
 
-      <mat-select
-        formControlName="startTime">
+      <mat-select formControlName="startTime">
 
         @for (
-          slot of availableSlots();
-          track slot.startTime
+        slot of availableSlots();
+        track slot.startTime
         ) {
 
-          <mat-option
-            [value]="slot.startTime">
+        <mat-option [value]="slot.startTime">
 
-            {{ slot.startTime }}
-            -
-            {{ slot.endTime }}
+          {{ slot.startTime }}
+          -
+          {{ slot.endTime }}
 
-          </mat-option>
+        </mat-option>
 
         }
 
@@ -107,31 +97,20 @@
         Notes
       </mat-label>
 
-      <textarea
-        matInput
-        rows="4"
-        formControlName="notes">
+      <textarea matInput rows="4" formControlName="notes">
       </textarea>
 
     </mat-form-field>
 
     <div class="form-actions">
 
-      <button
-        type="button"
-        mat-stroked-button
-        (click)="cancel()">
+      <button type="button" mat-stroked-button (click)="cancel()">
 
         Cancel
 
       </button>
 
-      <button
-        type="button"
-        mat-raised-button
-        color="primary"
-        [disabled]="form.invalid"
-        (click)="save()">
+      <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
 
         Book Appointment
 

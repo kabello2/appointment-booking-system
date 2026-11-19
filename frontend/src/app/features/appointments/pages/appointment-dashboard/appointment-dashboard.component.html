@@ -2,59 +2,57 @@
 
 @if (dashboard(); as dashboard) {
 
-  <div class="dashboard-grid">
+<div class="dashboard-grid">
 
-    <mat-card>
+  <mat-card>
 
-      <mat-card-title>
-        Upcoming
-      </mat-card-title>
+    <mat-card-title>
+      Upcoming
+    </mat-card-title>
 
-      <mat-card-content>
+    <mat-card-content>
 
-        {{ dashboard.upcomingAppointments }}
+      {{ dashboard.upcomingAppointments }}
 
-      </mat-card-content>
+    </mat-card-content>
 
-    </mat-card>
+  </mat-card>
 
-    <mat-card>
+  <mat-card>
 
-      <mat-card-title>
-        Completed
-      </mat-card-title>
+    <mat-card-title>
+      Completed
+    </mat-card-title>
 
-      <mat-card-content>
+    <mat-card-content>
 
-        {{ dashboard.completedAppointments }}
+      {{ dashboard.completedAppointments }}
 
-      </mat-card-content>
+    </mat-card-content>
 
-    </mat-card>
+  </mat-card>
 
-    <mat-card>
+  <mat-card>
 
-      <mat-card-title>
-        Cancelled
-      </mat-card-title>
+    <mat-card-title>
+      Cancelled
+    </mat-card-title>
 
-      <mat-card-content>
+    <mat-card-content>
 
-        {{ dashboard.cancelledAppointments }}
+      {{ dashboard.cancelledAppointments }}
 
-      </mat-card-content>
+    </mat-card-content>
 
-    </mat-card>
+  </mat-card>
 
-  </div>
+</div>
 
 }
 
 <h2>Upcoming Appointments</h2>
 
-<table
-  mat-table
-  [dataSource]="upcomingAppointments()">
+<table mat-table [dataSource]="upcomingAppointments()">
 
   <ng-container matColumnDef="appointmentNumber">
 
@@ -126,14 +124,10 @@
 
   </ng-container>
 
-  <tr
-    mat-header-row
-    *matHeaderRowDef="displayedColumns">
+  <tr mat-header-row *matHeaderRowDef="displayedColumns">
   </tr>
 
-  <tr
-    mat-row
-    *matRowDef="
+  <tr mat-row *matRowDef="
       let row;
       columns: displayedColumns;
     ">

@@ -67,29 +67,29 @@ export class UserListComponent implements OnInit {
 
   private loadUsers(): void {
 
-  this.loading.set(true);
+    this.loading.set(true);
 
-  this.userService
-    .getUsers()
-    .subscribe({
+    this.userService
+      .getUsers()
+      .subscribe({
 
-      next: users => {
+        next: users => {
 
-        this.users.set(users);
+          this.users.set(users);
 
-        this.loading.set(false);
+          this.loading.set(false);
 
-      },
+        },
 
-      error: () => {
+        error: () => {
 
-        this.loading.set(false);
+          this.loading.set(false);
 
-      }
+        }
 
-    });
+      });
 
-}
+  }
 
   filterUsers(
     event: Event

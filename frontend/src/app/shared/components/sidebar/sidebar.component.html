@@ -1,23 +1,21 @@
 <mat-nav-list>
 
   @for (
-    item of menuItems();
-    track item.route
+  item of menuItems();
+  track item.route
   ) {
 
-    <a
-      mat-list-item
-      [routerLink]="item.route">
+  <a mat-list-item [routerLink]="item.route">
 
-      <mat-icon>
-        {{ item.icon }}
-      </mat-icon>
+    <mat-icon>
+      {{ item.icon }}
+    </mat-icon>
 
-      <span>
-        {{ item.label }}
-      </span>
+    <span>
+      {{ item.label }}
+    </span>
 
-    </a>
+  </a>
 
   }
 

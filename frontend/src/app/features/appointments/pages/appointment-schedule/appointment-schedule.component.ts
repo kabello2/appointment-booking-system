@@ -30,7 +30,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './appointment-schedule.component.scss'
 })
 export class AppointmentScheduleComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly appointmentService =
     inject(AppointmentService);
@@ -38,38 +38,38 @@ implements OnInit {
   readonly appointments =
     signal<AppointmentResponse[]>([]);
 
-readonly groupedAppointments =
-  computed(() => {
+  readonly groupedAppointments =
+    computed(() => {
 
-    const groups =
-      new Map<string, AppointmentResponse[]>();
+      const groups =
+        new Map<string, AppointmentResponse[]>();
 
-    this.appointments()
-      .forEach(appointment => {
+      this.appointments()
+        .forEach(appointment => {
 
-        const date =
-          appointment.appointmentDate;
+          const date =
+            appointment.appointmentDate;
 
-        if (!groups.has(date)) {
+          if (!groups.has(date)) {
 
-          groups.set(date, []);
+            groups.set(date, []);
 
-        }
+          }
 
-        groups
-          .get(date)!
-          .push(appointment);
+          groups
+            .get(date)!
+            .push(appointment);
 
-      });
+        });
 
-    return Array.from(
-      groups.entries()
-    )
-    .sort(([first], [second]) =>
-      first.localeCompare(second)
-    );
+      return Array.from(
+        groups.entries()
+      )
+        .sort(([first], [second]) =>
+          first.localeCompare(second)
+        );
 
-  });
+    });
 
   ngOnInit(): void {
 

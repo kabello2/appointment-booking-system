@@ -10,15 +10,13 @@
         First Name
       </mat-label>
 
-      <input
-        matInput
-        formControlName="firstName">
+      <input matInput formControlName="firstName">
 
       @if (form.controls.firstName.hasError('required')) {
 
-        <mat-error>
-          First name is required
-        </mat-error>
+      <mat-error>
+        First name is required
+      </mat-error>
 
       }
 
@@ -30,15 +28,13 @@
         Last Name
       </mat-label>
 
-      <input
-        matInput
-        formControlName="lastName">
+      <input matInput formControlName="lastName">
 
       @if (form.controls.lastName.hasError('required')) {
 
-        <mat-error>
-          Last name is required
-        </mat-error>
+      <mat-error>
+        Last name is required
+      </mat-error>
 
       }
 
@@ -50,23 +46,21 @@
         Email
       </mat-label>
 
-      <input
-        matInput
-        formControlName="email">
+      <input matInput formControlName="email">
 
       @if (form.controls.email.hasError('required')) {
 
-        <mat-error>
-          Email is required
-        </mat-error>
+      <mat-error>
+        Email is required
+      </mat-error>
 
       }
 
       @if (form.controls.email.hasError('email')) {
 
-        <mat-error>
-          Enter a valid email address
-        </mat-error>
+      <mat-error>
+        Enter a valid email address
+      </mat-error>
 
       }
 
@@ -78,15 +72,13 @@
         Phone Number
       </mat-label>
 
-      <input
-        matInput
-        formControlName="phoneNumber">
+      <input matInput formControlName="phoneNumber">
 
       @if (form.controls.phoneNumber.hasError('required')) {
 
-        <mat-error>
-          Phone number is required
-        </mat-error>
+      <mat-error>
+        Phone number is required
+      </mat-error>
 
       }
 
@@ -102,11 +94,11 @@
 
         @for (role of roles; track role) {
 
-          <mat-option [value]="role">
+        <mat-option [value]="role">
 
-            {{ role }}
+          {{ role }}
 
-          </mat-option>
+        </mat-option>
 
         }
 
@@ -114,9 +106,9 @@
 
       @if (form.controls.role.hasError('required')) {
 
-        <mat-error>
-          Role is required
-        </mat-error>
+      <mat-error>
+        Role is required
+      </mat-error>
 
       }
 
@@ -124,21 +116,13 @@
 
     <div class="form-actions">
 
-      <button
-        type="button"
-        mat-stroked-button
-        (click)="cancel()">
+      <button type="button" mat-stroked-button (click)="cancel()">
 
         Cancel
 
       </button>
 
-      <button
-        type="button"
-        mat-raised-button
-        color="primary"
-        [disabled]="form.invalid"
-        (click)="save()">
+      <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
 
         Update User
 

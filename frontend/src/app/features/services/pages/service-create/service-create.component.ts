@@ -77,23 +77,23 @@ export class ServiceCreateComponent {
 
     });
 
-ngOnInit(): void {
-Object.keys(this.form.controls)
-  .forEach(controlName => {
+  ngOnInit(): void {
+    Object.keys(this.form.controls)
+      .forEach(controlName => {
 
-    this.form
-      .get(controlName)
-      ?.valueChanges
-      .subscribe(() => {
+        this.form
+          .get(controlName)
+          ?.valueChanges
+          .subscribe(() => {
 
-        FormErrorUtils.clearServerErrors(
-          this.form.get(controlName)
-        );
+            FormErrorUtils.clearServerErrors(
+              this.form.get(controlName)
+            );
+
+          });
 
       });
-
-  });
-  }  
+  }
 
   save(): void {
 
@@ -113,9 +113,9 @@ Object.keys(this.form.controls)
 
         next: () => {
 
-            this.snackbar.success(
-                'Service offering created successfully'
-            );
+          this.snackbar.success(
+            'Service offering created successfully'
+          );
 
           this.router.navigate([
             '/services'
@@ -123,12 +123,12 @@ Object.keys(this.form.controls)
 
         }, error: error => {
 
-  FormErrorUtils.applyServerErrors(
-    this.form,
-    error.error?.validationErrors ?? {}
-  );
+          FormErrorUtils.applyServerErrors(
+            this.form,
+            error.error?.validationErrors ?? {}
+          );
 
-}
+        }
 
       });
 

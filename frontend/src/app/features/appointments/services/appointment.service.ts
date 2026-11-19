@@ -5,16 +5,16 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
 import { AppointmentResponse }
-from '../models/appointment-response.model';
+  from '../models/appointment-response.model';
 
 import { BookAppointmentRequest }
-from '../models/book-appointment-request.model';
+  from '../models/book-appointment-request.model';
 
 import { AvailableSlotResponse }
-from '../models/available-slot-response.model';
+  from '../models/available-slot-response.model';
 
 import { DashboardResponse }
-from '../models/dashboard-response.model';
+  from '../models/dashboard-response.model';
 
 import {
   RescheduleAppointmentRequest
@@ -134,8 +134,8 @@ export class AppointmentService {
     return this.http.get<AvailableSlotResponse[]>(
 
       `${this.apiUrl}/appointments/available-slots`
-    + `?branchId=${branchId}`
-    + `&appointmentDate=${appointmentDate}`
+      + `?branchId=${branchId}`
+      + `&appointmentDate=${appointmentDate}`
 
     );
 
@@ -143,47 +143,47 @@ export class AppointmentService {
 
   getMyDashboard() {
 
-  return this.http.get<DashboardResponse>(
+    return this.http.get<DashboardResponse>(
 
-    `${this.apiUrl}/appointments/dashboard/me`
+      `${this.apiUrl}/appointments/dashboard/me`
 
-  );
+    );
 
-}
+  }
 
-getMyUpcomingAppointments() {
+  getMyUpcomingAppointments() {
 
-  return this.http.get<AppointmentResponse[]>(
+    return this.http.get<AppointmentResponse[]>(
 
-    `${this.apiUrl}/appointments/my/upcoming`
+      `${this.apiUrl}/appointments/my/upcoming`
 
-  );
+    );
 
-}
+  }
 
-getMyConsultantAppointments() {
+  getMyConsultantAppointments() {
 
-  return this.http.get<AppointmentResponse[]>(
+    return this.http.get<AppointmentResponse[]>(
 
-    `${this.apiUrl}/appointments/consultant/my`
+      `${this.apiUrl}/appointments/consultant/my`
 
-  );
+    );
 
-}
+  }
 
-rescheduleAppointment(
-  appointmentId: string,
-  request: RescheduleAppointmentRequest
-) {
+  rescheduleAppointment(
+    appointmentId: string,
+    request: RescheduleAppointmentRequest
+  ) {
 
-  return this.http.put(
+    return this.http.put(
 
-    `${this.apiUrl}/appointments/${appointmentId}/reschedule`,
+      `${this.apiUrl}/appointments/${appointmentId}/reschedule`,
 
-    request
+      request
 
-  );
+    );
 
-}
+  }
 
 }

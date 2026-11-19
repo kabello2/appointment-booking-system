@@ -29,7 +29,7 @@ import {
     './report-dashboard.component.scss'
 })
 export class ReportDashboardComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly reportingService =
     inject(ReportingService);

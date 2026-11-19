@@ -11,16 +11,16 @@
       </mat-label>
 
       @if (
-        form.controls.appointmentDate.hasError(
-          'required'
-        )
+      form.controls.appointmentDate.hasError(
+      'required'
+      )
       ) {
 
-        <mat-error>
+      <mat-error>
 
-          Appointment date is required
+        Appointment date is required
 
-        </mat-error>
+      </mat-error>
 
       }
 
@@ -32,38 +32,36 @@
         Available Slot
       </mat-label>
 
-      <mat-select
-        formControlName="startTime">
+      <mat-select formControlName="startTime">
 
         @for (
-          slot of availableSlots();
-          track slot.startTime
+        slot of availableSlots();
+        track slot.startTime
         ) {
 
-          <mat-option
-            [value]="slot.startTime">
+        <mat-option [value]="slot.startTime">
 
-            {{ slot.startTime }}
-            -
-            {{ slot.endTime }}
+          {{ slot.startTime }}
+          -
+          {{ slot.endTime }}
 
-          </mat-option>
+        </mat-option>
 
         }
 
       </mat-select>
 
       @if (
-        form.controls.startTime.hasError(
-          'required'
-        )
+      form.controls.startTime.hasError(
+      'required'
+      )
       ) {
 
-        <mat-error>
+      <mat-error>
 
-          Time slot is required
+        Time slot is required
 
-        </mat-error>
+      </mat-error>
 
       }
 
@@ -71,21 +69,13 @@
 
     <div class="form-actions">
 
-      <button
-        type="button"
-        mat-stroked-button
-        (click)="cancel()">
+      <button type="button" mat-stroked-button (click)="cancel()">
 
         Cancel
 
       </button>
 
-      <button
-        type="button"
-        mat-raised-button
-        color="primary"
-        [disabled]="form.invalid"
-        (click)="save()">
+      <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
 
         Reschedule
 

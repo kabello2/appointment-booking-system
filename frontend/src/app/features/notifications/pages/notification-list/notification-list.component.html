@@ -1,8 +1,6 @@
 <h1>Notifications</h1>
 
-<table
-  mat-table
-  [dataSource]="notifications()">
+<table mat-table [dataSource]="notifications()">
 
   <ng-container matColumnDef="recipient">
 
@@ -62,16 +60,13 @@
 
       @if (notification.status === 'FAILED') {
 
-        <button
-          mat-icon-button
-          color="warn"
-          (click)="retry(notification)">
+      <button mat-icon-button color="warn" (click)="retry(notification)">
 
-          <mat-icon>
-            refresh
-          </mat-icon>
+        <mat-icon>
+          refresh
+        </mat-icon>
 
-        </button>
+      </button>
 
       }
 
@@ -79,14 +74,10 @@
 
   </ng-container>
 
-  <tr
-    mat-header-row
-    *matHeaderRowDef="displayedColumns">
+  <tr mat-header-row *matHeaderRowDef="displayedColumns">
   </tr>
 
-  <tr
-    mat-row
-    *matRowDef="
+  <tr mat-row *matRowDef="
       let row;
       columns: displayedColumns;
     ">

@@ -31,7 +31,7 @@ import {
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent
-implements OnInit {
+  implements OnInit {
 
   protected readonly authState =
     inject(AuthState);

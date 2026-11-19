@@ -27,7 +27,7 @@ import {
   styleUrl: './service-report.component.scss'
 })
 export class ServiceReportComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly reportingService =
     inject(ReportingService);

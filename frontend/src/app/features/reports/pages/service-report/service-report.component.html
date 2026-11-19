@@ -2,10 +2,7 @@
 
   <h1>Service Popularity Report</h1>
 
-  <table
-    mat-table
-    [dataSource]="services()"
-    class="mat-elevation-z2">
+  <table mat-table [dataSource]="services()" class="mat-elevation-z2">
 
     <ng-container matColumnDef="rank">
 
@@ -63,14 +60,10 @@
 
     </ng-container>
 
-    <tr
-      mat-header-row
-      *matHeaderRowDef="displayedColumns">
+    <tr mat-header-row *matHeaderRowDef="displayedColumns">
     </tr>
 
-    <tr
-      mat-row
-      *matRowDef="
+    <tr mat-row *matRowDef="
         let row;
         columns: displayedColumns;
       ">

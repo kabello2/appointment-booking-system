@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 import { DashboardSummary }
-from '../models/dashboard-summary.model';
+  from '../models/dashboard-summary.model';
 
 @Injectable({
   providedIn: 'root'

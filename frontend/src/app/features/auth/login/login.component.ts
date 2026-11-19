@@ -36,7 +36,7 @@ import {
 }
   from '@angular/material/button';
 
-import { RouterLink } from '@angular/router';  
+import { RouterLink } from '@angular/router';
 
 import {
   AuthService
@@ -99,11 +99,43 @@ export class LoginComponent {
     )
       .subscribe({
 
-        next: () => {
+        next: user => {
 
-          this.router.navigate([
-            '/dashboard'
-          ]);
+          this.loading = false;
+
+          switch (user.role) {
+
+            case 'ROLE_ADMIN':
+
+              this.router.navigate([
+                '/reports'
+              ]);
+
+              break;
+
+            case 'ROLE_CONSULTANT':
+
+              this.router.navigate([
+                '/appointments/dashboard'
+              ]);
+
+              break;
+
+            case 'ROLE_CUSTOMER':
+
+              this.router.navigate([
+                '/appointments/dashboard'
+              ]);
+
+              break;
+
+            default:
+
+              this.router.navigate([
+                '/'
+              ]);
+
+          }
 
         },
 

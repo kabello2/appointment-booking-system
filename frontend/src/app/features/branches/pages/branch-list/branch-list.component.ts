@@ -63,7 +63,7 @@ import {
   styleUrl: './branch-list.component.scss'
 })
 export class BranchListComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly branchService = inject(BranchService);
   private readonly dialog = inject(MatDialog);
@@ -82,106 +82,106 @@ implements OnInit {
 
   ngOnInit(): void {
 
-  this.loadBranches();
+    this.loadBranches();
 
-}
+  }
 
-private loadBranches(): void {
+  private loadBranches(): void {
 
-  this.branchService
-    .getBranches()
-    .subscribe({
+    this.branchService
+      .getBranches()
+      .subscribe({
 
-      next: branches => {
+        next: branches => {
 
-        this.allBranches.set(branches);
+          this.allBranches.set(branches);
 
-        this.branches.set(branches);
-
-      }
-
-    });
-
-}
-
-filterBranches(
-  event: Event
-): void {
-
-  const value =
-    (event.target as HTMLInputElement)
-      .value
-      .toLowerCase();
-
-  const filtered =
-    this.allBranches()
-      .filter(branch =>
-
-        branch.branchCode
-          .toLowerCase()
-          .includes(value)
-
-        ||
-
-        branch.name
-          .toLowerCase()
-          .includes(value)
-
-        ||
-
-        branch.city
-          .toLowerCase()
-          .includes(value)
-
-      );
-
-  this.branches.set(filtered);
-
-}
-
-deleteBranch(
-  branch: BranchResponse
-): void {
-
-  const dialogRef =
-    this.dialog.open(
-      ConfirmDialogComponent,
-      {
-        width: '400px',
-
-        data: {
-
-          title: 'Delete Branch',
-
-          message:
-            `Are you sure you want to delete ${branch.name}?`
+          this.branches.set(branches);
 
         }
-      }
-    );
 
-  dialogRef
-    .afterClosed()
-    .subscribe(result => {
+      });
 
-      if (!result) {
-        return;
-      }
+  }
 
-      this.branchService
-        .deleteBranch(branch.id)
-        .subscribe({
+  filterBranches(
+    event: Event
+  ): void {
 
-          next: () => {
+    const value =
+      (event.target as HTMLInputElement)
+        .value
+        .toLowerCase();
 
-            this.loadBranches();
+    const filtered =
+      this.allBranches()
+        .filter(branch =>
+
+          branch.branchCode
+            .toLowerCase()
+            .includes(value)
+
+          ||
+
+          branch.name
+            .toLowerCase()
+            .includes(value)
+
+          ||
+
+          branch.city
+            .toLowerCase()
+            .includes(value)
+
+        );
+
+    this.branches.set(filtered);
+
+  }
+
+  deleteBranch(
+    branch: BranchResponse
+  ): void {
+
+    const dialogRef =
+      this.dialog.open(
+        ConfirmDialogComponent,
+        {
+          width: '400px',
+
+          data: {
+
+            title: 'Delete Branch',
+
+            message:
+              `Are you sure you want to delete ${branch.name}?`
 
           }
+        }
+      );
 
-        });
+    dialogRef
+      .afterClosed()
+      .subscribe(result => {
 
-    });
+        if (!result) {
+          return;
+        }
 
-}
+        this.branchService
+          .deleteBranch(branch.id)
+          .subscribe({
+
+            next: () => {
+
+              this.loadBranches();
+
+            }
+
+          });
+
+      });
+
+  }
 
 }

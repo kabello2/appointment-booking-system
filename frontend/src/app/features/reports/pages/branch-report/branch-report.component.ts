@@ -27,7 +27,7 @@ import {
   styleUrl: './branch-report.component.scss'
 })
 export class BranchReportComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly reportingService =
     inject(ReportingService);

@@ -52,7 +52,7 @@ import {
   styleUrl: './consultant-work-queue.component.scss'
 })
 export class ConsultantWorkQueueComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly appointmentService =
     inject(AppointmentService);

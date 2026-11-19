@@ -3,88 +3,83 @@
   <h1>My Schedule</h1>
 
   @for (
-    group of groupedAppointments();
-    track group[0]
+  group of groupedAppointments();
+  track group[0]
   ) {
 
-    <section class="schedule-day">
+  <section class="schedule-day">
 
-      <h2>
-        {{ group[0] }}
-      </h2>
+    <h2>
+      {{ group[0] }}
+    </h2>
 
-      <div class="appointments">
+    <div class="appointments">
 
-        @for (
-          appointment of group[1];
-          track appointment.id
-        ) {
+      @for (
+      appointment of group[1];
+      track appointment.id
+      ) {
 
-          <mat-card>
+      <mat-card>
 
-            <mat-card-title>
+        <mat-card-title>
 
-              {{ appointment.serviceName }}
+          {{ appointment.serviceName }}
 
-            </mat-card-title>
+        </mat-card-title>
 
-            <mat-card-content>
+        <mat-card-content>
 
-              <p>
+          <p>
 
-                <strong>Time:</strong>
+            <strong>Time:</strong>
 
-                {{ appointment.startTime }}
-                -
-                {{ appointment.endTime }}
+            {{ appointment.startTime }}
+            -
+            {{ appointment.endTime }}
 
-              </p>
+          </p>
 
-              <p>
+          <p>
 
-                <strong>Branch:</strong>
+            <strong>Branch:</strong>
 
-                {{ appointment.branchName }}
+            {{ appointment.branchName }}
 
-              </p>
+          </p>
 
-              <p>
+          <p>
 
-                <strong>Status:</strong>
+            <strong>Status:</strong>
 
-                <span
-                  class="status"
-                  [class.pending]="appointment.status === 'PENDING'"
-                  [class.confirmed]="appointment.status === 'CONFIRMED'"
-                  [class.completed]="appointment.status === 'COMPLETED'"
-                  [class.cancelled]="appointment.status === 'CANCELLED'">
+            <span class="status" [class.pending]="appointment.status === 'PENDING'"
+              [class.confirmed]="appointment.status === 'CONFIRMED'"
+              [class.completed]="appointment.status === 'COMPLETED'"
+              [class.cancelled]="appointment.status === 'CANCELLED'">
 
-                  {{ appointment.status }}
+              {{ appointment.status }}
 
-                </span>
+            </span>
 
-              </p>
+          </p>
 
-            </mat-card-content>
-            <a
-                mat-button
-                color="primary"
-                [routerLink]="[
+        </mat-card-content>
+        <a mat-button color="primary" [routerLink]="[
                 '/appointments',
                 appointment.id
             ]">
 
-                View Details
+          View Details
 
-            </a>
+        </a>
 
-          </mat-card>
+      </mat-card>
 
-        }
+      }
 
-      </div>
+    </div>
 
-    </section>
+  </section>
 
   }
 

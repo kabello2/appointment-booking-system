@@ -30,10 +30,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ConfirmDialogComponent }
-from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+  from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 import { AppointmentStatus }
-from '../../models/appointment-status.enum';
+  from '../../models/appointment-status.enum';
 
 @Component({
   selector: 'app-appointment-list',
@@ -42,249 +42,249 @@ from '../../models/appointment-status.enum';
     MatTableModule,
     RouterLink,
 
-  MatTableModule,
+    MatTableModule,
 
-  MatButtonModule,
+    MatButtonModule,
 
-  MatIconModule,
+    MatIconModule,
 
-  MatFormFieldModule,
-  MatInputModule
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './appointment-list.component.html'
 })
 export class AppointmentListComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly dialog = inject(MatDialog);
   private readonly appointmentService =
     inject(AppointmentService);
 
-readonly allAppointments =
-  signal<AppointmentResponse[]>([]);
+  readonly allAppointments =
+    signal<AppointmentResponse[]>([]);
 
-readonly appointments =
-  signal<AppointmentResponse[]>([]);
+  readonly appointments =
+    signal<AppointmentResponse[]>([]);
 
   displayedColumns = [
-  'appointmentNumber',
-  'appointmentDate',
-  'serviceName',
-  'consultantName',
-  'status',
-  'actions'
-];
+    'appointmentNumber',
+    'appointmentDate',
+    'serviceName',
+    'consultantName',
+    'status',
+    'actions'
+  ];
 
- ngOnInit(): void {
+  ngOnInit(): void {
 
-  this.loadAppointments();
+    this.loadAppointments();
 
-}
+  }
 
   private loadAppointments(): void {
 
-  this.appointmentService
-    .getAppointments()
-    .subscribe({
+    this.appointmentService
+      .getAppointments()
+      .subscribe({
 
-      next: appointments => {
+        next: appointments => {
 
-        this.allAppointments
-          .set(appointments);
+          this.allAppointments
+            .set(appointments);
 
-        this.appointments
-          .set(appointments);
+          this.appointments
+            .set(appointments);
 
-      }
+        }
 
-    });
+      });
 
-}
+  }
 
-filterAppointments(
-  event: Event
-): void {
+  filterAppointments(
+    event: Event
+  ): void {
 
-  const value =
-    (event.target as HTMLInputElement)
-      .value
-      .toLowerCase();
+    const value =
+      (event.target as HTMLInputElement)
+        .value
+        .toLowerCase();
 
-  const filtered =
-    this.allAppointments()
-      .filter(appointment =>
+    const filtered =
+      this.allAppointments()
+        .filter(appointment =>
 
-        appointment
-          .appointmentNumber
-          .toLowerCase()
-          .includes(value)
+          appointment
+            .appointmentNumber
+            .toLowerCase()
+            .includes(value)
 
-        ||
+          ||
 
-        appointment
-          .serviceName
-          .toLowerCase()
-          .includes(value)
+          appointment
+            .serviceName
+            .toLowerCase()
+            .includes(value)
 
-        ||
+          ||
 
-        appointment
-          .consultantName
-          ?.toLowerCase()
-          .includes(value)
+          appointment
+            .consultantName
+            ?.toLowerCase()
+            .includes(value)
 
+        );
+
+    this.appointments
+      .set(filtered);
+
+  }
+
+  confirmAppointment(
+    appointment: AppointmentResponse
+  ): void {
+
+    const dialogRef =
+      this.dialog.open(
+        ConfirmDialogComponent,
+        {
+          width: '400px',
+
+          data: {
+
+            title:
+              'Confirm Appointment',
+
+            message:
+              `Confirm appointment ${appointment.appointmentNumber}?`
+
+          }
+        }
       );
 
-  this.appointments
-    .set(filtered);
+    dialogRef
+      .afterClosed()
+      .subscribe(result => {
 
-}
-
-confirmAppointment(
-  appointment: AppointmentResponse
-): void {
-
-  const dialogRef =
-    this.dialog.open(
-      ConfirmDialogComponent,
-      {
-        width: '400px',
-
-        data: {
-
-          title:
-            'Confirm Appointment',
-
-          message:
-            `Confirm appointment ${appointment.appointmentNumber}?`
-
+        if (!result) {
+          return;
         }
-      }
-    );
 
-  dialogRef
-    .afterClosed()
-    .subscribe(result => {
+        this.appointmentService
+          .confirmAppointment(
+            appointment.id
+          )
+          .subscribe({
 
-      if (!result) {
-        return;
-      }
+            next: () => {
 
-      this.appointmentService
-        .confirmAppointment(
-          appointment.id
-        )
-        .subscribe({
+              this.loadAppointments();
 
-          next: () => {
+            }
 
-            this.loadAppointments();
+          });
+
+      });
+
+  }
+
+  completeAppointment(
+    appointment: AppointmentResponse
+  ): void {
+
+    const dialogRef =
+      this.dialog.open(
+        ConfirmDialogComponent,
+
+        {
+          width: '400px',
+
+          data: {
+
+            title:
+              'Complete Appointment',
+
+            message:
+              `Mark appointment ${appointment.appointmentNumber} as completed?`
 
           }
 
-        });
+        }
+      );
 
-    });
+    dialogRef
+      .afterClosed()
+      .subscribe(result => {
 
-}
-
-completeAppointment(
-  appointment: AppointmentResponse
-): void {
-
-  const dialogRef =
-    this.dialog.open(
-      ConfirmDialogComponent,
-
-      {
-        width: '400px',
-
-        data: {
-
-          title:
-            'Complete Appointment',
-
-          message:
-            `Mark appointment ${appointment.appointmentNumber} as completed?`
-
+        if (!result) {
+          return;
         }
 
-      }
-    );
+        this.appointmentService
+          .completeAppointment(
+            appointment.id
+          )
+          .subscribe({
 
-  dialogRef
-    .afterClosed()
-    .subscribe(result => {
+            next: () => {
 
-      if (!result) {
-        return;
-      }
+              this.loadAppointments();
 
-      this.appointmentService
-        .completeAppointment(
-          appointment.id
-        )
-        .subscribe({
+            }
 
-          next: () => {
+          });
 
-            this.loadAppointments();
+      });
+
+  }
+
+  cancelAppointment(
+    appointment: AppointmentResponse
+  ): void {
+
+    const dialogRef =
+      this.dialog.open(
+        ConfirmDialogComponent,
+        {
+          width: '400px',
+
+          data: {
+
+            title:
+              'Cancel Appointment',
+
+            message:
+              `Cancel appointment ${appointment.appointmentNumber}?`
 
           }
 
-        });
+        }
+      );
 
-    });
+    dialogRef
+      .afterClosed()
+      .subscribe(result => {
 
-}
-
-cancelAppointment(
-  appointment: AppointmentResponse
-): void {
-
-  const dialogRef =
-    this.dialog.open(
-      ConfirmDialogComponent,
-      {
-        width: '400px',
-
-        data: {
-
-          title:
-            'Cancel Appointment',
-
-          message:
-            `Cancel appointment ${appointment.appointmentNumber}?`
-
+        if (!result) {
+          return;
         }
 
-      }
-    );
+        this.appointmentService
+          .cancelAppointment(
+            appointment.id
+          )
+          .subscribe({
 
-  dialogRef
-    .afterClosed()
-    .subscribe(result => {
+            next: () => {
 
-      if (!result) {
-        return;
-      }
+              this.loadAppointments();
 
-      this.appointmentService
-        .cancelAppointment(
-          appointment.id
-        )
-        .subscribe({
+            }
 
-          next: () => {
+          });
 
-            this.loadAppointments();
+      });
 
-          }
-
-        });
-
-    });
-
-}
+  }
 
 }

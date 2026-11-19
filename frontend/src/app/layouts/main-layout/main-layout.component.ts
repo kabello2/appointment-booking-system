@@ -6,6 +6,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -24,16 +25,16 @@ export class MainLayoutComponent {
 
   private readonly router = inject(Router);
 
+  private readonly authService = inject(AuthService);
+
   logout(): void {
 
-  localStorage.removeItem('token');
+    localStorage.removeItem('token');
 
-  localStorage.removeItem('user');
+    localStorage.removeItem('user');
 
-  this.router.navigate([
-    '/login'
-  ]);
+    this.authService.logout();
 
-}
+  }
 
 }

@@ -39,7 +39,7 @@ import {
     './appointment-dashboard.component.scss'
 })
 export class AppointmentDashboardComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly appointmentService =
     inject(AppointmentService);

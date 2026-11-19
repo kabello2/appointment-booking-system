@@ -71,7 +71,7 @@ import { FormErrorUtils } from '../../../../shared/utils/form-error.utils';
   styleUrl: './appointment-create.component.scss'
 })
 export class AppointmentCreateComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly snackbar = inject(SnackbarService);
   private readonly fb = inject(FormBuilder);
@@ -130,20 +130,20 @@ implements OnInit {
     this.loadServices();
 
     Object.keys(this.form.controls)
-  .forEach(controlName => {
+      .forEach(controlName => {
 
-    this.form
-      .get(controlName)
-      ?.valueChanges
-      .subscribe(() => {
+        this.form
+          .get(controlName)
+          ?.valueChanges
+          .subscribe(() => {
 
-        FormErrorUtils.clearServerErrors(
-          this.form.get(controlName)
-        );
+            FormErrorUtils.clearServerErrors(
+              this.form.get(controlName)
+            );
+
+          });
 
       });
-
-  });
 
   }
 
@@ -173,32 +173,32 @@ implements OnInit {
 
   loadSlots(): void {
 
-  const branchId =
-    this.form.controls.branchId.value;
+    const branchId =
+      this.form.controls.branchId.value;
 
-  const appointmentDate =
-    this.form.controls.appointmentDate.value;
+    const appointmentDate =
+      this.form.controls.appointmentDate.value;
 
-  if (
-    !branchId ||
-    !appointmentDate
-  ) {
-    return;
-  }
+    if (
+      !branchId ||
+      !appointmentDate
+    ) {
+      return;
+    }
 
-  this.appointmentService
-    .getAvailableSlots(
-      branchId,
-      appointmentDate
-    )
-    .subscribe(slots => {
+    this.appointmentService
+      .getAvailableSlots(
+        branchId,
+        appointmentDate
+      )
+      .subscribe(slots => {
 
         this.availableSlots
           .set(slots);
 
       });
 
-}
+  }
 
 
   save(): void {
@@ -218,9 +218,9 @@ implements OnInit {
       .subscribe({
 
         next: () => {
-            this.snackbar.success(
-                'Appointment created successfully'
-            );
+          this.snackbar.success(
+            'Appointment created successfully'
+          );
 
 
           this.router.navigate([
@@ -229,12 +229,12 @@ implements OnInit {
 
         }, error: error => {
 
-  FormErrorUtils.applyServerErrors(
-    this.form,
-    error.error?.validationErrors ?? {}
-  );
+          FormErrorUtils.applyServerErrors(
+            this.form,
+            error.error?.validationErrors ?? {}
+          );
 
-}
+        }
 
       });
 

@@ -89,21 +89,21 @@ export class BranchCreateComponent {
 
   ngOnInit(): void {
     Object.keys(this.form.controls)
-  .forEach(controlName => {
+      .forEach(controlName => {
 
-    this.form
-      .get(controlName)
-      ?.valueChanges
-      .subscribe(() => {
+        this.form
+          .get(controlName)
+          ?.valueChanges
+          .subscribe(() => {
 
-        FormErrorUtils.clearServerErrors(
-          this.form.get(controlName)
-        );
+            FormErrorUtils.clearServerErrors(
+              this.form.get(controlName)
+            );
+
+          });
 
       });
-
-  });
-  }  
+  }
 
   save(): void {
 
@@ -122,9 +122,9 @@ export class BranchCreateComponent {
       .subscribe({
 
         next: () => {
-            this.snackbar.success(
-                'Branch created successfully'
-            );
+          this.snackbar.success(
+            'Branch created successfully'
+          );
 
 
           this.router.navigate([
@@ -133,12 +133,12 @@ export class BranchCreateComponent {
 
         }, error: error => {
 
-  FormErrorUtils.applyServerErrors(
-    this.form,
-    error.error?.validationErrors ?? {}
-  );
+          FormErrorUtils.applyServerErrors(
+            this.form,
+            error.error?.validationErrors ?? {}
+          );
 
-}
+        }
 
       });
 

@@ -10,9 +10,7 @@
         Service Code
       </mat-label>
 
-      <input
-        matInput
-        formControlName="serviceCode">
+      <input matInput formControlName="serviceCode">
 
     </mat-form-field>
 
@@ -22,9 +20,7 @@
         Service Name
       </mat-label>
 
-      <input
-        matInput
-        formControlName="name">
+      <input matInput formControlName="name">
 
     </mat-form-field>
 
@@ -34,10 +30,7 @@
         Description
       </mat-label>
 
-      <textarea
-        matInput
-        rows="4"
-        formControlName="description">
+      <textarea matInput rows="4" formControlName="description">
       </textarea>
 
     </mat-form-field>
@@ -48,18 +41,15 @@
         Duration (Minutes)
       </mat-label>
 
-      <input
-        type="number"
-        matInput
-        formControlName="durationMinutes">
+      <input type="number" matInput formControlName="durationMinutes">
 
       @if (form.controls.durationMinutes.hasError('min')) {
 
-        <mat-error>
+      <mat-error>
 
-          Duration must be at least 15 minutes
+        Duration must be at least 15 minutes
 
-        </mat-error>
+      </mat-error>
 
       }
 
@@ -67,21 +57,13 @@
 
     <div class="form-actions">
 
-      <button
-        type="button"
-        mat-stroked-button
-        (click)="cancel()">
+      <button type="button" mat-stroked-button (click)="cancel()">
 
         Cancel
 
       </button>
 
-      <button
-        type="button"
-        mat-raised-button
-        color="primary"
-        [disabled]="form.invalid"
-        (click)="save()">
+      <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
 
         Create Service
 

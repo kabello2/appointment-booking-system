@@ -2,10 +2,7 @@
 
   <h1>Branch Performance Report</h1>
 
-  <table
-    mat-table
-    [dataSource]="branches()"
-    class="mat-elevation-z2">
+  <table mat-table [dataSource]="branches()" class="mat-elevation-z2">
 
     <ng-container matColumnDef="branchCode">
 
@@ -49,14 +46,10 @@
 
     </ng-container>
 
-    <tr
-      mat-header-row
-      *matHeaderRowDef="displayedColumns">
+    <tr mat-header-row *matHeaderRowDef="displayedColumns">
     </tr>
 
-    <tr
-      mat-row
-      *matRowDef="
+    <tr mat-row *matRowDef="
         let row;
         columns: displayedColumns;
       ">

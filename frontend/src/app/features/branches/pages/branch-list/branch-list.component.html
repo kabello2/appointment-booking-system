@@ -2,10 +2,7 @@
 
   <h1>Branches</h1>
 
-  <button
-    mat-raised-button
-    color="primary"
-    routerLink="/branches/create">
+  <button mat-raised-button color="primary" routerLink="/branches/create">
 
     Create Branch
 
@@ -13,24 +10,17 @@
 
 </div>
 
-<mat-form-field
-  appearance="outline"
-  class="search-field">
+<mat-form-field appearance="outline" class="search-field">
 
   <mat-label>
     Search Branches
   </mat-label>
 
-  <input
-    matInput
-    placeholder="Search branch"
-    (input)="filterBranches($event)">
+  <input matInput placeholder="Search branch" (input)="filterBranches($event)">
 
 </mat-form-field>
 
-<table
-  mat-table
-  [dataSource]="branches()">
+<table mat-table [dataSource]="branches()">
 
   <ng-container matColumnDef="branchCode">
 
@@ -90,11 +80,11 @@
 
       @if (branch.active) {
 
-        Active
+      Active
 
       } @else {
 
-        Inactive
+      Inactive
 
       }
 
@@ -108,56 +98,46 @@
       Actions
     </th>
 
-  <ng-container matColumnDef="actions">
+    <ng-container matColumnDef="actions">
 
-  <th mat-header-cell *matHeaderCellDef>
+      <th mat-header-cell *matHeaderCellDef>
 
-    Actions
+        Actions
 
-  </th>
+      </th>
 
-  <td mat-cell *matCellDef="let branch">
+      <td mat-cell *matCellDef="let branch">
 
-    <button
-      mat-icon-button
-      color="primary"
-      [routerLink]="[
+        <button mat-icon-button color="primary" [routerLink]="[
         '/branches',
         branch.id,
         'edit'
       ]">
 
-      <mat-icon>
-        edit
-      </mat-icon>
+          <mat-icon>
+            edit
+          </mat-icon>
 
-    </button>
+        </button>
 
-    <button
-      mat-icon-button
-      color="warn"
-      (click)="deleteBranch(branch)">
+        <button mat-icon-button color="warn" (click)="deleteBranch(branch)">
 
-      <mat-icon>
-        delete
-      </mat-icon>
+          <mat-icon>
+            delete
+          </mat-icon>
 
-    </button>
+        </button>
 
-  </td>
+      </td>
 
-</ng-container>
+    </ng-container>
 
   </ng-container>
 
-  <tr
-    mat-header-row
-    *matHeaderRowDef="displayedColumns">
+  <tr mat-header-row *matHeaderRowDef="displayedColumns">
   </tr>
 
-  <tr
-    mat-row
-    *matRowDef="
+  <tr mat-row *matRowDef="
       let row;
       columns: displayedColumns;
     ">

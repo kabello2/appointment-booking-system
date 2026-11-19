@@ -58,7 +58,7 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
     './appointment-reschedule.component.scss'
 })
 export class AppointmentRescheduleComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly snackbar = inject(SnackbarService);
   private readonly fb =
@@ -122,9 +122,9 @@ implements OnInit {
       .subscribe({
 
         next: () => {
-            this.snackbar.success(
-                'User created successfully'
-            );
+          this.snackbar.success(
+            'User created successfully'
+          );
 
 
           this.router.navigate([

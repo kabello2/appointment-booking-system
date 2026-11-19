@@ -29,7 +29,7 @@ import {
     './notification-dashboard.component.scss'
 })
 export class NotificationDashboardComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly notificationService =
     inject(NotificationService);

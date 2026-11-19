@@ -49,7 +49,7 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
   styleUrl: './user-edit.component.scss'
 })
 export class UserEditComponent
-implements OnInit {
+  implements OnInit {
 
   private readonly snackbar = inject(SnackbarService);
   private readonly fb =
@@ -105,49 +105,49 @@ implements OnInit {
 
     });
 
-ngOnInit(): void {
+  ngOnInit(): void {
 
-  this.userId =
-    this.route.snapshot.params['id'];
+    this.userId =
+      this.route.snapshot.params['id'];
 
-  this.loadUser();
+    this.loadUser();
 
-}
+  }
 
-private loadUser(): void {
+  private loadUser(): void {
 
-  this.userService
-    .getUserById(
-      this.userId
-    )
-    .subscribe({
+    this.userService
+      .getUserById(
+        this.userId
+      )
+      .subscribe({
 
-      next: user => {
+        next: user => {
 
-        this.form.patchValue({
+          this.form.patchValue({
 
-          firstName:
-            user.firstName,
+            firstName:
+              user.firstName,
 
-          lastName:
-            user.lastName,
+            lastName:
+              user.lastName,
 
-          email:
-            user.email,
+            email:
+              user.email,
 
-          phoneNumber:
-            user.phoneNumber,
+            phoneNumber:
+              user.phoneNumber,
 
-          role:
-            user.role
+            role:
+              user.role
 
-        });
+          });
 
-      }
+        }
 
-    });
+      });
 
-}
+  }
 
   save(): void {
 
@@ -169,9 +169,9 @@ private loadUser(): void {
         next: () => {
 
 
-            this.snackbar.success(
-                'User updated successfully'
-            );
+          this.snackbar.success(
+            'User updated successfully'
+          );
           this.router.navigate([
             '/users'
           ]);
