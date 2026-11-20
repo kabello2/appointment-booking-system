@@ -78,7 +78,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/{appointmentId}")
-    @PreAuthorize("hasAuthority('APPOINTMENT_VIEW')")
+    @PreAuthorize("hasAnyAuthority('APPOINTMENT_VIEW','APPOINTMENT_VIEW_OWN')")
     public ResponseEntity<AppointmentResponse> getAppointment(@PathVariable UUID appointmentId) {
 
         return ResponseEntity.ok(appointmentService.getAppointment(appointmentId));
