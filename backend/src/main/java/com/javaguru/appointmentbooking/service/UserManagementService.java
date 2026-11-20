@@ -45,6 +45,8 @@ public class UserManagementService {
 
         User user = new User();
 
+        user.setRole(request.role());
+
         if (request.role() == Role.ROLE_CONSULTANT) {
 
             Branch branch = branchRepository.findById(request.branchId())
@@ -76,6 +78,21 @@ public class UserManagementService {
                 userRepository.save(user);
 
         return mapToResponse(saved);
+    }
+
+    @Transactional
+    public void enableUser(UUID userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new UserNotFoundException(
+                                "User not found."
+                        )
+                );
+
+        user.setEnabled(true);
+
+        userRepository.save(user);
     }
 
     @Transactional

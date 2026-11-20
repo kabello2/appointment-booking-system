@@ -63,7 +63,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasAuthority('USER_DELETE')")
-    public ResponseEntity<Void> disableUser(
+    public ResponseEntity<Void> deleteUser(
             @PathVariable UUID userId) {
 
         userManagementService.disableUser(userId);
@@ -75,5 +75,25 @@ public class UserController {
             Authentication authentication) {
 
         return ResponseEntity.ok(userManagementService.getUserByEmail(authentication.getName()));
+    }
+
+
+    @PatchMapping("/{userId}/disable")
+    @PreAuthorize("hasAuthority('USER_UPDATE')")
+    public ResponseEntity<Void> disableUser(
+            @PathVariable UUID userId) {
+
+        userManagementService.disableUser(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @PatchMapping("/{userId}/enable")
+    @PreAuthorize("hasAuthority('USER_UPDATE')")
+    public ResponseEntity<Void>enableUser(
+            @PathVariable UUID userId) {
+
+        userManagementService.enableUser(userId);
+        return ResponseEntity.noContent().build();
     }
 }
