@@ -16,15 +16,6 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
   },
 
   {
-    label: 'Appointments',
-    route: '/appointments',
-    icon: 'event',
-    roles: [
-      'ROLE_ADMIN'
-    ]
-  },
-
-  {
     label: 'Users',
     route: '/users',
     icon: 'group',

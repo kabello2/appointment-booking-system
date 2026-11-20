@@ -25,6 +25,8 @@ import {
   AppointmentResponse
 } from '../../models/appointment-response.model';
 
+import { AppointmentStateService } from '../../services/appointment-state.service';
+
 @Component({
   selector: 'app-appointment-dashboard',
   standalone: true,
@@ -40,6 +42,11 @@ import {
 })
 export class AppointmentDashboardComponent
   implements OnInit {
+
+  private readonly appointmentState =
+    inject(
+      AppointmentStateService
+    );
 
   private readonly appointmentService =
     inject(AppointmentService);
@@ -101,6 +108,10 @@ export class AppointmentDashboardComponent
         next: appointments => {
 
           this.upcomingAppointments
+            .set(appointments);
+
+          this.appointmentState
+            .appointments
             .set(appointments);
 
         }

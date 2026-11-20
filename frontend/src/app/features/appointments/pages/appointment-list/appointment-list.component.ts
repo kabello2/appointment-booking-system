@@ -32,8 +32,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent }
   from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
-import { AppointmentStatus }
-  from '../../models/appointment-status.enum';
+import { AppointmentStateService } from '../../services/appointment-state.service';
+
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-appointment-list',
@@ -57,6 +58,9 @@ export class AppointmentListComponent
   implements OnInit {
 
   private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
+  private readonly appointmentState =
+    inject(AppointmentStateService);
   private readonly appointmentService =
     inject(AppointmentService);
 
@@ -83,21 +87,60 @@ export class AppointmentListComponent
 
   private loadAppointments(): void {
 
+    const cachedAppointments =
+      this.appointmentState
+        .appointments();
+
+    if (cachedAppointments.length > 0) {
+
+      this.allAppointments.set(
+        cachedAppointments
+      );
+
+      this.appointments.set(
+        cachedAppointments
+      );
+
+      return;
+
+    }
+
     this.appointmentService
       .getAppointments()
       .subscribe({
 
         next: appointments => {
 
-          this.allAppointments
-            .set(appointments);
+          this.allAppointments.set(
+            appointments
+          );
 
-          this.appointments
+          this.appointments.set(
+            appointments
+          );
+
+          this.appointmentState
+            .appointments
             .set(appointments);
 
         }
 
       });
+
+  }
+
+  viewAppointment(
+    appointment: AppointmentResponse
+  ): void {
+
+    this.appointmentState
+      .selectedAppointment
+      .set(appointment);
+
+    this.router.navigate([
+      '/appointments',
+      appointment.id
+    ]);
 
   }
 

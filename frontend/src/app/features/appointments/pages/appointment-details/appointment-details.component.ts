@@ -37,6 +37,7 @@ import { RouterLink } from '@angular/router';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { Location }
   from '@angular/common';
+import { AppointmentStateService } from '../../services/appointment-state.service';
 
 
 @Component({
@@ -67,6 +68,8 @@ export class AppointmentDetailsComponent
   private readonly appointmentService =
     inject(AppointmentService);
 
+  private readonly appointmentState = inject(AppointmentStateService);
+
   readonly appointment =
     signal<AppointmentResponse | null>(
       null
@@ -85,8 +88,49 @@ export class AppointmentDetailsComponent
 
   private loadAppointment(): void {
 
+    const selectedAppointment =
+      this.appointmentState
+        .selectedAppointment();
+
+    if (
+      selectedAppointment &&
+      selectedAppointment.id ===
+      this.appointmentId
+    ) {
+
+      this.appointment.set(
+        selectedAppointment
+      );
+
+      return;
+
+    }
+
+    const cachedAppointment =
+      this.appointmentState
+        .findAppointment(
+          this.appointmentId
+        );
+
+    if (cachedAppointment) {
+
+      this.appointment.set(
+        cachedAppointment
+      );
+
+      this.appointmentState
+        .selectAppointment(
+          cachedAppointment
+        );
+
+      return;
+
+    }
+
     this.appointmentService
-      .getAppointment(this.appointmentId)
+      .getAppointment(
+        this.appointmentId
+      )
       .subscribe({
 
         next: appointment => {
@@ -94,6 +138,11 @@ export class AppointmentDetailsComponent
           this.appointment.set(
             appointment
           );
+
+          this.appointmentState
+            .selectAppointment(
+              appointment
+            );
 
         }
 
@@ -245,12 +294,6 @@ export class AppointmentDetailsComponent
     this.router.navigate([
       '/appointments'
     ]);
-
-  }
-
-  goBack(): void {
-
-    this.location.back();
 
   }
 
