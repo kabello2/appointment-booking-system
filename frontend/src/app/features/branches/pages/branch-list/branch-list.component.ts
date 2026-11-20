@@ -65,21 +65,22 @@ import {
 import {
   MatTableDataSource
 } from '@angular/material/table';
+import { BranchStateService } from '../../services/branch-state.service';
 
 @Component({
   selector: 'app-branch-list',
   standalone: true,
   imports: [
-    
-  RouterLink,
-  MatTableModule,
-  MatButtonModule,
-  MatIconModule,
-  MatDialogModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatPaginatorModule,
-  MatSortModule
+
+    RouterLink,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   templateUrl: './branch-list.component.html',
   styleUrl: './branch-list.component.scss'
@@ -88,16 +89,17 @@ export class BranchListComponent
   implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator)
-paginator!: MatPaginator;
+  paginator!: MatPaginator;
 
-@ViewChild(MatSort)
-sort!: MatSort;
+  @ViewChild(MatSort)
+  sort!: MatSort;
 
   private readonly branchService = inject(BranchService);
+  private readonly branchState = inject(BranchStateService);
   private readonly dialog = inject(MatDialog);
 
   readonly dataSource =
-  new MatTableDataSource<BranchResponse>();
+    new MatTableDataSource<BranchResponse>();
 
   displayedColumns = [
     'branchCode',
@@ -116,23 +118,36 @@ sort!: MatSort;
 
   ngAfterViewInit(): void {
 
-  this.dataSource.paginator =
-    this.paginator;
+    this.dataSource.paginator =
+      this.paginator;
 
-  this.dataSource.sort =
-    this.sort;
+    this.dataSource.sort =
+      this.sort;
 
-}
+  }
 
   private loadBranches(): void {
+
+    const cachedBranches = this.branchState.branches();
+
+    if (cachedBranches.length > 0) {
+      this.dataSource.data =
+        cachedBranches;
+
+      return;
+    }
 
     this.branchService
       .getBranches()
       .subscribe({
 
         next: branches => {
-this.dataSource.data =
-  branches;
+          this.dataSource.data =
+            branches;
+
+          this.branchState
+            .branches
+            .set(branches);
 
         }
 
@@ -145,13 +160,13 @@ this.dataSource.data =
   ): void {
 
     const filterValue =
-    (event.target as HTMLInputElement)
-      .value;
+      (event.target as HTMLInputElement)
+        .value;
 
-  this.dataSource.filter =
-    filterValue
-      .trim()
-      .toLowerCase();
+    this.dataSource.filter =
+      filterValue
+        .trim()
+        .toLowerCase();
 
   }
 

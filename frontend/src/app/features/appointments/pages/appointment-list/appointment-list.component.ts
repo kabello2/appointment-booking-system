@@ -221,7 +221,7 @@ export class AppointmentListComponent
 
             next: () => {
 
-              this.loadAppointments();
+              this.appointmentState.updateAppointment(appointment);
 
             }
 
@@ -271,7 +271,7 @@ export class AppointmentListComponent
 
             next: () => {
 
-              this.loadAppointments();
+              this.appointmentState.updateAppointment(appointment);
 
             }
 
@@ -320,7 +320,7 @@ export class AppointmentListComponent
 
             next: () => {
 
-              this.loadAppointments();
+              this.appointmentState.updateAppointment(appointment);
 
             }
 

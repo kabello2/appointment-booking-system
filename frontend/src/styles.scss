@@ -1,12 +1,447 @@
 @use '@angular/material' as mat;
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+/* =====================================================
+   APPLICATION THEME
+===================================================== */
+
+:root {
+
+  /* Brand */
+
+  --primary: #0057b8;
+  --primary-hover: #00479a;
+
+  --secondary: #00a3a3;
+
+  /* Status Colors */
+
+  --booked: #0288d1;
+  --confirmed: #2e7d32;
+  --completed: #1976d2;
+  --rescheduled: #f57c00;
+  --cancelled: #d32f2f;
+
+  /* Layout */
+
+  --background: #f5f7fa;
+  --surface: #ffffff;
+
+  --border: #e5e7eb;
+
+  /* Text */
+
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+
+  /* Effects */
+
+  --shadow:
+    0 2px 10px
+    rgba(
+      0,
+      0,
+      0,
+      0.08
+    );
+
+  --radius: 12px;
+
 }
 
-* {
-  box-sizing: border-box;
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+html,
+body {
+
+  height: 100%;
+
+}
+
+body {
+
+  margin: 0;
+
+  background:
+    var(--background);
+
+  color:
+    var(--text-primary);
+
+  font-family:
+    Roboto,
+    "Helvetica Neue",
+    sans-serif;
+
+}
+
+/* =====================================================
+   PAGE LAYOUT
+===================================================== */
+
+.page-container {
+
+  padding: 1.5rem;
+
+}
+
+.page-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 1.5rem;
+
+}
+
+.page-title {
+
+  margin: 0;
+
+  font-size: 2rem;
+
+  font-weight: 600;
+
+}
+
+/* =====================================================
+   FORMS
+===================================================== */
+
+.form-card {
+
+  background: var(--surface);
+
+  border-radius: 12px;
+
+  box-shadow: var(--shadow);
+
+  padding: 2rem;
+
+}
+
+mat-form-field {
+
+  width: 100%;
+
+}
+
+/* =====================================================
+   TABLES
+===================================================== */
+
+table {
+
+  width: 100%;
+
+  background:
+    var(--surface);
+
+}
+
+.mat-mdc-header-row {
+
+  background:
+    #f8fafc;
+
+}
+
+.mat-mdc-header-cell {
+
+  font-weight: 600;
+
+}
+
+.mat-mdc-row:hover {
+
+  background:
+    rgba(
+      0,
+      87,
+      184,
+      0.04
+    );
+
+}
+
+mat-paginator {
+
+  background:
+    var(--surface);
+
+}
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search-field {
+
+  width: 400px;
+
+  margin-bottom: 1rem;
+
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.active-link {
+
+  background:
+    rgba(
+      0,
+      87,
+      184,
+      0.12
+    );
+
+  border-left:
+    4px solid
+    var(--primary);
+
+  color:
+    var(--primary);
+
+  font-weight: 600;
+
+}
+
+/* =====================================================
+   STATUS CHIPS
+===================================================== */
+
+.status-chip {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-width: 110px;
+
+  padding: .45rem .9rem;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+}
+
+.pending {
+
+  background: #f9a825;
+
+}
+
+.confirmed {
+
+  background: var(--confirmed);
+
+}
+
+.completed {
+
+  background: var(--completed);
+
+}
+
+.rescheduled {
+
+  background: var(--rescheduled);
+
+}
+
+.cancelled {
+
+  background: var(--cancelled);
+
+}
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.dashboard-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(
+        250px,
+        1fr
+      )
+    );
+
+  gap: 1rem;
+
+}
+
+.dashboard-card {
+
+  background: white;
+
+  border-radius: 12px;
+
+  padding: 1.5rem;
+
+  box-shadow: var(--shadow);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+
+}
+
+.dashboard-card:hover {
+
+  transform:
+    translateY(-3px);
+
+}
+
+.dashboard-title {
+
+  font-size: .95rem;
+
+  color: var(--text-secondary);
+
+  text-transform: uppercase;
+
+  letter-spacing: .05rem;
+
+}
+
+.dashboard-value {
+
+  font-size: 2.5rem;
+
+  font-weight: 700;
+
+  margin-top: .75rem;
+
+}
+
+/* =====================================================
+   DASHBOARD CARD COLORS
+===================================================== */
+
+.dashboard-booked {
+
+  border-left:
+    6px solid
+    var(--booked);
+
+}
+
+.dashboard-confirmed {
+
+  border-left:
+    6px solid
+    var(--confirmed);
+
+}
+
+.dashboard-completed {
+
+  border-left:
+    6px solid
+    var(--completed);
+
+}
+
+.dashboard-rescheduled {
+
+  border-left:
+    6px solid
+    var(--rescheduled);
+
+}
+
+.dashboard-cancelled {
+
+  border-left:
+    6px solid
+    var(--cancelled);
+
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.mat-mdc-raised-button.mat-primary {
+
+  background:
+    var(--primary);
+
+}
+
+.mat-mdc-raised-button.mat-primary:hover {
+
+  background:
+    var(--primary-hover);
+
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (
+  max-width: 768px
+) {
+
+  .page-header {
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 1rem;
+
+  }
+
+  .search-field {
+
+    width: 100%;
+
+  }
+
+}
+
+.form-actions {
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 1rem;
+
+  margin-top: 2rem;
+
+}
+
+.mat-mdc-raised-button.mat-primary {
+
+  background: var(--primary) !important;
+
+  color: white !important;
+
+}
+
+.mat-mdc-raised-button.mat-primary:hover {
+
+  filter: brightness(95%);
+
 }

@@ -35,6 +35,7 @@ import {
   UserService
 } from '../../services/user.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { UserStateService } from '../../services/user-state.service';
 @Component({
   selector: 'app-user-edit',
   standalone: true,
@@ -63,6 +64,8 @@ export class UserEditComponent
 
   private readonly userService =
     inject(UserService);
+  
+  private readonly userState = inject(UserStateService);
 
   private userId!: string;
 

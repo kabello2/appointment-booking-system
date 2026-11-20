@@ -1,79 +1,94 @@
-<h1>Reporting Dashboard</h1>
+<div class="page-container">
 
-@if (report(); as report) {
+  <div class="page-header">
 
-<div class="dashboard-grid">
+    <h1 class="page-title">
+      Reporting Dashboard
+    </h1>
 
-  <mat-card>
+  </div>
 
-    <mat-card-title>
-      Booked
-    </mat-card-title>
+  @if (report(); as report) {
 
-    <mat-card-content>
+  <div class="dashboard-grid">
 
-      {{ report.booked }}
+    <div class="
+          dashboard-card
+          dashboard-booked
+        ">
 
-    </mat-card-content>
+      <div class="dashboard-title">
+        Booked
+      </div>
 
-  </mat-card>
+      <div class="dashboard-value">
+        {{ report.booked }}
+      </div>
 
-  <mat-card>
+    </div>
 
-    <mat-card-title>
-      Confirmed
-    </mat-card-title>
+    <div class="
+          dashboard-card
+          dashboard-confirmed
+        ">
 
-    <mat-card-content>
+      <div class="dashboard-title">
+        Confirmed
+      </div>
 
-      {{ report.confirmed }}
+      <div class="dashboard-value">
+        {{ report.confirmed }}
+      </div>
 
-    </mat-card-content>
+    </div>
 
-  </mat-card>
+    <div class="
+          dashboard-card
+          dashboard-completed
+        ">
 
-  <mat-card>
+      <div class="dashboard-title">
+        Completed
+      </div>
 
-    <mat-card-title>
-      Completed
-    </mat-card-title>
+      <div class="dashboard-value">
+        {{ report.completed }}
+      </div>
 
-    <mat-card-content>
+    </div>
 
-      {{ report.completed }}
+    <div class="
+          dashboard-card
+          dashboard-cancelled
+        ">
 
-    </mat-card-content>
+      <div class="dashboard-title">
+        Cancelled
+      </div>
 
-  </mat-card>
+      <div class="dashboard-value">
+        {{ report.cancelled }}
+      </div>
 
-  <mat-card>
+    </div>
 
-    <mat-card-title>
-      Cancelled
-    </mat-card-title>
+    <div class="
+          dashboard-card
+          dashboard-rescheduled
+        ">
 
-    <mat-card-content>
+      <div class="dashboard-title">
+        Rescheduled
+      </div>
 
-      {{ report.cancelled }}
+      <div class="dashboard-value">
+        {{ report.rescheduled }}
+      </div>
 
-    </mat-card-content>
+    </div>
 
-  </mat-card>
+  </div>
 
-  <mat-card>
-
-    <mat-card-title>
-      Rescheduled
-    </mat-card-title>
-
-    <mat-card-content>
-
-      {{ report.rescheduled }}
-
-    </mat-card-content>
-
-  </mat-card>
+  }
 
 </div>
-
-}

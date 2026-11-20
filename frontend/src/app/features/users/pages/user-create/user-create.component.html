@@ -1,258 +1,261 @@
 <h1>Create User</h1>
 
-<form [formGroup]="form">
+<div class="form-card">
+  
+  <form [formGroup]="form">
 
-  <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline">
 
-    <mat-label>
-      First Name
-    </mat-label>
+      <mat-label>
+        First Name
+      </mat-label>
 
-    <input matInput formControlName="firstName">
+      <input matInput formControlName="firstName">
 
-    @if(form.controls.firstName.touched &&
-    form.controls.firstName.hasError('required')) {
+      @if(form.controls.firstName.touched &&
+      form.controls.firstName.hasError('required')) {
 
-    <mat-error>
-      First name is required
-    </mat-error>
-    }
+      <mat-error>
+        First name is required
+      </mat-error>
+      }
 
-  </mat-form-field>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline">
 
-    <mat-label>
-      Last Name
-    </mat-label>
+      <mat-label>
+        Last Name
+      </mat-label>
 
-    <input matInput formControlName="lastName">
+      <input matInput formControlName="lastName">
 
-    @if(form.controls.lastName.touched &&
-    form.controls.lastName.hasError('required')) {
+      @if(form.controls.lastName.touched &&
+      form.controls.lastName.hasError('required')) {
 
-    <mat-error>
-      Last name is required
-    </mat-error>
-    }
+      <mat-error>
+        Last name is required
+      </mat-error>
+      }
 
-  </mat-form-field>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline">
 
-    <mat-label>
-      Email
-    </mat-label>
+      <mat-label>
+        Email
+      </mat-label>
 
-    <input matInput formControlName="email">
+      <input matInput formControlName="email">
 
-    @if(form.controls.email.touched &&
-    form.controls.email.hasError('required')) {
+      @if(form.controls.email.touched &&
+      form.controls.email.hasError('required')) {
 
-    <mat-error>
-      Email is required
-    </mat-error>
-    }
+      <mat-error>
+        Email is required
+      </mat-error>
+      }
 
-    @if(form.controls.email.touched &&
-    form.controls.email.hasError('email')) {
+      @if(form.controls.email.touched &&
+      form.controls.email.hasError('email')) {
 
-    <mat-error>
-      Invalid email address
-    </mat-error>
-
-    }
-
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-
-    <mat-label>
-      Phone Number
-    </mat-label>
-
-    <input matInput formControlName="phoneNumber">
-
-    @if(form.controls.phoneNumber.touched &&
-    form.controls.phoneNumber.hasError('required')) {
-
-    <mat-error>
-      Phone number is required
-    </mat-error>
-
-    }
-
-    @if(form.controls.phoneNumber.touched &&
-    form.controls.phoneNumber.hasError('pattern')) {
-
-    <mat-error>
-      Format must be +27821234567
-    </mat-error>
-
-    }
-
-
-    @if(form.controls.phoneNumber.getError('server')) {
-
-    <mat-error>
-
-      {{ form.controls.phoneNumber.getError('server') }}
-
-    </mat-error>
-
-    }
-
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-
-    <mat-label>
-      Role
-    </mat-label>
-
-    <mat-select formControlName="role">
-
-      @for (
-      role of roles;
-      track role.value
-      ) {
-
-      <mat-option [value]="role.value">
-
-        {{ role.label }}
-
-      </mat-option>
+      <mat-error>
+        Invalid email address
+      </mat-error>
 
       }
 
-    </mat-select>
+    </mat-form-field>
 
-    @if(form.controls.email.touched &&
-    form.controls.role.hasError('required')) {
-    <mat-error>
-      Role is required
-    </mat-error>
+    <mat-form-field appearance="outline">
 
-    }
+      <mat-label>
+        Phone Number
+      </mat-label>
 
-  </mat-form-field>
+      <input matInput formControlName="phoneNumber">
 
-  @if (
-  form.controls.role.value ===
-  'ROLE_CONSULTANT'
-  ) {
+      @if(form.controls.phoneNumber.touched &&
+      form.controls.phoneNumber.hasError('required')) {
 
-  <mat-form-field appearance="outline">
-
-    <mat-label>
-      Branch
-    </mat-label>
-
-    <mat-select formControlName="branchId">
-
-      @for (
-      branch of branches();
-      track branch.id
-      ) {
-
-      <mat-option [value]="branch.id">
-
-        {{ branch.name }}
-
-      </mat-option>
+      <mat-error>
+        Phone number is required
+      </mat-error>
 
       }
 
-    </mat-select>
+      @if(form.controls.phoneNumber.touched &&
+      form.controls.phoneNumber.hasError('pattern')) {
 
-    @if (form.controls.email.touched &&
-    form.controls.branchId.hasError(
-    'required'
-    )
+      <mat-error>
+        Format must be +27821234567
+      </mat-error>
+
+      }
+
+
+      @if(form.controls.phoneNumber.getError('server')) {
+
+      <mat-error>
+
+        {{ form.controls.phoneNumber.getError('server') }}
+
+      </mat-error>
+
+      }
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Role
+      </mat-label>
+
+      <mat-select formControlName="role">
+
+        @for (
+        role of roles;
+        track role.value
+        ) {
+
+        <mat-option [value]="role.value">
+
+          {{ role.label }}
+
+        </mat-option>
+
+        }
+
+      </mat-select>
+
+      @if(form.controls.email.touched &&
+      form.controls.role.hasError('required')) {
+      <mat-error>
+        Role is required
+      </mat-error>
+
+      }
+
+    </mat-form-field>
+
+    @if (
+    form.controls.role.value ===
+    'ROLE_CONSULTANT'
     ) {
 
-    <mat-error>
+    <mat-form-field appearance="outline">
 
-      Branch is required
+      <mat-label>
+        Branch
+      </mat-label>
 
-    </mat-error>
+      <mat-select formControlName="branchId">
 
-    }
+        @for (
+        branch of branches();
+        track branch.id
+        ) {
 
-  </mat-form-field>
+        <mat-option [value]="branch.id">
 
-  }
+          {{ branch.name }}
 
-  <mat-form-field appearance="outline">
+        </mat-option>
 
-    <mat-label>
-      Password
-    </mat-label>
+        }
 
-    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+      </mat-select>
 
-    <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+      @if (form.controls.email.touched &&
+      form.controls.branchId.hasError(
+      'required'
+      )
+      ) {
 
-      <mat-icon>
+      <mat-error>
 
-        {{ hidePassword ? 'visibility' : 'visibility_off' }}
+        Branch is required
 
-      </mat-icon>
+      </mat-error>
 
-    </button>
+      }
 
-
-    @if(form.controls.email.touched &&
-    form.controls.password.hasError('required')) {
-
-    <mat-error>
-      Password is required
-    </mat-error>
-
-    }
-
-    @if(form.controls.email.touched &&
-    form.controls.password.hasError('pattern')) {
-
-    <mat-error>
-
-      Password must contain:
-      uppercase,
-      lowercase,
-      number,
-      special character
-      and be at least 8 characters
-
-    </mat-error>
+    </mat-form-field>
 
     }
 
-    @if(form.controls.password.getError('server')) {
+    <mat-form-field appearance="outline">
 
-    <mat-error>
+      <mat-label>
+        Password
+      </mat-label>
 
-      {{ form.controls.password.getError('server') }}
+      <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
 
-    </mat-error>
+      <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
 
-    }
+        <mat-icon>
 
-  </mat-form-field>
+          {{ hidePassword ? 'visibility' : 'visibility_off' }}
 
-  <div class="form-actions">
+        </mat-icon>
 
-    <button type="button" mat-stroked-button (click)="cancel()">
+      </button>
 
-      Cancel
 
-    </button>
+      @if(form.controls.email.touched &&
+      form.controls.password.hasError('required')) {
 
-    <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
+      <mat-error>
+        Password is required
+      </mat-error>
 
-      Create User
+      }
 
-    </button>
+      @if(form.controls.email.touched &&
+      form.controls.password.hasError('pattern')) {
 
-  </div>
+      <mat-error>
 
-</form>
+        Password must contain:
+        uppercase,
+        lowercase,
+        number,
+        special character
+        and be at least 8 characters
+
+      </mat-error>
+
+      }
+
+      @if(form.controls.password.getError('server')) {
+
+      <mat-error>
+
+        {{ form.controls.password.getError('server') }}
+
+      </mat-error>
+
+      }
+
+    </mat-form-field>
+
+    <div class="form-actions">
+
+      <button type="button" mat-stroked-button (click)="cancel()">
+
+        Cancel
+
+      </button>
+
+      <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
+
+        Save
+
+      </button>
+
+    </div>
+
+  </form>
+</div>

@@ -2,130 +2,135 @@
 
   <h1>Edit Branch</h1>
 
-  <form [formGroup]="form">
 
-    <mat-form-field appearance="outline">
+  <div class="form-card">
 
-      <mat-label>
-        Branch Code
-      </mat-label>
+    <form [formGroup]="form">
 
-      <input matInput formControlName="branchCode">
+      <mat-form-field appearance="outline">
 
-      @if (form.controls.branchCode.hasError('required')) {
+        <mat-label>
+          Branch Code
+        </mat-label>
 
-      <mat-error>
-        Branch code is required
-      </mat-error>
+        <input matInput formControlName="branchCode">
 
-      }
+        @if (form.controls.branchCode.hasError('required')) {
 
-    </mat-form-field>
+        <mat-error>
+          Branch code is required
+        </mat-error>
 
-    <mat-form-field appearance="outline">
+        }
 
-      <mat-label>
-        Branch Name
-      </mat-label>
+      </mat-form-field>
 
-      <input matInput formControlName="name">
+      <mat-form-field appearance="outline">
 
-      @if (form.controls.name.hasError('required')) {
+        <mat-label>
+          Branch Name
+        </mat-label>
 
-      <mat-error>
-        Branch name is required
-      </mat-error>
+        <input matInput formControlName="name">
 
-      }
+        @if (form.controls.name.hasError('required')) {
 
-    </mat-form-field>
+        <mat-error>
+          Branch name is required
+        </mat-error>
 
-    <mat-form-field appearance="outline">
+        }
 
-      <mat-label>
-        Address Line 1
-      </mat-label>
+      </mat-form-field>
 
-      <input matInput formControlName="addressLine1">
+      <mat-form-field appearance="outline">
 
-    </mat-form-field>
+        <mat-label>
+          Address Line 1
+        </mat-label>
 
-    <mat-form-field appearance="outline">
+        <input matInput formControlName="addressLine1">
 
-      <mat-label>
-        Address Line 2
-      </mat-label>
+      </mat-form-field>
 
-      <input matInput formControlName="addressLine2">
+      <mat-form-field appearance="outline">
 
-    </mat-form-field>
+        <mat-label>
+          Address Line 2
+        </mat-label>
 
-    <mat-form-field appearance="outline">
+        <input matInput formControlName="addressLine2">
 
-      <mat-label>
-        Suburb
-      </mat-label>
+      </mat-form-field>
 
-      <input matInput formControlName="suburb">
+      <mat-form-field appearance="outline">
 
-    </mat-form-field>
+        <mat-label>
+          Suburb
+        </mat-label>
 
-    <mat-form-field appearance="outline">
+        <input matInput formControlName="suburb">
 
-      <mat-label>
-        City
-      </mat-label>
+      </mat-form-field>
 
-      <input matInput formControlName="city">
+      <mat-form-field appearance="outline">
 
-    </mat-form-field>
+        <mat-label>
+          City
+        </mat-label>
 
-    <mat-form-field appearance="outline">
+        <input matInput formControlName="city">
 
-      <mat-label>
-        Province
-      </mat-label>
+      </mat-form-field>
 
-      <input matInput formControlName="province">
+      <mat-form-field appearance="outline">
 
-    </mat-form-field>
+        <mat-label>
+          Province
+        </mat-label>
 
-    <mat-form-field appearance="outline">
+        <input matInput formControlName="province">
 
-      <mat-label>
-        Postal Code
-      </mat-label>
+      </mat-form-field>
 
-      <input matInput formControlName="postalCode">
+      <mat-form-field appearance="outline">
 
-    </mat-form-field>
+        <mat-label>
+          Postal Code
+        </mat-label>
 
-    <mat-form-field appearance="outline">
+        <input matInput formControlName="postalCode">
 
-      <mat-label>
-        Contact Number
-      </mat-label>
+      </mat-form-field>
 
-      <input matInput formControlName="contactNumber">
+      <mat-form-field appearance="outline">
 
-    </mat-form-field>
+        <mat-label>
+          Contact Number
+        </mat-label>
 
-    <div class="form-actions">
+        <input matInput formControlName="contactNumber">
 
-      <button type="button" mat-stroked-button (click)="cancel()">
+      </mat-form-field>
 
-        Cancel
+      <div class="form-actions">
 
-      </button>
+        <button type="button" mat-stroked-button (click)="cancel()">
 
-      <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
+          Cancel
 
-        Update Branch
+        </button>
 
-      </button>
+        <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
 
-    </div>
+          Update
 
-  </form>
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
 
 </div>

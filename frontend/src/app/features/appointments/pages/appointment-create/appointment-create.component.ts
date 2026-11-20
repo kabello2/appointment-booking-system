@@ -56,6 +56,7 @@ import {
 } from '../../models/available-slot-response.model';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { FormErrorUtils } from '../../../../shared/utils/form-error.utils';
+import { AppointmentStateService } from '../../services/appointment-state.service';
 
 @Component({
   selector: 'app-appointment-create',
@@ -77,6 +78,8 @@ export class AppointmentCreateComponent
   private readonly fb = inject(FormBuilder);
 
   private readonly router = inject(Router);
+
+  private readonly appointmentState = inject(AppointmentStateService);
 
   private readonly appointmentService =
     inject(AppointmentService);
@@ -217,11 +220,12 @@ export class AppointmentCreateComponent
       )
       .subscribe({
 
-        next: () => {
+        next: (appointmentResponse) => {
           this.snackbar.success(
             'Appointment created successfully'
           );
 
+          this.appointmentState.addAppointment(appointmentResponse);
 
           this.router.navigate([
             '/appointments'

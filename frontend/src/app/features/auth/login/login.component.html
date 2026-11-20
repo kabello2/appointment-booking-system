@@ -2,36 +2,40 @@
 
   <h2>Sign In</h2>
 
-  <form [formGroup]="loginForm">
+  <div class="form-card">
 
-    <mat-form-field appearance="outline">
+    <form [formGroup]="loginForm">
 
-      <mat-label>Email</mat-label>
+      <mat-form-field appearance="outline">
 
-      <input matInput formControlName="email">
+        <mat-label>Email</mat-label>
 
-    </mat-form-field>
+        <input matInput formControlName="email">
 
-    <mat-form-field appearance="outline">
+      </mat-form-field>
 
-      <mat-label>Password</mat-label>
+      <mat-form-field appearance="outline">
 
-      <input type="password" matInput formControlName="password">
+        <mat-label>Password</mat-label>
 
-    </mat-form-field>
+        <input type="password" matInput formControlName="password">
 
-    <button mat-raised-button color="primary" (click)="login()">
+      </mat-form-field>
 
-      Login
+      <button mat-raised-button color="primary" (click)="login()">
 
-    </button>
+        Login
 
-    <button mat-stroked-button color="primary" routerLink="/auth/register">
+      </button>
 
-      Create Account
+      <button mat-stroked-button color="primary" routerLink="/auth/register">
 
-    </button>
+        Create Account
 
-  </form>
+      </button>
+
+    </form>
+
+  </div>
 
 </mat-card>

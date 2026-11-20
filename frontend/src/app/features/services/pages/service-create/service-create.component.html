@@ -2,75 +2,78 @@
 
   <h1>Create Service</h1>
 
-  <form [formGroup]="form">
+  <div class="form-card">
 
-    <mat-form-field appearance="outline">
+    <form [formGroup]="form">
 
-      <mat-label>
-        Service Code
-      </mat-label>
+      <mat-form-field appearance="outline">
 
-      <input matInput formControlName="serviceCode">
+        <mat-label>
+          Service Code
+        </mat-label>
 
-    </mat-form-field>
+        <input matInput formControlName="serviceCode">
 
-    <mat-form-field appearance="outline">
+      </mat-form-field>
 
-      <mat-label>
-        Service Name
-      </mat-label>
+      <mat-form-field appearance="outline">
 
-      <input matInput formControlName="name">
+        <mat-label>
+          Service Name
+        </mat-label>
 
-    </mat-form-field>
+        <input matInput formControlName="name">
 
-    <mat-form-field appearance="outline">
+      </mat-form-field>
 
-      <mat-label>
-        Description
-      </mat-label>
+      <mat-form-field appearance="outline">
 
-      <textarea matInput rows="4" formControlName="description">
+        <mat-label>
+          Description
+        </mat-label>
+
+        <textarea matInput rows="4" formControlName="description">
       </textarea>
 
-    </mat-form-field>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline">
 
-      <mat-label>
-        Duration (Minutes)
-      </mat-label>
+        <mat-label>
+          Duration (Minutes)
+        </mat-label>
 
-      <input type="number" matInput formControlName="durationMinutes">
+        <input type="number" matInput formControlName="durationMinutes">
 
-      @if (form.controls.durationMinutes.hasError('min')) {
+        @if (form.controls.durationMinutes.hasError('min')) {
 
-      <mat-error>
+        <mat-error>
 
-        Duration must be at least 15 minutes
+          Duration must be at least 15 minutes
 
-      </mat-error>
+        </mat-error>
 
-      }
+        }
 
-    </mat-form-field>
+      </mat-form-field>
 
-    <div class="form-actions">
+      <div class="form-actions">
 
-      <button type="button" mat-stroked-button (click)="cancel()">
+        <button type="button" mat-stroked-button (click)="cancel()">
 
-        Cancel
+          Cancel
 
-      </button>
+        </button>
 
-      <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
+        <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
 
-        Create Service
+          Save
 
-      </button>
+        </button>
 
-    </div>
+      </div>
 
-  </form>
+    </form>
+  </div>
 
 </div>

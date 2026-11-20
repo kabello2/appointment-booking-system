@@ -22,6 +22,13 @@ import {
   RoleDisplayPipe
 } from '../../../../shared/pipes/role-display.pipe';
 
+import { MatDialog } from '@angular/material/dialog';
+import { UserStateService } from '../../services/user-state.service';
+
+
+import { ConfirmDialogComponent }
+  from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-user-list',
   standalone: true,
@@ -41,8 +48,12 @@ import {
 export class UserListComponent implements OnInit {
 
   readonly loading = signal(false);
+  private readonly dialog = inject(MatDialog);
   private readonly userService =
     inject(UserService);
+
+  private readonly userState =
+    inject(UserStateService);
 
   readonly allUsers =
     signal<UserResponse[]>([]);
@@ -69,13 +80,31 @@ export class UserListComponent implements OnInit {
 
     this.loading.set(true);
 
+    const cachedUsers =
+      this.userState
+        .users();
+
+    if (cachedUsers.length > 0) {
+
+      this.allUsers.set(cachedUsers);
+      this.users.set(cachedUsers);
+
+      this.userState.users.set(cachedUsers);
+
+      return;
+
+    }
+
     this.userService
       .getUsers()
       .subscribe({
 
         next: users => {
 
+          this.allUsers.set(users);
           this.users.set(users);
+
+          this.userState.users.set(users);
 
           this.loading.set(false);
 
@@ -129,29 +158,48 @@ export class UserListComponent implements OnInit {
     user: UserResponse
   ): void {
 
-    const confirmed =
-      confirm(
-        `${user.enabled ? 'Disable' : 'Enable'} ${user.firstName}?`
+    const dialogRef =
+      this.dialog.open(
+        ConfirmDialogComponent,
+        {
+          width: '400px',
+
+          data: {
+
+            title:
+              `${user.enabled ? 'Disable' : 'Enable'} user`,
+
+            message:
+              `${user.enabled ? 'Disable' : 'Enable'} ${user.firstName} ${user.lastName}?`
+
+          }
+
+        }
       );
 
-    if (!confirmed) {
-      return;
-    }
+    dialogRef
+      .afterClosed()
+      .subscribe(result => {
 
-    const request =
-      user.enabled
-        ? this.userService.disableUser(user.id)
-        : this.userService.enableUser(user.id);
+        if (!result) {
+          return;
+        }
 
-    request.subscribe({
+        const request =
+          user.enabled
+            ? this.userService.disableUser(user.id)
+            : this.userService.enableUser(user.id);
 
-      next: () => {
+        request.subscribe({
 
-        this.loadUsers();
+          next: () => {
+            this.userState.updateUser(user);
+            this.allUsers.set(this.userState.users());
+          }
 
-      }
+        });
 
-    });
+      });
 
   }
 

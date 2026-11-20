@@ -4,169 +4,173 @@
 
         <h1>Create Account</h1>
 
-        <form [formGroup]="form">
+        <div class="form-card">
 
-            <mat-form-field appearance="outline">
+            <form [formGroup]="form">
 
-                <mat-label>
-                    First Name
-                </mat-label>
+                <mat-form-field appearance="outline">
 
-                <input matInput formControlName="firstName">
+                    <mat-label>
+                        First Name
+                    </mat-label>
 
-                @if(form.controls.firstName.touched &&
-                form.controls.firstName.hasError('required')) {
+                    <input matInput formControlName="firstName">
 
-                <mat-error>
-                    First name is required
-                </mat-error>
-                }
+                    @if(form.controls.firstName.touched &&
+                    form.controls.firstName.hasError('required')) {
 
-            </mat-form-field>
+                    <mat-error>
+                        First name is required
+                    </mat-error>
+                    }
 
-            <mat-form-field appearance="outline">
+                </mat-form-field>
 
-                <mat-label>
-                    Last Name
-                </mat-label>
+                <mat-form-field appearance="outline">
 
-                <input matInput formControlName="lastName">
+                    <mat-label>
+                        Last Name
+                    </mat-label>
 
-                @if(form.controls.lastName.touched &&
-                form.controls.lastName.hasError('required')) {
+                    <input matInput formControlName="lastName">
 
-                <mat-error>
-                    Last name is required
-                </mat-error>
-                }
-            </mat-form-field>
+                    @if(form.controls.lastName.touched &&
+                    form.controls.lastName.hasError('required')) {
 
-            <mat-form-field appearance="outline">
+                    <mat-error>
+                        Last name is required
+                    </mat-error>
+                    }
+                </mat-form-field>
 
-                <mat-label>
-                    Email
-                </mat-label>
+                <mat-form-field appearance="outline">
 
-                <input matInput formControlName="email">
+                    <mat-label>
+                        Email
+                    </mat-label>
 
-                @if(form.controls.email.touched &&
-                form.controls.email.hasError('required')) {
+                    <input matInput formControlName="email">
 
-                <mat-error>
-                    Email is required
-                </mat-error>
-                }
+                    @if(form.controls.email.touched &&
+                    form.controls.email.hasError('required')) {
 
-                @if(form.controls.email.touched &&
-                form.controls.email.hasError('email')) {
+                    <mat-error>
+                        Email is required
+                    </mat-error>
+                    }
 
-                <mat-error>
-                    Invalid email address
-                </mat-error>
+                    @if(form.controls.email.touched &&
+                    form.controls.email.hasError('email')) {
 
-                }
+                    <mat-error>
+                        Invalid email address
+                    </mat-error>
 
-            </mat-form-field>
+                    }
 
-            <mat-form-field appearance="outline">
+                </mat-form-field>
 
-                <mat-label>
-                    Phone Number
-                </mat-label>
+                <mat-form-field appearance="outline">
 
-                <input matInput formControlName="phoneNumber">
+                    <mat-label>
+                        Phone Number
+                    </mat-label>
 
-                @if(form.controls.phoneNumber.touched &&
-                form.controls.phoneNumber.hasError('required')) {
+                    <input matInput formControlName="phoneNumber">
 
-                <mat-error>
-                    Phone number is required
-                </mat-error>
+                    @if(form.controls.phoneNumber.touched &&
+                    form.controls.phoneNumber.hasError('required')) {
 
-                }
+                    <mat-error>
+                        Phone number is required
+                    </mat-error>
 
-                @if(form.controls.phoneNumber.touched &&
-                form.controls.phoneNumber.hasError('pattern')) {
+                    }
 
-                <mat-error>
-                    Format must be +27821234567
-                </mat-error>
+                    @if(form.controls.phoneNumber.touched &&
+                    form.controls.phoneNumber.hasError('pattern')) {
 
-                }
+                    <mat-error>
+                        Format must be +27821234567
+                    </mat-error>
 
-                @if(form.controls.phoneNumber.getError('server')) {
+                    }
 
-                <mat-error>
+                    @if(form.controls.phoneNumber.getError('server')) {
 
-                    {{ form.controls.phoneNumber.getError('server') }}
+                    <mat-error>
 
-                </mat-error>
+                        {{ form.controls.phoneNumber.getError('server') }}
 
-                }
-            </mat-form-field>
+                    </mat-error>
 
-            <mat-form-field appearance="outline">
+                    }
+                </mat-form-field>
 
-                <mat-label>
-                    Password
-                </mat-label>
+                <mat-form-field appearance="outline">
 
-                <input matInput type="password" formControlName="password">
+                    <mat-label>
+                        Password
+                    </mat-label>
+
+                    <input matInput type="password" formControlName="password">
 
 
-                @if(form.controls.password.touched &&
-                form.controls.password.hasError('required')) {
+                    @if(form.controls.password.touched &&
+                    form.controls.password.hasError('required')) {
 
-                <mat-error>
-                    Password is required
-                </mat-error>
+                    <mat-error>
+                        Password is required
+                    </mat-error>
 
-                }
+                    }
 
-                @if(form.controls.password.touched &&
-                form.controls.password.hasError('pattern')) {
+                    @if(form.controls.password.touched &&
+                    form.controls.password.hasError('pattern')) {
 
-                <mat-error>
+                    <mat-error>
 
-                    Password must contain:
-                    uppercase,
-                    lowercase,
-                    number,
-                    special character
-                    and be at least 8 characters
+                        Password must contain:
+                        uppercase,
+                        lowercase,
+                        number,
+                        special character
+                        and be at least 8 characters
 
-                </mat-error>
+                    </mat-error>
 
-                }
+                    }
 
-                @if(form.controls.password.getError('server')) {
+                    @if(form.controls.password.getError('server')) {
 
-                <mat-error>
+                    <mat-error>
 
-                    {{ form.controls.password.getError('server') }}
+                        {{ form.controls.password.getError('server') }}
 
-                </mat-error>
+                    </mat-error>
 
-                }
-            </mat-form-field>
+                    }
+                </mat-form-field>
 
-            <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline">
 
-                <mat-label>
-                    Confirm Password
-                </mat-label>
+                    <mat-label>
+                        Confirm Password
+                    </mat-label>
 
-                <input matInput type="password" formControlName="confirmPassword">
+                    <input matInput type="password" formControlName="confirmPassword">
 
-            </mat-form-field>
+                </mat-form-field>
 
-            <button mat-raised-button color="primary" (click)="register()">
+                <button mat-raised-button color="primary" (click)="register()">
 
-                Sign Up
+                    Sign Up
 
-            </button>
+                </button>
 
-        </form>
+            </form>
+
+        </div>
 
         <div class="login-link">
 

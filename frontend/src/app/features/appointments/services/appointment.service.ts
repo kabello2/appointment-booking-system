@@ -46,7 +46,7 @@ export class AppointmentService {
     request: BookAppointmentRequest
   ) {
 
-    return this.http.post(
+    return this.http.post<AppointmentResponse>(
 
       `${this.apiUrl}/appointments`,
       request
@@ -176,7 +176,7 @@ export class AppointmentService {
     request: RescheduleAppointmentRequest
   ) {
 
-    return this.http.put(
+    return this.http.put<AppointmentResponse>(
 
       `${this.apiUrl}/appointments/${appointmentId}/reschedule`,
 

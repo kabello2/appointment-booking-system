@@ -1,90 +1,93 @@
 <div class="page-container">
 
   <h1>Reschedule Appointment</h1>
+  <div class="form-card">
 
-  <form [formGroup]="form">
+    <form [formGroup]="form">
 
-    <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline">
 
-      <mat-label>
-        New Date
-      </mat-label>
+        <mat-label>
+          New Date
+        </mat-label>
 
-      <input matInput type="date" formControlName="appointmentDate">
+        <input matInput type="date" formControlName="appointmentDate">
 
-      @if (
-      form.controls.appointmentDate.hasError(
-      'required'
-      )
-      ) {
-
-      <mat-error>
-
-        Appointment date is required
-
-      </mat-error>
-
-      }
-
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-
-      <mat-label>
-        Available Slot
-      </mat-label>
-
-      <mat-select formControlName="startTime">
-
-        @for (
-        slot of availableSlots();
-        track slot.startTime
+        @if (
+        form.controls.appointmentDate.hasError(
+        'required'
+        )
         ) {
 
-        <mat-option [value]="slot.startTime">
+        <mat-error>
 
-          {{ slot.startTime }}
-          -
-          {{ slot.endTime }}
+          Appointment date is required
 
-        </mat-option>
+        </mat-error>
 
         }
 
-      </mat-select>
+      </mat-form-field>
 
-      @if (
-      form.controls.startTime.hasError(
-      'required'
-      )
-      ) {
+      <mat-form-field appearance="outline">
 
-      <mat-error>
+        <mat-label>
+          Available Slot
+        </mat-label>
 
-        Time slot is required
+        <mat-select formControlName="startTime">
 
-      </mat-error>
+          @for (
+          slot of availableSlots();
+          track slot.startTime
+          ) {
 
-      }
+          <mat-option [value]="slot.startTime">
 
-    </mat-form-field>
+            {{ slot.startTime }}
+            -
+            {{ slot.endTime }}
 
-    <div class="form-actions">
+          </mat-option>
 
-      <button type="button" mat-stroked-button (click)="back()">
+          }
 
-        Back
+        </mat-select>
 
-      </button>
+        @if (
+        form.controls.startTime.hasError(
+        'required'
+        )
+        ) {
 
-      <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
+        <mat-error>
 
-        Reschedule
+          Time slot is required
 
-      </button>
+        </mat-error>
 
-    </div>
+        }
 
-  </form>
+      </mat-form-field>
+
+      <div class="form-actions">
+
+        <button type="button" mat-stroked-button (click)="back()">
+
+          Cancel
+
+        </button>
+
+        <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
+
+          Save
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
 
 </div>

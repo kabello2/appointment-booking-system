@@ -230,11 +230,14 @@ export class AppointmentRescheduleComponent
       )
       .subscribe({
 
-        next: () => {
+        next: (appointmentResponse) => {
 
           this.snackbar.success(
             'Appointment rescheduled successfully'
           );
+
+          
+          this.appointmentState.updateAppointment(appointmentResponse);
 
           this.router.navigate([
             '/appointments',
