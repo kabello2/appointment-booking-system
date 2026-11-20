@@ -47,29 +47,57 @@ import {
   BranchResponse
 } from '../../models/branch-response.model';
 
+import {
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
+
+import {
+  MatPaginator,
+  MatPaginatorModule
+} from '@angular/material/paginator';
+
+import {
+  MatSort,
+  MatSortModule
+} from '@angular/material/sort';
+
+import {
+  MatTableDataSource
+} from '@angular/material/table';
+
 @Component({
   selector: 'app-branch-list',
   standalone: true,
   imports: [
-    RouterLink,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule
+    
+  RouterLink,
+  MatTableModule,
+  MatButtonModule,
+  MatIconModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatPaginatorModule,
+  MatSortModule
   ],
   templateUrl: './branch-list.component.html',
   styleUrl: './branch-list.component.scss'
 })
 export class BranchListComponent
-  implements OnInit {
+  implements OnInit, AfterViewInit {
+
+  @ViewChild(MatPaginator)
+paginator!: MatPaginator;
+
+@ViewChild(MatSort)
+sort!: MatSort;
 
   private readonly branchService = inject(BranchService);
   private readonly dialog = inject(MatDialog);
 
-  readonly allBranches = signal<BranchResponse[]>([]);
-  readonly branches = signal<BranchResponse[]>([]);
+  readonly dataSource =
+  new MatTableDataSource<BranchResponse>();
 
   displayedColumns = [
     'branchCode',
@@ -86,6 +114,16 @@ export class BranchListComponent
 
   }
 
+  ngAfterViewInit(): void {
+
+  this.dataSource.paginator =
+    this.paginator;
+
+  this.dataSource.sort =
+    this.sort;
+
+}
+
   private loadBranches(): void {
 
     this.branchService
@@ -93,10 +131,8 @@ export class BranchListComponent
       .subscribe({
 
         next: branches => {
-
-          this.allBranches.set(branches);
-
-          this.branches.set(branches);
+this.dataSource.data =
+  branches;
 
         }
 
@@ -108,34 +144,14 @@ export class BranchListComponent
     event: Event
   ): void {
 
-    const value =
-      (event.target as HTMLInputElement)
-        .value
-        .toLowerCase();
+    const filterValue =
+    (event.target as HTMLInputElement)
+      .value;
 
-    const filtered =
-      this.allBranches()
-        .filter(branch =>
-
-          branch.branchCode
-            .toLowerCase()
-            .includes(value)
-
-          ||
-
-          branch.name
-            .toLowerCase()
-            .includes(value)
-
-          ||
-
-          branch.city
-            .toLowerCase()
-            .includes(value)
-
-        );
-
-    this.branches.set(filtered);
+  this.dataSource.filter =
+    filterValue
+      .trim()
+      .toLowerCase();
 
   }
 
