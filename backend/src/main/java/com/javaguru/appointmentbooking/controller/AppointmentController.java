@@ -70,11 +70,10 @@ public class AppointmentController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('APPOINTMENT_VIEW_OWN')")
+    @PreAuthorize("hasAnyAuthority('APPOINTMENT_VIEW_OWN', 'APPOINTMENT_VIEW')")
     public ResponseEntity<List<AppointmentResponse>> getMyAppointments(Authentication authentication) {
 
-        UUID customerId = userManagementService.getUserEntityByEmail(authentication.getName()).getId();
-        return ResponseEntity.ok(appointmentService.getMyAppointments(customerId));
+        return ResponseEntity.ok(appointmentService.getMyAppointments(authentication));
     }
 
     @GetMapping("/{appointmentId}")

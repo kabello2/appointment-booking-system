@@ -9,6 +9,7 @@ import com.javaguru.appointmentbooking.entity.Branch;
 import com.javaguru.appointmentbooking.entity.ServiceOffering;
 import com.javaguru.appointmentbooking.entity.User;
 import com.javaguru.appointmentbooking.entity.enums.AppointmentStatus;
+import com.javaguru.appointmentbooking.entity.enums.Role;
 import com.javaguru.appointmentbooking.repository.AppointmentRepository;
 import com.javaguru.appointmentbooking.repository.BranchRepository;
 import com.javaguru.appointmentbooking.repository.ServiceOfferingRepository;
@@ -16,6 +17,7 @@ import com.javaguru.appointmentbooking.repository.UserRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -179,14 +181,41 @@ public class AppointmentService {
         return mapToResponse(appointment);
     }
 
-    public List<AppointmentResponse> getMyAppointments(
-            UUID customerId) {
+    public List<AppointmentResponse> getMyAppointments(Authentication authentication) {
 
-        return appointmentRepository
-                .findByCustomerId(customerId)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
+
+        List<AppointmentResponse> appointments = null;
+
+        if (user.getRole().equals(Role.ROLE_CONSULTANT)) {
+
+            appointments = appointmentRepository
+                    .findByConsultantIdOrderByAppointmentDateAscStartTimeAsc(
+                            user.getId()
+                    )
+                    .stream()
+                    .map(this::mapToResponse)
+                    .toList();
+
+        } else if (user.getRole().equals(Role.ROLE_CUSTOMER)) {
+
+            appointments = appointmentRepository
+                    .findByCustomerId(user.getId())
+                    .stream()
+                    .map(this::mapToResponse)
+                    .toList();
+
+        } else {
+            appointments = appointmentRepository
+                    .findAll()
+                    .stream()
+                    .map(this::mapToResponse)
+                    .toList();
+        }
+
+        return appointments;
+
     }
 
     public AppointmentResponse cancelAppointment(
