@@ -30,6 +30,21 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent }
   from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
+import {
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
+
+import {
+  MatPaginator,
+  MatPaginatorModule
+} from '@angular/material/paginator';
+
+import {
+  MatSort,
+  MatSortModule
+} from '@angular/material/sort';
+
 @Component({
   selector: 'app-user-list',
   standalone: true,
@@ -41,13 +56,20 @@ import { ConfirmDialogComponent }
     MatFormFieldModule,
     MatInputModule,
     LoadingSpinnerComponent,
-    RoleDisplayPipe
+    RoleDisplayPipe,
+    MatPaginatorModule,
+    MatSortModule
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, AfterViewInit  {
 
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+  @ViewChild(MatSort)
+  sort!: MatSort;
   readonly loading = signal(false);
   private readonly dialog = inject(MatDialog);
   private readonly userService =
@@ -72,6 +94,16 @@ export class UserListComponent implements OnInit {
   ngOnInit(): void {
 
     this.loadUsers();
+
+  }
+
+  ngAfterViewInit(): void {
+
+    this.dataSource.paginator =
+      this.paginator;
+
+    this.dataSource.sort =
+      this.sort;
 
   }
 

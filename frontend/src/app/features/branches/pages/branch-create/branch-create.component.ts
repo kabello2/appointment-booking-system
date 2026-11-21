@@ -71,19 +71,34 @@ export class BranchCreateComponent {
         ]
       ],
 
-      addressLine1: [''],
+      addressLine1: [
+        '',
+        Validators.required
+      ],
 
       addressLine2: [''],
 
-      suburb: [''],
+      suburb: [
+        '',
+        Validators.required
+      ],
 
-      city: [''],
+      city: [
+        '',
+        Validators.required
+      ],
 
-      province: [''],
+      province: [
+        '',
+        Validators.required],
 
-      postalCode: [''],
+      postalCode: [
+        '',
+        Validators.required],
 
-      contactNumber: ['']
+      contactNumber: [
+        '',
+        Validators.required]
 
     });
 

@@ -1,7 +1,7 @@
 <div class="page-container">
 
   <h1>Create Branch</h1>
-  
+
   <div class="form-card">
 
     <form [formGroup]="form">
@@ -50,6 +50,13 @@
 
         <input matInput formControlName="addressLine1">
 
+        @if(form.controls.addressLine1.touched &&
+        form.controls.addressLine1.hasError('required')) {
+
+        <mat-error>
+          AddressLine1 is required
+        </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -70,6 +77,13 @@
 
         <input matInput formControlName="suburb">
 
+        @if(form.controls.suburb.touched &&
+        form.controls.suburb.hasError('required')) {
+
+        <mat-error>
+          Suburb is required
+        </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -80,6 +94,13 @@
 
         <input matInput formControlName="city">
 
+        @if(form.controls.city.touched &&
+        form.controls.city.hasError('required')) {
+
+        <mat-error>
+          City name is required
+        </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -90,6 +111,13 @@
 
         <input matInput formControlName="province">
 
+        @if(form.controls.province.touched &&
+        form.controls.province.hasError('required')) {
+
+        <mat-error>
+          Province is required
+        </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -98,8 +126,15 @@
           Postal Code
         </mat-label>
 
-        <input matInput formControlName="postalCode">
+        <input matInput type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" formControlName="postalCode">
 
+        @if(form.controls.postalCode.touched &&
+        form.controls.postalCode.hasError('required')) {
+
+        <mat-error>
+          Postal code is required
+        </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -108,8 +143,15 @@
           Contact Number
         </mat-label>
 
-        <input matInput formControlName="contactNumber">
+        <input matInput type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" formControlName="contactNumber">
 
+        @if(form.controls.contactNumber.touched &&
+        form.controls.contactNumber.hasError('required')) {
+
+        <mat-error>
+          Contact number is required
+        </mat-error>
+        }
       </mat-form-field>
 
       <div class="form-actions">

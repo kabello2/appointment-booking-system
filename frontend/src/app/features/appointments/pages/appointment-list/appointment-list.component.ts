@@ -36,6 +36,21 @@ import { AppointmentStateService } from '../../services/appointment-state.servic
 
 import { Router, ActivatedRoute } from '@angular/router';
 
+import {
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
+
+import {
+  MatPaginator,
+  MatPaginatorModule
+} from '@angular/material/paginator';
+
+import {
+  MatSort,
+  MatSortModule
+} from '@angular/material/sort';
+
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -44,21 +59,25 @@ import { MatTableDataSource } from '@angular/material/table';
   imports: [
     MatTableModule,
     RouterLink,
-
     MatTableModule,
-
     MatButtonModule,
-
     MatIconModule,
-
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatSort
   ],
   templateUrl: './appointment-list.component.html'
 })
 export class AppointmentListComponent
-  implements OnInit {
+  implements OnInit, AfterViewInit  {
 
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+  @ViewChild(MatSort)
+  sort!: MatSort;
   private readonly route = inject(ActivatedRoute);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
@@ -77,6 +96,7 @@ export class AppointmentListComponent
     'appointmentNumber',
     'appointmentDate',
     'serviceName',
+    'consultantName',
     'status',
     'actions'
   ];
@@ -86,10 +106,19 @@ export class AppointmentListComponent
     const mode = this.route.snapshot.data['mode'];
     this.mode.set(mode ?? 'CUSTOMER');
     this.mode.name;
-    if (this.mode() !== 'CONSULTANT') {
-      this.displayedColumns.push('consultantNam');
-    }
+   
     this.loadAppointments();
+
+  }
+
+  
+  ngAfterViewInit(): void {
+
+    this.dataSource.paginator =
+      this.paginator;
+
+    this.dataSource.sort =
+      this.sort;
 
   }
 

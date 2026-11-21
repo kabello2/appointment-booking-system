@@ -9,7 +9,7 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
   {
     label: 'Appointments',
     route: '/appointments/all',
-    icon: 'dashboard',
+    icon: 'calendar_month',
     roles: [
       'ROLE_ADMIN'
     ]

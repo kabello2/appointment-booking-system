@@ -124,11 +124,6 @@ body {
 
 }
 
-mat-form-field {
-
-  width: 100%;
-
-}
 
 /* =====================================================
    TABLES
@@ -153,6 +148,7 @@ table {
 .mat-mdc-header-cell {
 
   font-weight: 600;
+  color: var(--text-primary);
 
 }
 
@@ -443,5 +439,176 @@ mat-paginator {
 .mat-mdc-raised-button.mat-primary:hover {
 
   filter: brightness(95%);
+
+}
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+
+mat-paginator {
+
+  background: white;
+
+  border-top: 1px solid var(--border);
+
+  padding: .5rem 1rem;
+
+  border-radius: 0 0 12px 12px;
+
+}
+
+.mat-mdc-paginator-range-label {
+
+  font-weight: 500;
+
+}
+
+.mat-mdc-icon-button {
+
+  border-radius: 50%;
+
+}
+
+.mat-mdc-icon-button:hover {
+
+  background:
+    rgba(
+      0,
+      87,
+      184,
+      0.08
+    );
+
+}
+
+/* =====================================================
+   FORM VALIDATION
+===================================================== */
+
+mat-form-field {
+
+  width: 100%;
+
+  margin-bottom: 1rem;
+
+}
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+.mdc-text-field {
+
+  background:
+    white !important;
+
+}
+
+.mdc-text-field__input {
+
+  padding-left: 12px !important;
+
+  padding-right: 12px !important;
+
+}
+
+/* =====================================================
+   SELECTS
+===================================================== */
+
+.mat-mdc-select-trigger {
+
+  padding-left: 12px;
+
+}
+
+.mat-mdc-form-field {
+
+  background:
+    white;
+}
+
+.mat-mdc-select-panel {
+
+  background:
+    white !important;
+
+}
+
+/* =====================================================
+   DROPDOWNS
+===================================================== */
+
+.mat-mdc-select {
+
+  background: white;
+
+}
+
+.mat-mdc-select-trigger {
+
+  padding-left: 12px;
+
+  padding-right: 12px;
+
+}
+
+.mat-mdc-select-arrow-wrapper {
+
+  padding-right: 12px;
+
+}
+
+/* =====================================================
+   VALIDATION ERRORS
+===================================================== */
+
+.mat-mdc-form-field-subscript-wrapper {
+
+  min-height: 28px;
+
+}
+
+.mat-mdc-form-field-error-wrapper {
+
+  padding-top: 4px;
+  padding: 0 0 !important;
+
+}
+
+.mat-mdc-form-field.mat-form-field-invalid {
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+
+    border-color: #d32f2f !important;
+
+  }
+
+}
+
+/* =====================================================
+   FIELD ERRORS
+===================================================== */
+
+.mat-mdc-form-field-subscript-wrapper {
+
+  padding-left: 0 !important;
+
+  padding-right: 0 !important;
+
+}
+
+.mat-mdc-form-field-error {
+
+  color: #d32f2f !important;
+
+  font-size: 14px !important;
+
+  font-weight: 500;
+
+  margin-top: 4px;
 
 }
