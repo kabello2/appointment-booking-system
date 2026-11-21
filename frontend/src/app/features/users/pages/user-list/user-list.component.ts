@@ -25,6 +25,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { UserStateService } from '../../services/user-state.service';
 
+import { MatTableDataSource } from '@angular/material/table';
 
 import { ConfirmDialogComponent }
   from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -55,11 +56,9 @@ export class UserListComponent implements OnInit {
   private readonly userState =
     inject(UserStateService);
 
-  readonly allUsers =
-    signal<UserResponse[]>([]);
 
-  readonly users =
-    signal<UserResponse[]>([]);
+  readonly dataSource =
+    new MatTableDataSource<UserResponse>();
 
   displayedColumns = [
     'firstName',
@@ -86,11 +85,7 @@ export class UserListComponent implements OnInit {
 
     if (cachedUsers.length > 0) {
 
-      this.allUsers.set(cachedUsers);
-      this.users.set(cachedUsers);
-
-      this.userState.users.set(cachedUsers);
-
+      this.dataSource.data = cachedUsers;
       return;
 
     }
@@ -101,9 +96,7 @@ export class UserListComponent implements OnInit {
 
         next: users => {
 
-          this.allUsers.set(users);
-          this.users.set(users);
-
+          this.dataSource.data = users;
           this.userState.users.set(users);
 
           this.loading.set(false);
@@ -123,34 +116,15 @@ export class UserListComponent implements OnInit {
   filterUsers(
     event: Event
   ): void {
-
-    const value =
+    
+    const filterValue =
       (event.target as HTMLInputElement)
-        .value
+        .value;
+
+    this.dataSource.filter =
+      filterValue
+        .trim()
         .toLowerCase();
-
-    const filtered =
-      this.allUsers().filter(user =>
-
-        user.firstName
-          .toLowerCase()
-          .includes(value)
-
-        ||
-
-        user.lastName
-          .toLowerCase()
-          .includes(value)
-
-        ||
-
-        user.email
-          .toLowerCase()
-          .includes(value)
-
-      );
-
-    this.users.set(filtered);
 
   }
 
@@ -194,7 +168,6 @@ export class UserListComponent implements OnInit {
 
           next: () => {
             this.userState.updateUser(user);
-            this.allUsers.set(this.userState.users());
           }
 
         });

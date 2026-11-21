@@ -2,11 +2,14 @@
 
   <h1>Appointments</h1>
 
+  @if (this.mode() === "CUSTOMER") {
+
   <button mat-raised-button color="primary" routerLink="/appointments/create">
 
     Book Appointment
 
   </button>
+  }
 
 </div>
 <mat-form-field appearance="outline" class="search-field">
@@ -20,7 +23,7 @@
   <input matInput (input)="filterAppointments($event)">
 
 </mat-form-field>
-<table mat-table [dataSource]="appointments()">
+<table mat-table [dataSource]="dataSource">
 
   <ng-container matColumnDef="appointmentNumber">
 
@@ -58,6 +61,8 @@
 
   </ng-container>
 
+  @if (this.mode() !== "CONSULTANT") {
+
   <ng-container matColumnDef="consultantName">
 
     <th mat-header-cell *matHeaderCellDef>
@@ -69,6 +74,8 @@
     </td>
 
   </ng-container>
+
+  }
 
   <ng-container matColumnDef="status">
 
@@ -102,19 +109,39 @@
 
     <td mat-cell *matCellDef="let appointment">
 
-      @if (appointment.status === 'PENDING') {
+      <!-- View -->
+
+      <button mat-icon-button color="primary" (click)="viewAppointment(appointment)">
+
+        <mat-icon>
+          visibility
+        </mat-icon>
+
+      </button>
+
+      <!-- Confirm -->
+
+      @if (
+      appointment.status === 'BOOKED'
+      && this.mode() !== 'CUSTOMER'
+      ) {
 
       <button mat-icon-button color="primary" (click)="confirmAppointment(appointment)">
 
         <mat-icon>
-          check
+          check_circle
         </mat-icon>
 
       </button>
 
       }
 
-      @if (appointment.status === 'CONFIRMED') {
+      <!-- Complete -->
+
+      @if (
+      appointment.status === 'CONFIRMED' 
+      && this.mode() === 'CONSULTANT'
+      ) {
 
       <button mat-icon-button color="accent" (click)="completeAppointment(appointment)">
 
@@ -126,27 +153,19 @@
 
       }
 
+      <!-- Cancel -->
+
       @if (
-      appointment.status !== 'CANCELLED'
-      &&
       appointment.status !== 'COMPLETED'
+      &&
+      appointment.status !== 'CANCELLED'
+      && this.mode() === 'CUSTOMER'
       ) {
 
       <button mat-icon-button color="warn" (click)="cancelAppointment(appointment)">
 
         <mat-icon>
           cancel
-        </mat-icon>
-
-      </button>
-
-      <button mat-icon-button color="primary" [routerLink]="[
-    '/appointments',
-    appointment.id
-  ]">
-
-        <mat-icon>
-          visibility
         </mat-icon>
 
       </button>
@@ -162,7 +181,7 @@
 
   <tr mat-row *matRowDef="
       let row;
-      columns: displayedColumns;
+      columns: this.displayedColumns;
     ">
   </tr>
 

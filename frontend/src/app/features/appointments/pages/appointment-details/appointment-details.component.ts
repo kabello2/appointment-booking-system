@@ -189,7 +189,7 @@ export class AppointmentDetailsComponent
               'Appointment confirmed successfully'
             );
 
-            this.loadAppointment();
+            this.appointmentState.updateAppointment(appointment);
 
           });
 
@@ -235,7 +235,7 @@ export class AppointmentDetailsComponent
             this.snackbar.success(
               'Appointment completed successfully'
             );
-            this.loadAppointment();
+            this.appointmentState.updateAppointment(appointment);
 
           });
 
@@ -281,7 +281,7 @@ export class AppointmentDetailsComponent
             this.snackbar.success(
               'Appointment cancelled successfully'
             );
-            this.loadAppointment();
+            this.appointmentState.removeAppointment(appointment.id);
 
           });
 

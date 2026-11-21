@@ -166,7 +166,19 @@ export const routes: Routes = [
       {
         path: 'appointments',
         component: AppointmentListComponent,
-        canActivate: [authGuard]
+        canActivate: [authGuard],
+        data: {
+          mode: 'CUSTOMER'
+        }
+      },
+
+      {
+        path: 'appointments/all',
+        component: AppointmentListComponent,
+        canActivate: [authGuard],
+        data: {
+          mode: 'ADMINISTRATOR'
+        }
       },
 
       {
@@ -201,8 +213,11 @@ export const routes: Routes = [
 
       {
         path: 'appointments/work/queue',
-        component: ConsultantWorkQueueComponent,
-        canActivate: [authGuard]
+        component: AppointmentListComponent,
+        canActivate: [authGuard],
+        data: {
+          mode: 'CONSULTANT'
+        }
       },
 
       {

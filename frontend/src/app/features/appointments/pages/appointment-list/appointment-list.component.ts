@@ -34,7 +34,9 @@ import { ConfirmDialogComponent }
 
 import { AppointmentStateService } from '../../services/appointment-state.service';
 
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-appointment-list',
@@ -57,30 +59,36 @@ import { Router } from '@angular/router';
 export class AppointmentListComponent
   implements OnInit {
 
+  private readonly route = inject(ActivatedRoute);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
+
+  readonly mode = signal<'CUSTOMER' | 'CONSULTANT'>('CUSTOMER');
+
   private readonly appointmentState =
     inject(AppointmentStateService);
   private readonly appointmentService =
     inject(AppointmentService);
 
-  readonly allAppointments =
-    signal<AppointmentResponse[]>([]);
-
-  readonly appointments =
-    signal<AppointmentResponse[]>([]);
+  readonly dataSource =
+    new MatTableDataSource<AppointmentResponse>();
 
   displayedColumns = [
     'appointmentNumber',
     'appointmentDate',
     'serviceName',
-    'consultantName',
     'status',
     'actions'
   ];
 
   ngOnInit(): void {
 
+    const mode = this.route.snapshot.data['mode'];
+    this.mode.set(mode ?? 'CUSTOMER');
+    this.mode.name;
+    if (this.mode() !== 'CONSULTANT') {
+      this.displayedColumns.push('consultantNam');
+    }
     this.loadAppointments();
 
   }
@@ -93,14 +101,7 @@ export class AppointmentListComponent
 
     if (cachedAppointments.length > 0) {
 
-      this.allAppointments.set(
-        cachedAppointments
-      );
-
-      this.appointments.set(
-        cachedAppointments
-      );
-
+      this.dataSource.data = cachedAppointments;
       return;
 
     }
@@ -111,13 +112,7 @@ export class AppointmentListComponent
 
         next: appointments => {
 
-          this.allAppointments.set(
-            appointments
-          );
-
-          this.appointments.set(
-            appointments
-          );
+          this.dataSource.data = appointments;
 
           this.appointmentState
             .appointments
@@ -153,33 +148,15 @@ export class AppointmentListComponent
         .value
         .toLowerCase();
 
-    const filtered =
-      this.allAppointments()
-        .filter(appointment =>
+    
+    const filterValue =
+      (event.target as HTMLInputElement)
+        .value;
 
-          appointment
-            .appointmentNumber
-            .toLowerCase()
-            .includes(value)
-
-          ||
-
-          appointment
-            .serviceName
-            .toLowerCase()
-            .includes(value)
-
-          ||
-
-          appointment
-            .consultantName
-            ?.toLowerCase()
-            .includes(value)
-
-        );
-
-    this.appointments
-      .set(filtered);
+    this.dataSource.filter =
+      filterValue
+        .trim()
+        .toLowerCase();
 
   }
 

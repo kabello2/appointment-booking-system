@@ -205,7 +205,7 @@ export class BranchListComponent
 
             next: () => {
 
-              this.loadBranches();
+              this.branchState.removeBranch(branch.id);
 
             }
 
