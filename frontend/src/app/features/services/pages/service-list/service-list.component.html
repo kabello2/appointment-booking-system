@@ -22,7 +22,7 @@
 
   </mat-form-field>
 
-  <table mat-table [dataSource]="services()" class="mat-elevation-z2">
+  <table mat-table [dataSource]="dataSource" MatSort class="mat-elevation-z2">
 
     <ng-container matColumnDef="serviceCode">
 
@@ -118,3 +118,14 @@
   </table>
 
 </div>
+
+<mat-paginator
+  [pageSize]="10"
+  [pageSizeOptions]="[
+    5,
+    10,
+    20,
+    50
+  ]"
+  showFirstLastButtons>
+</mat-paginator>

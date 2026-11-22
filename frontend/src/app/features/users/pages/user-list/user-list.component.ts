@@ -78,7 +78,6 @@ export class UserListComponent implements OnInit, AfterViewInit  {
   private readonly userState =
     inject(UserStateService);
 
-
   readonly dataSource =
     new MatTableDataSource<UserResponse>();
 

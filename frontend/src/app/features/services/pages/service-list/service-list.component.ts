@@ -45,6 +45,26 @@ import {
   ConfirmDialogComponent
 } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
+
+import {
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
+
+import {
+  MatPaginator,
+  MatPaginatorModule
+} from '@angular/material/paginator';
+
+import {
+  MatSort,
+  MatSortModule
+} from '@angular/material/sort';
+
+import { MatTableDataSource } from '@angular/material/table';
+
+import { ServiceOfferingStateService } from '../../services/service-offering-state.service';
+
 @Component({
   selector: 'app-service-list',
   standalone: true,
@@ -54,12 +74,21 @@ import {
     MatButtonModule,
     MatIconModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   templateUrl: './service-list.component.html',
   styleUrl: './service-list.component.scss'
 })
-export class ServiceListComponent implements OnInit {
+export class ServiceListComponent implements OnInit, AfterViewInit  {
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+  @ViewChild(MatSort)
+  sort!: MatSort;
+  readonly loading = signal(false);
 
   private readonly serviceOfferingService =
     inject(ServiceOfferingService);
@@ -67,11 +96,11 @@ export class ServiceListComponent implements OnInit {
   private readonly dialog =
     inject(MatDialog);
 
-  readonly allServices =
-    signal<ServiceResponse[]>([]);
+  private readonly serviceOfferingState =
+    inject(ServiceOfferingStateService);
 
-  readonly services =
-    signal<ServiceResponse[]>([]);
+  readonly dataSource =
+    new MatTableDataSource<ServiceResponse>();
 
   displayedColumns = [
     'serviceCode',
@@ -87,15 +116,40 @@ export class ServiceListComponent implements OnInit {
 
   }
 
+  
+  ngAfterViewInit(): void {
+
+    this.dataSource.paginator =
+      this.paginator;
+
+    this.dataSource.sort =
+      this.sort;
+
+  }
+
   private loadServices(): void {
+
+      this.loading.set(true);
+
+    const cachedServices =
+      this.serviceOfferingState
+        .services();
+
+    if (cachedServices.length > 0) {
+
+      this.dataSource.data = cachedServices;
+      return;
+
+    }
 
     this.serviceOfferingService
       .getServices()
       .subscribe(services => {
 
-        this.allServices.set(services);
+          this.dataSource.data = services;
+          this.serviceOfferingState.services.set(services);
 
-        this.services.set(services);
+          this.loading.set(false);
 
       });
 
@@ -104,29 +158,15 @@ export class ServiceListComponent implements OnInit {
   filterServices(
     event: Event
   ): void {
-
-    const value =
+    
+    const filterValue =
       (event.target as HTMLInputElement)
-        .value
+        .value;
+
+    this.dataSource.filter =
+      filterValue
+        .trim()
         .toLowerCase();
-
-    this.services.set(
-
-      this.allServices().filter(service =>
-
-        service.serviceCode
-          .toLowerCase()
-          .includes(value)
-
-        ||
-
-        service.name
-          .toLowerCase()
-          .includes(value)
-
-      )
-
-    );
 
   }
 
@@ -160,7 +200,7 @@ export class ServiceListComponent implements OnInit {
           .deleteService(service.id)
           .subscribe(() => {
 
-            this.loadServices();
+            this.serviceOfferingState.removeServiceOffering(service.id);
 
           });
 
