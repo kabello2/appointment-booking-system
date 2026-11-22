@@ -6,9 +6,9 @@ CREATE TABLE branches
 
     name VARCHAR(255) NOT NULL,
 
-    address_line_1 VARCHAR(255),
+    address_line1 VARCHAR(255),
 
-    address_line_2 VARCHAR(255),
+    address_line2 VARCHAR(255),
 
     suburb VARCHAR(100),
 
@@ -35,3 +35,12 @@ CREATE TABLE branches
     CONSTRAINT uk_branch_code
         UNIQUE (branch_code)
 );
+
+CREATE INDEX idx_branch_code
+    ON branches(branch_code);
+
+CREATE INDEX idx_branch_name
+    ON branches(name);
+
+CREATE INDEX idx_branch_active
+    ON branches(active);
