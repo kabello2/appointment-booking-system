@@ -6,6 +6,7 @@ import com.javaguru.appointmentbooking.entity.ServiceOffering;
 import com.javaguru.appointmentbooking.repository.ServiceOfferingRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.BusinessRuleViolationException;
 import com.javaguru.appointmentbooking.utils.errorhandling.ServiceOfferingNotFoundException;
+import com.javaguru.appointmentbooking.utils.mapper.ServiceOfferingMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class ServiceOfferingService {
 
     private final ServiceOfferingRepository serviceOfferingRepository;
+    private final ServiceOfferingMapper mapper;
 
     @Transactional
     public ServiceOfferingResponse createService(ServiceOfferingRequest request) {
@@ -27,41 +29,17 @@ public class ServiceOfferingService {
             throw new BusinessRuleViolationException("Service code already exists.");
         }
 
-        ServiceOffering service = new ServiceOffering();
-        service.setServiceCode(request.serviceCode());
-        service.setName(request.name());
-        service.setDescription(request.description());
-        service.setDurationMinutes(request.durationMinutes());
-
+        ServiceOffering service = mapper.toEntity(request);
         service.setActive(true);
 
-        ServiceOffering saved =
-                serviceOfferingRepository.save(
-                        service);
-
-        return mapToResponse(saved);
+        return mapper.toResponse(serviceOfferingRepository.save(service));
     }
 
     @Transactional
     public List<ServiceOfferingResponse>
     getServices() {
 
-        return serviceOfferingRepository
-                .findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
-
-    @Transactional
-    public List<ServiceOfferingResponse>
-    getActiveServices() {
-
-        return serviceOfferingRepository
-                .findByActiveTrue()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return mapper.toResponseList(serviceOfferingRepository.findAll());
     }
 
     @Transactional
@@ -74,15 +52,4 @@ public class ServiceOfferingService {
         serviceOfferingRepository.save(service);
     }
 
-    private ServiceOfferingResponse mapToResponse(ServiceOffering serviceOffering) {
-
-        return new ServiceOfferingResponse(
-                serviceOffering.getId(),
-                serviceOffering.getServiceCode(),
-                serviceOffering.getName(),
-                serviceOffering.getDescription(),
-                serviceOffering.getDurationMinutes(),
-                serviceOffering.getActive()
-        );
-    }
 }

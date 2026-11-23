@@ -6,6 +6,7 @@ import com.javaguru.appointmentbooking.entity.Branch;
 import com.javaguru.appointmentbooking.repository.BranchRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.BranchNotFoundException;
 import com.javaguru.appointmentbooking.utils.errorhandling.BusinessRuleViolationException;
+import com.javaguru.appointmentbooking.utils.mapper.BranchMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class BranchService {
 
     private final BranchRepository branchRepository;
+    private final BranchMapper mapper;
 
     public BranchResponse createBranch(BranchRequest request) {
 
@@ -27,20 +29,8 @@ public class BranchService {
                     String.format("Branch code [%s] already exists.", request.branchCode()));
         }
 
-        Branch branch = Branch.builder()
-                .branchCode(request.branchCode())
-                .name(request.name())
-                .addressLine1(request.addressLine1())
-                .addressLine2(request.addressLine2())
-                .suburb(request.suburb())
-                .city(request.city())
-                .province(request.province())
-                .postalCode(request.postalCode())
-                .contactNumber(request.contactNumber())
-                .active(true).build();
-
-        Branch savedBranch = branchRepository.save(branch);
-        return mapToResponse(savedBranch);
+        Branch branch = mapper.toEntity(request);
+        return mapper.toResponse(branchRepository.save(branch));
     }
 
     public BranchResponse updateBranch(
@@ -59,7 +49,7 @@ public class BranchService {
         branch.setPostalCode(request.postalCode());
         branch.setContactNumber(request.contactNumber());
 
-        return mapToResponse(branchRepository.save(branch));
+        return mapper.toResponse(branchRepository.save(branch));
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
@@ -69,16 +59,13 @@ public class BranchService {
         Branch branch = branchRepository.findById(branchId)
                 .orElseThrow(() -> new BranchNotFoundException("Branch not found."));
 
-        return mapToResponse(branch);
+        return mapper.toResponse(branch);
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
     public List<BranchResponse> getBranches() {
 
-        return branchRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return mapper.toResponseList(branchRepository.findAll());
     }
 
     public void deactivateBranch(
@@ -91,21 +78,4 @@ public class BranchService {
         branchRepository.save(branch);
     }
 
-    private BranchResponse mapToResponse(
-            Branch branch) {
-
-        return new BranchResponse(
-                branch.getId(),
-                branch.getBranchCode(),
-                branch.getName(),
-                branch.getAddressLine1(),
-                branch.getAddressLine2(),
-                branch.getSuburb(),
-                branch.getCity(),
-                branch.getProvince(),
-                branch.getPostalCode(),
-                branch.getContactNumber(),
-                branch.getActive()
-        );
-    }
 }

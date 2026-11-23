@@ -15,6 +15,8 @@ import com.javaguru.appointmentbooking.utils.errorhandling.BranchNotFoundExcepti
 import com.javaguru.appointmentbooking.utils.errorhandling.BusinessRuleViolationException;
 import com.javaguru.appointmentbooking.utils.errorhandling.UserAlreadyExistsException;
 import com.javaguru.appointmentbooking.utils.errorhandling.UserNotFoundException;
+import com.javaguru.appointmentbooking.utils.mapper.AppointmentMapper;
+import com.javaguru.appointmentbooking.utils.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,10 +33,10 @@ public class UserManagementService {
     private final UserRepository userRepository;
     private final BranchRepository branchRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper mapper;
 
     @Transactional
-    public UserResponse createUser(
-            CreateUserRequest request) {
+    public UserResponse createUser(CreateUserRequest request) {
 
         if (userRepository.existsByEmail(request.email())) {
 
@@ -55,29 +57,14 @@ public class UserManagementService {
             user.setBranch(branch);
         }
 
-        user.setFirstName(
-                request.firstName());
-
-        user.setLastName(
-                request.lastName());
-
-        user.setEmail(
-                request.email());
-
-        user.setPhoneNumber(
-                request.phoneNumber());
-
-        user.setPasswordHash(
-                passwordEncoder.encode(
-                        request.password())
-        );
-
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(request.email());
+        user.setPhoneNumber(request.phoneNumber());
+        user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setEnabled(true);
 
-        User saved =
-                userRepository.save(user);
-
-        return mapToResponse(saved);
+        return mapper.toResponse(userRepository.save(user));
     }
 
     @Transactional
@@ -85,10 +72,7 @@ public class UserManagementService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
-                        new UserNotFoundException(
-                                "User not found."
-                        )
-                );
+                        new UserNotFoundException("User not found."));
 
         user.setEnabled(true);
 
@@ -99,11 +83,7 @@ public class UserManagementService {
     public void disableUser(UUID userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new UserNotFoundException(
-                                "User not found."
-                        )
-                );
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         user.setEnabled(false);
 
@@ -116,39 +96,24 @@ public class UserManagementService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new UserNotFoundException(
-                                String.format(
-                                        "User with id [%s] not found.",
-                                        userId
-                                )
-                        )
-                );
+                                String.format("User with id [%s] not found.", userId)));
 
-        return mapToResponse(user);
+        return mapper.toResponse(user);
     }
 
     @Transactional
     public List<UserResponse> getUsers() {
 
-        return userRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return mapper.toResponseList(userRepository.findAll());
     }
 
     @Transactional
-    public UserResponse updateUser(
-            UUID userId,
-            UpdateUserRequest request) {
+    public UserResponse updateUser(UUID userId, UpdateUserRequest request) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new UserNotFoundException(
-                                String.format(
-                                        "User with id [%s] not found.",
-                                        userId
-                                )
-                        )
-                );
+                                String.format("User with id [%s] not found.", userId)));
 
         if (!user.getEmail().equalsIgnoreCase(request.email())
                 && userRepository.existsByEmail(request.email())) {
@@ -177,17 +142,15 @@ public class UserManagementService {
         user.setEmail(request.email());
         user.setPhoneNumber(request.phoneNumber());
 
-        User updatedUser =
-                userRepository.save(user);
-
-        return mapToResponse(updatedUser);
+        return mapper.toResponse(userRepository.save(user));
     }
 
     @Transactional
     public UserResponse getUserByEmail(String email) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found."));
-        return mapToResponse(user);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
+        return mapper.toResponse(user);
     }
 
     @Transactional
@@ -240,20 +203,6 @@ public class UserManagementService {
                 .orElseThrow(() -> new UserNotFoundException("User not found."));
     }
 
-    private UserResponse mapToResponse(User user) {
-        return new UserResponse(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getPhoneNumber(),
-                user.getRole(),
-                user.isEnabled(),
-                user.getBranch() != null
-                        ? user.getBranch().getId()
-                        : null
-        );
-    }
 
     private ConsultantResponse mapConsultantResponse(User consultant) {
 

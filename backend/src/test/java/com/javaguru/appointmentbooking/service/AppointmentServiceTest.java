@@ -97,7 +97,7 @@ class AppointmentServiceTest {
                 .thenReturn(Optional.of(serviceOffering));
 
         when(consultantAllocationService
-                .findAvailableConsultant(
+                .allocateConsultant(
                         any(),
                         any(),
                         any(),

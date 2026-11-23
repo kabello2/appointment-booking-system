@@ -161,9 +161,11 @@ Only appointments that have not been completed can be cancelled.
                     description = "Appointment identifier",
                     required = true
             )
-            @PathVariable UUID appointmentId) {
+            @PathVariable UUID appointmentId,
+            Authentication authentication) {
 
-        return ResponseEntity.ok(appointmentService.cancelAppointment(appointmentId));
+        return ResponseEntity.ok(appointmentService
+                .cancelAppointment(appointmentId, authentication));
     }
 
     @Operation(
@@ -198,10 +200,12 @@ Only appointments that have not been completed can be cancelled.
 
             @Valid
             @RequestBody
-            RescheduleAppointmentRequest request) {
+            RescheduleAppointmentRequest request,
+            Authentication authentication
+            ) {
 
         return ResponseEntity.ok(appointmentService
-                .rescheduleAppointment(appointmentId, request));
+                .rescheduleAppointment(appointmentId, request, authentication));
     }
 
     @Operation(
@@ -233,9 +237,10 @@ Only appointments that have not been completed can be cancelled.
                     description = "Appointment identifier",
                     required = true
             )
-            @PathVariable UUID appointmentId) {
+            @PathVariable UUID appointmentId,
+            Authentication authentication) {
 
-        return ResponseEntity.ok(appointmentService.confirmAppointment(appointmentId));
+        return ResponseEntity.ok(appointmentService.confirmAppointment(appointmentId, authentication));
     }
 
     @Operation(
@@ -268,9 +273,10 @@ Only appointments that have not been completed can be cancelled.
                     description = "Appointment identifier",
                     required = true
             )
-            @PathVariable UUID appointmentId) {
+            @PathVariable UUID appointmentId,
+            Authentication authentication) {
 
-        return ResponseEntity.ok(appointmentService.completeAppointment(appointmentId));
+        return ResponseEntity.ok(appointmentService.completeAppointment(appointmentId, authentication));
     }
 
     @Operation(

@@ -39,4 +39,6 @@ public final class ErrorCodes {
     public static final String TOKEN_EXPIRED ="TOKEN_EXPIRED";
 
     public static final String ACCOUNT_DISABLED ="ACCOUNT_DISABLED";
+
+    public static final String RESOURCE_NOT_FOUND = "RESOURCE_NOT_FOUND";
 }

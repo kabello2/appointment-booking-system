@@ -27,6 +27,7 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final LoginFailureService loginFailureService;
 
     public UserResponse register(
             CreateUserRequest request) {
@@ -76,8 +77,8 @@ public class AuthenticationService {
                 savedUser.getBranch() != null ? savedUser.getBranch().getId() : null
         );
     }
-    public AuthenticationResponse login(
-            LoginRequest request) {
+
+    public AuthenticationResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() ->
@@ -91,7 +92,7 @@ public class AuthenticationService {
                 request.password(),
                 user.getPasswordHash())) {
 
-            processFailedLogin(user);
+            loginFailureService.recordFailedLogin(user);
 
             throw new InvalidCredentialsException(
                     "Invalid email or password."
@@ -193,36 +194,12 @@ public class AuthenticationService {
         }
     }
 
-    private void processFailedLogin(User user) {
-
-        int attempts =
-                user.getFailedLoginAttempts() + 1;
-
-        user.setFailedLoginAttempts(attempts);
-
-        if (attempts >= 5) {
-
-            user.setAccountLocked(true);
-
-            user.setLockedUntil(
-                    LocalDateTime.now().plusMinutes(30)
-            );
-
-            log.warn(
-                    "Account locked due to failed login attempts. Email={}",
-                    user.getEmail()
-            );
-        }
-
-        userRepository.save(user);
-    }
-
     private void resetFailedAttempts(User user) {
 
         if (user.getFailedLoginAttempts() > 0) {
 
             user.setFailedLoginAttempts(0);
-
+            user.setAccountLocked(false);
             user.setLockedUntil(null);
 
             userRepository.save(user);
