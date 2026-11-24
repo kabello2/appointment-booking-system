@@ -173,6 +173,11 @@
 			<artifactId>mapstruct</artifactId>
 			<version>1.6.3</version>
 		</dependency>
+		<dependency>
+			<groupId>com.bucket4j</groupId>
+			<artifactId>bucket4j_jdk17-core</artifactId>
+			<version>8.23.0</version>
+		</dependency>
     </dependencies>
 
 	<dependencyManagement>

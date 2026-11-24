@@ -22,6 +22,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final AuthenticationRateLimitFilter authenticationRateLimitFilter;
 
     @Bean
     public AuthenticationManager authenticationManager(
@@ -79,6 +80,10 @@ public class SecurityConfig {
                         .authenticated()
                 )
 
+                .addFilterBefore(
+                        authenticationRateLimitFilter,
+                        JwtAuthenticationFilter.class
+                )
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class

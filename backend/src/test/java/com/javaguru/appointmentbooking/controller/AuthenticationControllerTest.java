@@ -29,7 +29,7 @@ class AuthenticationControllerTest
                 """;
 
         mockMvc.perform(
-                        post("/auth/register")
+                        post("/api/v1/auth/register")
                                 .contentType(
                                         MediaType.APPLICATION_JSON
                                 )

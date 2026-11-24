@@ -18,7 +18,7 @@ public class NotificationControllerTest
             throws Exception {
 
         mockMvc.perform(
-                        get("/notifications")
+                        get("/api/v1/notifications")
                 )
                 .andExpect(status().isUnauthorized());
     }

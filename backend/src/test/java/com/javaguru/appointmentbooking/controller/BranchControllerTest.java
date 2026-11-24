@@ -18,7 +18,7 @@ public class BranchControllerTest
             throws Exception {
 
         mockMvc.perform(
-                        get("/branches")
+                        get("/api/v1/branches")
                 )
                 .andExpect(status().isUnauthorized());
     }

@@ -32,7 +32,7 @@ class AppointmentControllerTest
         );
 
         mockMvc.perform(
-                        post("/appointments")
+                        post("/api/v1/appointments")
                                 .contentType(
                                         MediaType.APPLICATION_JSON
                                 )
