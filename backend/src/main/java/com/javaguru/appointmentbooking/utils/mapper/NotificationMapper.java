@@ -9,11 +9,11 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {
 
-    NotificationResponse toResponse(
-            Notification notification
-    );
-
-    List<NotificationResponse> toResponseList(
-            List<Notification> notifications
-    );
+//    NotificationResponse toResponse(
+//            Notification notification
+//    );
+//
+//    List<NotificationResponse> toResponseList(
+//            List<Notification> notifications
+//    );
 }

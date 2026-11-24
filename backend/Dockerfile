@@ -12,7 +12,7 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY --from=build /workspace/target/appointment-booking.jar app.jar
+COPY --from=build /workspace/target/*.jar app.jar
 
 EXPOSE 8080
 

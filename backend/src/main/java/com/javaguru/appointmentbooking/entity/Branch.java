@@ -29,6 +29,7 @@ public class Branch extends BaseAggregateRoot {
     @Column(nullable = false)
     private String name;
 
+    @Builder.Default
     @OneToMany(
             mappedBy = "branch",
             fetch = FetchType.LAZY
@@ -36,6 +37,7 @@ public class Branch extends BaseAggregateRoot {
     private Set<User> consultants =
             new HashSet<>();
 
+    @Builder.Default
     @OneToMany(
             mappedBy = "branch",
             fetch = FetchType.LAZY

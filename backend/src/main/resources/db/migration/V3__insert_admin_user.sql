@@ -1,0 +1,41 @@
+INSERT INTO users (
+    id,
+    first_name,
+    last_name,
+    email,
+    phone_number,
+    password_hash,
+    role,
+    enabled,
+    account_locked,
+    email_verified,
+    failed_login_attempts,
+    locked_until,
+    branch_id,
+    created_at,
+    created_by,
+    updated_at,
+    updated_by,
+    version
+)
+VALUES
+    (
+        gen_random_uuid(),
+        'System',
+        'Administrator',
+        'admin.booking@mail.com',
+        '0110000000',
+        '$2a$12$0iXaUv33MyUF0zqQsu88DeVTrg0//A7XEoqaQvpMIV02yUR.CFbJe',
+        'ROLE_ADMIN',
+        true,
+        false,
+        true,
+        0,
+        NULL,
+        NULL,
+        NOW(),
+        'SYSTEM',
+        NOW(),
+        'SYSTEM',
+        0
+    );

@@ -7,7 +7,9 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring"
+)
 public interface AppointmentMapper {
 
     @Mapping(
@@ -21,7 +23,11 @@ public interface AppointmentMapper {
     @Mapping(
             target = "consultantName",
             expression =
-                    "java(appointment.getConsultant().getFirstName() + \" \" + appointment.getConsultant().getLastName())"
+                    "java(" +
+                            "appointment.getConsultant().getFirstName() + " +
+                            "\" \" + " +
+                            "appointment.getConsultant().getLastName()" +
+                            ")"
     )
     @Mapping(
             target = "branchId",
@@ -46,5 +52,7 @@ public interface AppointmentMapper {
     List<AppointmentResponse> toResponseList(
             List<Appointment> appointments
     );
+
 }
+
 

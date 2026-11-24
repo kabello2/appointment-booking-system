@@ -30,6 +30,8 @@ CREATE TABLE appointments
 
     version BIGINT NOT NULL DEFAULT 0,
 
+    consultant_id UUID,
+
     CONSTRAINT uk_appointment_number
         UNIQUE (appointment_number),
 
@@ -43,7 +45,11 @@ CREATE TABLE appointments
 
     CONSTRAINT fk_appointment_service
         FOREIGN KEY (service_offering_id)
-            REFERENCES service_offerings(id)
+            REFERENCES service_offerings(id),
+
+    CONSTRAINT fk_appointment_consultant
+        FOREIGN KEY (consultant_id)
+            REFERENCES users(id)
 );
 
 CREATE INDEX idx_appointment_date
@@ -51,3 +57,6 @@ CREATE INDEX idx_appointment_date
 
 CREATE INDEX idx_appointment_customer
     ON appointments(customer_id);
+
+CREATE INDEX idx_appointment_consultant
+    ON appointments(consultant_id);

@@ -4,8 +4,7 @@ import com.javaguru.appointmentbooking.dto.response.ErrorResponse;
 import com.javaguru.appointmentbooking.utils.constants.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +18,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    private static final Logger LOG =
-            LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
@@ -213,7 +210,7 @@ public class GlobalExceptionHandler {
             DataIntegrityViolationException ex,
             HttpServletRequest request) {
 
-        LOG.error("Database constraint violation", ex);
+        log.error("Database constraint violation", ex);
 
         return buildResponse(
                 HttpStatus.CONFLICT,
@@ -228,7 +225,7 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request) {
 
-        LOG.error("Unexpected error occurred", ex);
+        log.error("Unexpected error occurred", ex);
 
         return buildResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -285,6 +282,19 @@ public class GlobalExceptionHandler {
         return buildResponse(
                 HttpStatus.UNAUTHORIZED,
                 ErrorCodes.ACCOUNT_DISABLED,
+                ex.getMessage(),
+                request
+        );
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(
+            ResourceNotFoundException ex,
+            HttpServletRequest request) {
+
+        return buildResponse(
+                HttpStatus.NOT_FOUND,
+                ErrorCodes.RESOURCE_NOT_FOUND,
                 ex.getMessage(),
                 request
         );

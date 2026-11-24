@@ -15,6 +15,8 @@ import com.javaguru.appointmentbooking.utils.errorhandling.BranchNotFoundExcepti
 import com.javaguru.appointmentbooking.utils.errorhandling.BusinessRuleViolationException;
 import com.javaguru.appointmentbooking.utils.errorhandling.UserAlreadyExistsException;
 import com.javaguru.appointmentbooking.utils.errorhandling.UserNotFoundException;
+import com.javaguru.appointmentbooking.utils.mapper.AppointmentMapper;
+import com.javaguru.appointmentbooking.utils.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,79 +33,57 @@ public class UserManagementService {
     private final UserRepository userRepository;
     private final BranchRepository branchRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserResponse createConsultant(CreateConsultantRequest request) {
-
-        if (userRepository.existsByEmail(request.email())) {
-            throw new UserAlreadyExistsException("Consultant already exists.");
-        }
-        Branch branch = branchRepository.findById(request.branchId())
-                        .orElseThrow(() -> new BranchNotFoundException("Branch not found."));
-
-        User consultant = new User();
-        consultant.setFirstName(request.firstName());
-        consultant.setLastName(request.lastName());
-        consultant.setEmail(request.email());
-        consultant.setPhoneNumber(request.phoneNumber());
-        consultant.setPasswordHash(passwordEncoder.encode(request.password()));
-        consultant.setRole(Role.ROLE_CONSULTANT);
-        consultant.setBranch(branch);
-        consultant.setEnabled(true);
-        User saved = userRepository.save(consultant);
-        return mapToResponse(saved);
-    }
+    private final UserMapper mapper;
 
     @Transactional
-    public UserResponse createAdmin(
-            CreateUserRequest request) {
+    public UserResponse createUser(CreateUserRequest request) {
 
-        if (userRepository.existsByEmail(
-                request.email())) {
+        if (userRepository.existsByEmail(request.email())) {
 
             throw new UserAlreadyExistsException(
                     "User already exists."
             );
         }
 
-        User admin = new User();
+        User user = new User();
 
-        admin.setFirstName(
-                request.firstName());
+        user.setRole(request.role());
 
-        admin.setLastName(
-                request.lastName());
+        if (request.role() == Role.ROLE_CONSULTANT) {
 
-        admin.setEmail(
-                request.email());
+            Branch branch = branchRepository.findById(request.branchId())
+                    .orElseThrow(() -> new BranchNotFoundException("Branch not found."));
 
-        admin.setPhoneNumber(
-                request.phoneNumber());
+            user.setBranch(branch);
+        }
 
-        admin.setPasswordHash(
-                passwordEncoder.encode(
-                        request.password())
-        );
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(request.email());
+        user.setPhoneNumber(request.phoneNumber());
+        user.setPasswordHash(passwordEncoder.encode(request.password()));
+        user.setEnabled(true);
 
-        admin.setRole(
-                Role.ROLE_ADMIN);
+        return mapper.toResponse(userRepository.save(user));
+    }
 
-        admin.setEnabled(true);
+    @Transactional
+    public void enableUser(UUID userId) {
 
-        User saved =
-                userRepository.save(admin);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found."));
 
-        return mapToResponse(saved);
+        user.setEnabled(true);
+
+        userRepository.save(user);
     }
 
     @Transactional
     public void disableUser(UUID userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new UserNotFoundException(
-                                "User not found."
-                        )
-                );
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         user.setEnabled(false);
 
@@ -116,39 +96,24 @@ public class UserManagementService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new UserNotFoundException(
-                                String.format(
-                                        "User with id [%s] not found.",
-                                        userId
-                                )
-                        )
-                );
+                                String.format("User with id [%s] not found.", userId)));
 
-        return mapToResponse(user);
+        return mapper.toResponse(user);
     }
 
     @Transactional
     public List<UserResponse> getUsers() {
 
-        return userRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return mapper.toResponseList(userRepository.findAll());
     }
 
     @Transactional
-    public UserResponse updateUser(
-            UUID userId,
-            UpdateUserRequest request) {
+    public UserResponse updateUser(UUID userId, UpdateUserRequest request) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new UserNotFoundException(
-                                String.format(
-                                        "User with id [%s] not found.",
-                                        userId
-                                )
-                        )
-                );
+                                String.format("User with id [%s] not found.", userId)));
 
         if (!user.getEmail().equalsIgnoreCase(request.email())
                 && userRepository.existsByEmail(request.email())) {
@@ -161,22 +126,31 @@ public class UserManagementService {
             );
         }
 
+        if (request.role() == Role.ROLE_CONSULTANT
+                && (user.getBranch() != null && request.branchId() != null)
+                && !user.getBranch().getId().equals(request.branchId())) {
+
+            Branch branch = branchRepository.findById(request.branchId())
+                    .orElseThrow(() -> new BranchNotFoundException("Branch not found."));
+
+            user.setBranch(branch);
+
+        }
+
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
         user.setEmail(request.email());
         user.setPhoneNumber(request.phoneNumber());
 
-        User updatedUser =
-                userRepository.save(user);
-
-        return mapToResponse(updatedUser);
+        return mapper.toResponse(userRepository.save(user));
     }
 
     @Transactional
     public UserResponse getUserByEmail(String email) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found."));
-        return mapToResponse(user);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
+        return mapper.toResponse(user);
     }
 
     @Transactional
@@ -229,20 +203,6 @@ public class UserManagementService {
                 .orElseThrow(() -> new UserNotFoundException("User not found."));
     }
 
-    private UserResponse mapToResponse(User user) {
-        return new UserResponse(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getPhoneNumber(),
-                user.getRole(),
-                user.isEnabled(),
-                user.getBranch() != null
-                        ? user.getBranch().getId()
-                        : null
-        );
-    }
 
     private ConsultantResponse mapConsultantResponse(User consultant) {
 

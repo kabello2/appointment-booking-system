@@ -85,7 +85,7 @@ class ConsultantAllocationServiceTest {
 
         User selected =
                 consultantAllocationService
-                        .findAvailableConsultant(
+                        .allocateConsultant(
                                 branchId,
                                 appointmentDate,
                                 LocalTime.of(10, 0),
@@ -111,7 +111,7 @@ class ConsultantAllocationServiceTest {
         assertThrows(
                 BusinessRuleViolationException.class,
                 () -> consultantAllocationService
-                        .findAvailableConsultant(
+                        .allocateConsultant(
                                 UUID.randomUUID(),
                                 LocalDate.now(),
                                 LocalTime.of(10, 0),

@@ -147,15 +147,20 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             LocalDate toDate
     );
 
-    List<Appointment> findByConsultantIdAndStatus(
-            UUID consultantId,
-            AppointmentStatus status
+    Optional<Appointment> findByIdAndConsultantId(
+            UUID appointmentId,
+            UUID consultantId
     );
 
     List<Appointment>
     findByCustomerIdAndAppointmentDateGreaterThanEqualOrderByAppointmentDateAsc(
             UUID customerId,
             LocalDate appointmentDate
+    );
+
+    Optional<Appointment> findByIdAndCustomerId(
+            UUID appointmentId,
+            UUID customerId
     );
 
     List<Appointment>
@@ -183,6 +188,18 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
     long countUpcomingAppointments(
             UUID customerId,
             LocalDate today
+    );
+
+    @Query("""
+       SELECT a
+       FROM Appointment a
+       WHERE a.customer.id = :customerId
+       AND a.appointmentDate = :appointmentDate
+       AND a.status <> com.javaguru.appointmentbooking.entity.enums.AppointmentStatus.CANCELLED
+       """)
+    List<Appointment> findActiveAppointmentsForCustomer(
+            UUID customerId,
+            LocalDate appointmentDate
     );
 
 }

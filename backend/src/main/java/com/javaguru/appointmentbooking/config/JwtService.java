@@ -1,6 +1,7 @@
 package com.javaguru.appointmentbooking.config;
 
 import com.javaguru.appointmentbooking.entity.User;
+import com.javaguru.appointmentbooking.utils.errorhandling.TokenExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -46,7 +47,11 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        try {
+            return extractExpiration(token).before(new Date());
+        } catch (TokenExpiredException e) {
+            return true;
+        }
     }
 
     private Date extractExpiration(String token) {

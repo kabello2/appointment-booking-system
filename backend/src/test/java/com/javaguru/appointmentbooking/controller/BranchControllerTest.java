@@ -2,13 +2,16 @@ package com.javaguru.appointmentbooking.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class BranchControllerTest
-        extends BaseIntegrationTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+public class BranchControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -18,7 +21,7 @@ public class BranchControllerTest
             throws Exception {
 
         mockMvc.perform(
-                        get("/branches")
+                        get("/api/v1/branches")
                 )
                 .andExpect(status().isUnauthorized());
     }

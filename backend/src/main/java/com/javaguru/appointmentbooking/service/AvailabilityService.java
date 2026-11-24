@@ -3,7 +3,25 @@ package com.javaguru.appointmentbooking.service;
 import com.javaguru.appointmentbooking.config.AppointmentProperties;
 import com.javaguru.appointmentbooking.dto.response.AvailableSlotResponse;
 import com.javaguru.appointmentbooking.entity.Appointment;
+import com.javaguru.appointmentbooking.entity.enums.Role;
 import com.javaguru.appointmentbooking.repository.AppointmentRepository;
+import com.javaguru.appointmentbooking.utils.errorhandling.BusinessRuleViolationException;
+import com.javaguru.appointmentbooking.utils.errorhandling.DuplicateAppointmentException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import com.javaguru.appointmentbooking.config.AppointmentProperties;
+import com.javaguru.appointmentbooking.dto.response.AvailableSlotResponse;
+import com.javaguru.appointmentbooking.entity.Appointment;
+import com.javaguru.appointmentbooking.entity.User;
+import com.javaguru.appointmentbooking.repository.AppointmentRepository;
+import com.javaguru.appointmentbooking.repository.UserRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.BusinessRuleViolationException;
 import com.javaguru.appointmentbooking.utils.errorhandling.DuplicateAppointmentException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +38,7 @@ import java.util.UUID;
 public class AvailabilityService {
 
     private final AppointmentRepository appointmentRepository;
+    private final UserRepository userRepository;
     private final AppointmentProperties appointmentProperties;
 
     public void validateAppointmentDate(
@@ -60,8 +79,8 @@ public class AvailabilityService {
         }
     }
 
-    public void validateBranchAvailability(
-            UUID branchId,
+    public void validateConsultantAvailability(
+            UUID consultantId,
             LocalDate appointmentDate,
             LocalTime proposedStartTime,
             LocalTime proposedEndTime,
@@ -69,8 +88,8 @@ public class AvailabilityService {
 
         boolean overlaps =
                 appointmentRepository
-                        .findActiveAppointmentsForBranch(
-                                branchId,
+                        .findActiveAppointmentsForConsultant(
+                                consultantId,
                                 appointmentDate
                         )
                         .stream()
@@ -97,7 +116,49 @@ public class AvailabilityService {
         if (overlaps) {
 
             throw new DuplicateAppointmentException(
-                    "Selected appointment slot overlaps with an existing booking."
+                    "Consultant already has an appointment during this time."
+            );
+        }
+    }
+
+    public void validateCustomerAvailability(
+            UUID customerId,
+            LocalDate appointmentDate,
+            LocalTime proposedStartTime,
+            LocalTime proposedEndTime,
+            UUID currentAppointmentId) {
+
+        boolean overlaps =
+                appointmentRepository
+                        .findActiveAppointmentsForCustomer(
+                                customerId,
+                                appointmentDate
+                        )
+                        .stream()
+
+                        .filter(appointment ->
+                                currentAppointmentId == null
+                                        || !appointment.getId()
+                                        .equals(currentAppointmentId)
+                        )
+
+                        .anyMatch(appointment ->
+
+                                proposedStartTime.isBefore(
+                                        appointment.getEndTime()
+                                )
+
+                                        &&
+
+                                        proposedEndTime.isAfter(
+                                                appointment.getStartTime()
+                                        )
+                        );
+
+        if (overlaps) {
+
+            throw new DuplicateAppointmentException(
+                    "Customer already has an appointment during this time."
             );
         }
     }
@@ -133,12 +194,11 @@ public class AvailabilityService {
             UUID branchId,
             LocalDate appointmentDate) {
 
-        List<Appointment> appointments =
-                appointmentRepository
-                        .findActiveAppointmentsForBranch(
-                                branchId,
-                                appointmentDate
-                        );
+        List<User> consultants = userRepository.findByRoleAndBranchIdAndEnabled(
+                Role.ROLE_CONSULTANT,
+                branchId,
+                true
+        );
 
         List<AvailableSlotResponse> slots =
                 new ArrayList<>();
@@ -164,28 +224,23 @@ public class AvailabilityService {
         while (current.plusMinutes(slotDuration)
                 .compareTo(closing) <= 0) {
 
+            LocalTime slotStart = current;
+
             LocalTime slotEnd =
                     current.plusMinutes(slotDuration);
 
-            LocalTime slotStart =
-                    current;
-
-            boolean occupied =
-                    appointments.stream()
-                            .anyMatch(appointment ->
-
-                                    slotStart.isBefore(
-                                            appointment.getEndTime()
+            boolean available =
+                    consultants.stream()
+                            .anyMatch(consultant ->
+                                    isConsultantAvailable(
+                                            consultant.getId(),
+                                            appointmentDate,
+                                            slotStart,
+                                            slotEnd
                                     )
-
-                                            &&
-
-                                            slotEnd.isAfter(
-                                                    appointment.getStartTime()
-                                            )
                             );
 
-            if (!occupied) {
+            if (available) {
 
                 slots.add(
                         new AvailableSlotResponse(

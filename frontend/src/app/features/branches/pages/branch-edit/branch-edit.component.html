@@ -1,0 +1,136 @@
+<div class="page-container">
+
+  <h1>Edit Branch</h1>
+
+
+  <div class="form-card">
+
+    <form [formGroup]="form">
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Branch Code
+        </mat-label>
+
+        <input matInput formControlName="branchCode">
+
+        @if (form.controls.branchCode.hasError('required')) {
+
+        <mat-error>
+          Branch code is required
+        </mat-error>
+
+        }
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Branch Name
+        </mat-label>
+
+        <input matInput formControlName="name">
+
+        @if (form.controls.name.hasError('required')) {
+
+        <mat-error>
+          Branch name is required
+        </mat-error>
+
+        }
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Address Line 1
+        </mat-label>
+
+        <input matInput formControlName="addressLine1">
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Address Line 2
+        </mat-label>
+
+        <input matInput formControlName="addressLine2">
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Suburb
+        </mat-label>
+
+        <input matInput formControlName="suburb">
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          City
+        </mat-label>
+
+        <input matInput formControlName="city">
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Province
+        </mat-label>
+
+        <input matInput formControlName="province">
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Postal Code
+        </mat-label>
+
+        <input matInput formControlName="postalCode">
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Contact Number
+        </mat-label>
+
+        <input matInput formControlName="contactNumber">
+
+      </mat-form-field>
+
+      <div class="form-actions">
+
+        <button type="button" mat-stroked-button (click)="cancel()">
+
+          Cancel
+
+        </button>
+
+        <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">
+
+          Update
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

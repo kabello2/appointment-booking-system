@@ -1,0 +1,67 @@
+.page-container {
+
+  padding: 1.5rem;
+
+}
+
+.schedule-day {
+
+  margin-bottom: 2rem;
+
+}
+
+.appointments {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(320px, 1fr)
+    );
+
+  gap: 1rem;
+
+}
+
+mat-card {
+
+  padding: 1rem;
+
+}
+
+.status {
+
+  padding: 0.35rem 0.75rem;
+
+  border-radius: 16px;
+
+  color: white;
+
+  font-weight: 600;
+
+}
+
+.pending {
+
+  background: #f9a825;
+
+}
+
+.confirmed {
+
+  background: #1976d2;
+
+}
+
+.completed {
+
+  background: #2e7d32;
+
+}
+
+.cancelled {
+
+  background: #d32f2f;
+
+}

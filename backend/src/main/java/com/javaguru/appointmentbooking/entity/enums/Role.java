@@ -20,7 +20,11 @@ public enum Role {
                     Permission.BRANCH_DELETE,
                     Permission.APPOINTMENT_VIEW,
                     Permission.APPOINTMENT_CONFIRM,
-                    Permission.APPOINTMENT_COMPLETE
+                    Permission.APPOINTMENT_COMPLETE,
+                    Permission.SERVICE_CREATE,
+                    Permission.SERVICE_VIEW,
+                    Permission.SERVICE_UPDATE,
+                    Permission.SERVICE_DELETE
             )
     ),
 
@@ -35,7 +39,9 @@ public enum Role {
     ROLE_CUSTOMER(
             Set.of(
                     Permission.APPOINTMENT_BOOK,
-                    Permission.APPOINTMENT_VIEW_OWN
+                    Permission.APPOINTMENT_VIEW_OWN,
+                    Permission.BRANCH_VIEW,
+                    Permission.SERVICE_VIEW
             )
     );
 

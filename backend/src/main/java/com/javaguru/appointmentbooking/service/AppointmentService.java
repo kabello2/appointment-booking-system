@@ -9,13 +9,17 @@ import com.javaguru.appointmentbooking.entity.Branch;
 import com.javaguru.appointmentbooking.entity.ServiceOffering;
 import com.javaguru.appointmentbooking.entity.User;
 import com.javaguru.appointmentbooking.entity.enums.AppointmentStatus;
+import com.javaguru.appointmentbooking.entity.enums.Role;
 import com.javaguru.appointmentbooking.repository.AppointmentRepository;
 import com.javaguru.appointmentbooking.repository.BranchRepository;
 import com.javaguru.appointmentbooking.repository.ServiceOfferingRepository;
 import com.javaguru.appointmentbooking.repository.UserRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.*;
+import com.javaguru.appointmentbooking.utils.mapper.AppointmentMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,54 +40,34 @@ public class AppointmentService {
     private final AvailabilityService availabilityService;
     private final ConsultantAllocationService consultantAllocationService;
     private final NotificationService notificationService;
+    private final AppointmentMapper mapper;
 
-    public AppointmentResponse bookAppointment(
-            UUID customerId,
-            BookAppointmentRequest request) {
+    public AppointmentResponse bookAppointment(UUID customerId, BookAppointmentRequest request) {
 
         User customer = userRepository.findById(customerId)
-                .orElseThrow(() ->
-                        new UserNotFoundException(
-                                "Customer not found."));
+                .orElseThrow(() -> new UserNotFoundException("Customer not found."));
 
-        Branch branch = branchRepository.findById(
-                        request.branchId())
-                .orElseThrow(() ->
-                        new BranchNotFoundException(
-                                "Branch not found."
-                        )
-                );
+        Branch branch = branchRepository.findById(request.branchId())
+                .orElseThrow(() -> new BranchNotFoundException("Branch not found."));
 
         if (!Boolean.TRUE.equals(branch.getActive())) {
-
             throw new BusinessRuleViolationException(
                     "Selected branch is inactive."
             );
         }
 
-        ServiceOffering serviceOffering =
-                serviceOfferingRepository.findById(
-                                request.serviceOfferingId())
-                        .orElseThrow(
-                                () ->
-                                        new ServiceOfferingNotFoundException(
-                                                "Service offering not found."
-                                        )
-                        );
+        ServiceOffering serviceOffering = serviceOfferingRepository
+                .findById(request.serviceOfferingId())
+                .orElseThrow(() -> new ServiceOfferingNotFoundException("Service offering not found."));
 
-        if (!Boolean.TRUE.equals(
-                serviceOffering.getActive())) {
-
+        if (!Boolean.TRUE.equals(serviceOffering.getActive())) {
             throw new BusinessRuleViolationException(
                     "Selected service offering is inactive."
             );
         }
 
-        LocalTime proposedEndTime =
-                request.startTime()
-                        .plusMinutes(
-                                serviceOffering.getDurationMinutes()
-                        );
+        LocalTime proposedEndTime = request.startTime()
+                .plusMinutes(serviceOffering.getDurationMinutes());
 
         availabilityService.validateAppointmentDate(
                 request.appointmentDate()
@@ -94,163 +78,129 @@ public class AppointmentService {
                 proposedEndTime
         );
 
-        availabilityService.validateBranchAvailability(
-                branch.getId(),
+        availabilityService.validateCustomerAvailability(
+                customer.getId(),
                 request.appointmentDate(),
                 request.startTime(),
                 proposedEndTime,
                 null
         );
 
-        User consultant =
-                consultantAllocationService
-                        .findAvailableConsultant(
-                                branch.getId(),
-                                request.appointmentDate(),
-                                request.startTime(),
-                                serviceOffering.getDurationMinutes()
-                        );
+        User consultant = consultantAllocationService
+                .allocateConsultant(
+                        branch.getId(),
+                        request.appointmentDate(),
+                        request.startTime(),
+                        serviceOffering.getDurationMinutes()
+                );
 
-        Appointment appointment =
-                new Appointment();
-
-        appointment.setAppointmentNumber(
-                generateAppointmentNumber()
+        availabilityService.validateConsultantAvailability(
+                consultant.getId(),
+                request.appointmentDate(),
+                request.startTime(),
+                proposedEndTime,
+                null
         );
 
+
+        Appointment appointment =new Appointment();
+        appointment.setAppointmentNumber(generateAppointmentNumber());
         appointment.setCustomer(customer);
-
-        appointment.setConsultant(
-                consultant
-        );
-
+        appointment.setConsultant(consultant);
         appointment.setBranch(branch);
+        appointment.setServiceOffering(serviceOffering);
+        appointment.setAppointmentDate(request.appointmentDate());
+        appointment.setStartTime(request.startTime());
+        appointment.setEndTime(proposedEndTime);
+        appointment.setStatus(AppointmentStatus.BOOKED);
+        appointment.setNotes(request.notes());
 
-        appointment.setServiceOffering(
-                serviceOffering
-        );
 
-        appointment.setAppointmentDate(
-                request.appointmentDate()
-        );
+        try {
 
-        appointment.setStartTime(
-                request.startTime()
-        );
+            Appointment saved = appointmentRepository.save(appointment);
+            notificationService.createAppointmentBookedNotification(saved);
 
-        appointment.setEndTime(
-                proposedEndTime
-        );
+            return mapper.toResponse(saved);
 
-        appointment.setStatus(
-                AppointmentStatus.BOOKED
-        );
-
-        appointment.setNotes(
-                request.notes()
-        );
-
-        Appointment saved =
-                appointmentRepository.save(
-                        appointment
-                );
-
-        notificationService
-                .createAppointmentBookedNotification(
-                        saved
-                );
-
-        return mapToResponse(saved);
+        } catch (DataIntegrityViolationException ex) {
+            throw new DuplicateAppointmentException(
+                    "Selected appointment slot is no longer available.");
+        }
     }
 
-    public AppointmentResponse getAppointment(
-            UUID appointmentId) {
+    public AppointmentResponse getAppointment(UUID appointmentId) {
 
-        Appointment appointment =
-                appointmentRepository.findById(
-                                appointmentId)
-                        .orElseThrow(
-                                () ->
-                                        new AppointmentNotFoundException(
-                                                "Appointment not found."
-                                        )
-                        );
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("Appointment not found."));
 
-        return mapToResponse(appointment);
+        return mapper.toResponse(appointment);
     }
 
-    public List<AppointmentResponse> getMyAppointments(
-            UUID customerId) {
+    public List<AppointmentResponse> getMyAppointments(Authentication authentication) {
 
-        return appointmentRepository
-                .findByCustomerId(customerId)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
+
+        List<Appointment> appointments;
+
+        if (user.getRole().equals(Role.ROLE_CONSULTANT)) {
+
+            appointments = appointmentRepository
+                    .findByConsultantIdOrderByAppointmentDateAscStartTimeAsc(
+                            user.getId()
+                    );
+
+        } else if (user.getRole().equals(Role.ROLE_CUSTOMER)) {
+
+            appointments = appointmentRepository
+                    .findByCustomerId(user.getId());
+        } else {
+
+            appointments = appointmentRepository
+                    .findAll();
+        }
+
+        return mapper.toResponseList(appointments);
+
     }
 
-    public AppointmentResponse cancelAppointment(
-            UUID appointmentId) {
+    public AppointmentResponse cancelAppointment(UUID appointmentId, Authentication authentication) {
 
-        Appointment appointment =
-                appointmentRepository.findById(
-                                appointmentId)
-                        .orElseThrow(
-                                () ->
-                                        new AppointmentNotFoundException(
-                                                "Appointment not found."
-                                        )
-                        );
+        Appointment appointment = getAccessibleAppointment(appointmentId, authentication);
 
-        if (appointment.getStatus()
-                == AppointmentStatus.COMPLETED) {
-
+        if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
             throw new BusinessRuleViolationException(
                     "Completed appointments cannot be cancelled."
             );
         }
-
-        appointment.setStatus(
+        validateTransition(
+                appointment,
                 AppointmentStatus.CANCELLED
         );
+        appointment.setStatus(AppointmentStatus.CANCELLED);
 
-        Appointment saved =
-                appointmentRepository.save(
-                        appointment
-                );
-
-        return mapToResponse(saved);
+        return mapper.toResponse(appointmentRepository.save(
+                appointment)
+        );
     }
 
     public AppointmentResponse rescheduleAppointment(
             UUID appointmentId,
-            RescheduleAppointmentRequest request) {
+            RescheduleAppointmentRequest request,
+            Authentication authentication) {
 
-        Appointment appointment =
-                appointmentRepository.findById(
-                                appointmentId)
-                        .orElseThrow(
-                                () ->
-                                        new AppointmentNotFoundException(
-                                                "Appointment not found."
-                                        )
-                        );
+        Appointment appointment = getAccessibleAppointment(appointmentId, authentication);
 
-        if (appointment.getStatus()
-                == AppointmentStatus.COMPLETED) {
+        if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
 
             throw new BusinessRuleViolationException(
                     "Completed appointments cannot be rescheduled."
             );
         }
 
-        LocalTime proposedEndTime =
-                request.startTime()
-                        .plusMinutes(
-                                appointment
-                                        .getServiceOffering()
-                                        .getDurationMinutes()
-                        );
+        LocalTime proposedEndTime = request.startTime().plusMinutes(
+                appointment.getServiceOffering().getDurationMinutes());
 
         availabilityService.validateAppointmentDate(
                 request.appointmentDate()
@@ -261,91 +211,79 @@ public class AppointmentService {
                 proposedEndTime
         );
 
-        availabilityService.validateBranchAvailability(
-                appointment.getBranch().getId(),
+        availabilityService.validateCustomerAvailability(
+                appointment.getCustomer().getId(),
                 request.appointmentDate(),
                 request.startTime(),
                 proposedEndTime,
                 appointment.getId()
         );
 
-        appointment.setAppointmentDate(
-                request.appointmentDate()
+        availabilityService.validateConsultantAvailability(
+                appointment.getConsultant().getId(),
+                request.appointmentDate(),
+                request.startTime(),
+                proposedEndTime,
+                appointment.getId()
         );
 
-        appointment.setStartTime(
-                request.startTime()
-        );
-
-        appointment.setEndTime(
-                proposedEndTime
-        );
-
-        appointment.setStatus(
+        validateTransition(
+                appointment,
                 AppointmentStatus.RESCHEDULED
         );
-
-        Appointment saved =
-                appointmentRepository.save(
-                        appointment
-                );
-
-        return mapToResponse(saved);
-    }
-
-    public AppointmentResponse confirmAppointment(
-            UUID appointmentId) {
-
-        Appointment appointment =
-                appointmentRepository.findById(
-                                appointmentId)
-                        .orElseThrow(
-                                () ->
-                                        new AppointmentNotFoundException(
-                                                "Appointment not found."
-                                        )
+        User consultant =
+                consultantAllocationService
+                        .allocateConsultant(
+                                appointment.getBranch().getId(),
+                                request.appointmentDate(),
+                                request.startTime(),
+                                appointment.getServiceOffering().getDurationMinutes()
                         );
 
-        appointment.setStatus(
-                AppointmentStatus.CONFIRMED
+        appointment.setConsultant(consultant);
+        appointment.setAppointmentDate(request.appointmentDate());
+        appointment.setStartTime(request.startTime());
+        appointment.setEndTime(request.startTime()
+                        .plusMinutes(appointment.getServiceOffering().getDurationMinutes())
         );
 
-        return mapToResponse(
-                appointmentRepository.save(
-                        appointment
-                )
+        return mapper.toResponse(
+                appointmentRepository.save(appointment)
+        );
+    }
+
+    public AppointmentResponse confirmAppointment(UUID appointmentId, Authentication authentication) {
+
+        Appointment appointment = getAccessibleAppointment(appointmentId, authentication);
+        validateTransition(
+                appointment,
+                AppointmentStatus.CONFIRMED
+        );
+        appointment.setStatus(AppointmentStatus.CONFIRMED);
+
+        return mapper.toResponse(
+                appointmentRepository.save(appointment)
         );
     }
 
     public AppointmentResponse completeAppointment(
-            UUID appointmentId) {
+            UUID appointmentId, Authentication authentication) {
 
-        Appointment appointment =
-                appointmentRepository.findById(
-                                appointmentId)
-                        .orElseThrow(
-                                () ->
-                                        new AppointmentNotFoundException(
-                                                "Appointment not found."
-                                        )
-                        );
+        Appointment appointment = getAccessibleAppointment(appointmentId, authentication);
 
-        if (appointment.getStatus()
-                != AppointmentStatus.CONFIRMED) {
-
+        if (appointment.getStatus() != AppointmentStatus.CONFIRMED) {
             throw new BusinessRuleViolationException(
                     "Only confirmed appointments can be completed."
             );
         }
 
-        appointment.setStatus(
+        validateTransition(
+                appointment,
                 AppointmentStatus.COMPLETED
         );
+        appointment.setStatus(AppointmentStatus.COMPLETED);
 
-        return mapToResponse(
-                appointmentRepository.save(
-                        appointment
-                )
+        return mapper.toResponse(appointmentRepository.save(appointment)
         );
     }
 
@@ -363,59 +301,40 @@ public class AppointmentService {
                 .toUpperCase();
     }
 
-    public List<AppointmentResponse>
-    getAppointmentsByStatus(
-            UUID customerId,
-            AppointmentStatus status) {
+    public List<AppointmentResponse> getAppointmentsByStatus(UUID customerId, AppointmentStatus status) {
 
-        return appointmentRepository
+        return mapper.toResponseList(appointmentRepository
                 .findByCustomerIdAndStatus(
                         customerId,
                         status
-                )
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+                ));
     }
 
-    public List<AppointmentResponse>
-    getAppointmentsByDateRange(
-            UUID customerId,
-            LocalDate fromDate,
-            LocalDate toDate) {
+    public List<AppointmentResponse> getAppointmentsByDateRange(UUID customerId, LocalDate fromDate, LocalDate toDate) {
 
-        return appointmentRepository
+        return mapper.toResponseList(appointmentRepository
                 .findByCustomerIdAndAppointmentDateBetween(
                         customerId,
                         fromDate,
                         toDate
-                )
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+                ));
     }
 
     public List<AppointmentResponse> getUpcomingAppointments(UUID customerId) {
 
-        return appointmentRepository
+        return mapper.toResponseList(appointmentRepository
                 .findByCustomerIdAndAppointmentDateGreaterThanEqualOrderByAppointmentDateAsc(
                         customerId,
                         LocalDate.now()
-                )
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+                ));
     }
 
     public List<AppointmentResponse> getConsultantAppointments(UUID consultantId) {
 
-        return appointmentRepository
+        return mapper.toResponseList(appointmentRepository
                 .findByConsultantIdOrderByAppointmentDateAscStartTimeAsc(
                         consultantId
-                )
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+                ));
     }
 
     public MyDashboardResponse getCustomerDashboard(UUID customerId) {
@@ -442,32 +361,53 @@ public class AppointmentService {
         );
     }
 
-    private AppointmentResponse mapToResponse(
-            Appointment appointment) {
+    private User getCurrentUser(Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
+    }
 
-        return new AppointmentResponse(
-                appointment.getId(),
-                appointment.getAppointmentNumber(),
-                appointment.getAppointmentDate(),
-                appointment.getStartTime(),
-                appointment.getEndTime(),
-                appointment.getStatus(),
+    private Appointment getAccessibleAppointment(UUID appointmentId, Authentication authentication) {
+        Appointment appointment;
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-                appointment.getCustomer().getId(),
+        if (user.getRole() == Role.ROLE_CUSTOMER) {
 
-                appointment.getConsultant().getId(),
+            appointment = appointmentRepository
+                    .findByIdAndCustomerId(
+                            appointmentId,
+                            user.getId()
+                    )
+                    .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
 
-                appointment.getConsultant()
-                        .getFirstName()
-                        + " "
-                        + appointment.getConsultant()
-                        .getLastName(),
+        } else if (user.getRole() == Role.ROLE_CONSULTANT) {
 
-                appointment.getBranch().getId(),
-                appointment.getBranch().getName(),
+            appointment = appointmentRepository
+                    .findByIdAndConsultantId(
+                            appointmentId,
+                            user.getId()
+                    )
+                    .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
 
-                appointment.getServiceOffering().getId(),
-                appointment.getServiceOffering().getName()
-        );
+        } else {
+            appointment = appointmentRepository.findById(appointmentId)
+                    .orElseThrow(() -> new AppointmentNotFoundException("Appointment not found."));
+        }
+        return appointment;
+    }
+
+    private void validateTransition(Appointment appointment, AppointmentStatus targetStatus) {
+
+        if (!appointment.getStatus().canTransitionTo(targetStatus)) {
+
+            throw new BusinessRuleViolationException(
+                    String.format(
+                            "Appointment cannot transition from %s to %s",
+                            appointment.getStatus(),
+                            targetStatus
+                    )
+            );
+        }
+
     }
 }

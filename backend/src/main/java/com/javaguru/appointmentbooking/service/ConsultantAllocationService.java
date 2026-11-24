@@ -1,7 +1,6 @@
 package com.javaguru.appointmentbooking.service;
 
 import com.javaguru.appointmentbooking.entity.User;
-import com.javaguru.appointmentbooking.entity.enums.AppointmentStatus;
 import com.javaguru.appointmentbooking.entity.enums.Role;
 import com.javaguru.appointmentbooking.repository.AppointmentRepository;
 import com.javaguru.appointmentbooking.repository.UserRepository;
@@ -25,7 +24,7 @@ public class ConsultantAllocationService {
 
     private final AvailabilityService availabilityService;
 
-    public User findAvailableConsultant(
+    public User allocateConsultant(
             UUID branchId,
             LocalDate appointmentDate,
             LocalTime startTime,

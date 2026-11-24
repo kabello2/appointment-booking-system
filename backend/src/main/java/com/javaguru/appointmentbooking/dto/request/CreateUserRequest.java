@@ -1,9 +1,12 @@
 package com.javaguru.appointmentbooking.dto.request;
 
+import com.javaguru.appointmentbooking.entity.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+
+import java.util.UUID;
 
 public record CreateUserRequest(
 
@@ -32,5 +35,9 @@ public record CreateUserRequest(
                         "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{12,64}$",
                 message = "Password does not meet complexity requirements"
         )
-        String password
+        String password,
+
+        Role role,
+
+        UUID branchId
 ) { }

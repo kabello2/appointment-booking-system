@@ -1,0 +1,51 @@
+<h1>Notifications Dashboard</h1>
+
+@if (summary(); as summary) {
+
+<div class="dashboard-grid">
+
+  <mat-card>
+
+    <mat-card-title>
+      Pending
+    </mat-card-title>
+
+    <mat-card-content>
+
+      {{ summary.pending }}
+
+    </mat-card-content>
+
+  </mat-card>
+
+  <mat-card>
+
+    <mat-card-title>
+      Sent
+    </mat-card-title>
+
+    <mat-card-content>
+
+      {{ summary.sent }}
+
+    </mat-card-content>
+
+  </mat-card>
+
+  <mat-card>
+
+    <mat-card-title>
+      Failed
+    </mat-card-title>
+
+    <mat-card-content>
+
+      {{ summary.failed }}
+
+    </mat-card-content>
+
+  </mat-card>
+
+</div>
+
+}

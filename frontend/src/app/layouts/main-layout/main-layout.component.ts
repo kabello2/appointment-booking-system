@@ -1,16 +1,19 @@
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
+import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
   imports: [
+    SidebarComponent,
     RouterOutlet,
-    RouterLink,
     MatToolbarModule,
     MatSidenavModule,
     MatListModule
@@ -18,4 +21,20 @@ import { MatListModule } from '@angular/material/list';
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
-export class MainLayoutComponent {}
+export class MainLayoutComponent {
+
+  private readonly router = inject(Router);
+
+  private readonly authService = inject(AuthService);
+
+  logout(): void {
+
+    localStorage.removeItem('token');
+
+    localStorage.removeItem('user');
+
+    this.authService.logout();
+
+  }
+
+}
