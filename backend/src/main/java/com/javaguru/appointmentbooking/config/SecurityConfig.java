@@ -82,7 +82,7 @@ public class SecurityConfig {
 
                 .addFilterBefore(
                         authenticationRateLimitFilter,
-                        JwtAuthenticationFilter.class
+                        UsernamePasswordAuthenticationFilter.class
                 )
                 .addFilterBefore(
                         jwtAuthenticationFilter,

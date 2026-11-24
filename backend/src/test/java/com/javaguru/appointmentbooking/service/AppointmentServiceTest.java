@@ -6,12 +6,14 @@ import com.javaguru.appointmentbooking.entity.Appointment;
 import com.javaguru.appointmentbooking.entity.Branch;
 import com.javaguru.appointmentbooking.entity.ServiceOffering;
 import com.javaguru.appointmentbooking.entity.User;
+import com.javaguru.appointmentbooking.entity.enums.AppointmentStatus;
 import com.javaguru.appointmentbooking.factory.UserTestDataFactory;
 import com.javaguru.appointmentbooking.repository.AppointmentRepository;
 import com.javaguru.appointmentbooking.repository.BranchRepository;
 import com.javaguru.appointmentbooking.repository.ServiceOfferingRepository;
 import com.javaguru.appointmentbooking.repository.UserRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.BusinessRuleViolationException;
+import com.javaguru.appointmentbooking.utils.mapper.AppointmentMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -55,6 +57,9 @@ class AppointmentServiceTest {
 
     @InjectMocks
     private AppointmentService appointmentService;
+
+    @Mock
+    private AppointmentMapper mapper;
 
     @Test
     void shouldBookAppointmentSuccessfully() {
@@ -104,12 +109,30 @@ class AppointmentServiceTest {
                         any()))
                 .thenReturn(consultant);
 
+        AppointmentResponse response =
+                new AppointmentResponse(
+                        UUID.randomUUID(),
+                        "APT00001",
+                        LocalDate.now(),
+                        LocalTime.of(9, 0),
+                        LocalTime.of(9, 30),
+                        AppointmentStatus.BOOKED,
+                        UUID.randomUUID(),
+                        UUID.randomUUID(),
+                        "John Consultant",
+                        UUID.randomUUID(),
+                        "Sandton",
+                        UUID.randomUUID(),
+                        "Home Loan"
+                );
+        when(mapper.toResponse(any(Appointment.class)))
+                .thenReturn(response);
+
         when(appointmentRepository.save(any()))
                 .thenAnswer(invocation ->
                         invocation.getArgument(0));
 
-        AppointmentResponse response =
-                appointmentService.bookAppointment(
+        appointmentService.bookAppointment(
                         customer.getId(),
                         request
                 );
