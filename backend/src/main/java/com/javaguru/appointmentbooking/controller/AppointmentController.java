@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -97,10 +99,10 @@ public class AppointmentController {
     })
     @GetMapping
     @PreAuthorize("hasAnyAuthority('APPOINTMENT_VIEW_OWN', 'APPOINTMENT_VIEW')")
-    public ResponseEntity<List<AppointmentResponse>>
-    getMyAppointments(Authentication authentication) {
+    public ResponseEntity<Page<AppointmentResponse>> getMyAppointments(
+            Authentication authentication, Pageable pageable) {
 
-        return ResponseEntity.ok(appointmentService.getMyAppointments(authentication));
+        return ResponseEntity.ok(appointmentService.getMyAppointments(authentication, pageable));
     }
 
     @Operation(
@@ -380,11 +382,11 @@ Only appointments that have not been completed can be cancelled.
     })
     @GetMapping("/consultant/my")
     @PreAuthorize("hasAuthority('APPOINTMENT_VIEW')")
-    public ResponseEntity<List<AppointmentResponse>>
-    getConsultantAppointments(Authentication authentication) {
+    public ResponseEntity<Page<AppointmentResponse>>
+    getConsultantAppointments(Authentication authentication, Pageable pageable) {
 
         UUID consultantId = userManagementService.getUserEntityByEmail(authentication.getName()).getId();
-        return ResponseEntity.ok(appointmentService.getConsultantAppointments(consultantId));
+        return ResponseEntity.ok(appointmentService.getConsultantAppointments(consultantId, pageable));
     }
 
     @Operation(

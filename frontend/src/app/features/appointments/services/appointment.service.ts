@@ -20,6 +20,9 @@ import {
   RescheduleAppointmentRequest
 } from '../models/reschedule-appointment-request.model';
 
+import { PageResponse } from '../../../core/models/page-response.model';
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -32,11 +35,14 @@ export class AppointmentService {
   private readonly apiUrl =
     environment.apiUrl;
 
-  getAppointments() {
+  getAppointments(
+    page: number = 0,
+    size: number = 10
+  ): Observable<PageResponse<AppointmentResponse>> {
 
-    return this.http.get<AppointmentResponse[]>(
+    return this.http.get<PageResponse<AppointmentResponse>>(
 
-      `${this.apiUrl}/appointments`
+      `${this.apiUrl}/appointments?page=${page}&size=${size}`
 
     );
 

@@ -10,6 +10,8 @@ import com.javaguru.appointmentbooking.repository.NotificationRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.NotificationNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,11 +56,9 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public List<NotificationResponse> getNotifications() {
-        return notificationRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+    public Page<NotificationResponse> getNotifications(Pageable pageable) {
+        return notificationRepository.findAll(pageable)
+                .map(this::mapToResponse);
 
     }
 

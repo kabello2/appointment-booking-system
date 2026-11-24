@@ -101,6 +101,11 @@ export class BranchListComponent
   readonly dataSource =
     new MatTableDataSource<BranchResponse>();
 
+  totalElements = signal(0);
+  totalPages = signal(0);
+  pageIndex = signal(0);
+  pageSize = signal(10);
+
   displayedColumns = [
     'branchCode',
     'name',
@@ -118,40 +123,54 @@ export class BranchListComponent
 
   ngAfterViewInit(): void {
 
-    this.dataSource.paginator =
-      this.paginator;
-
     this.dataSource.sort =
       this.sort;
+
+    this.paginator.page.subscribe(
+      () => this.onPageChange()
+    );
 
   }
 
   private loadBranches(): void {
 
-    const cachedBranches = this.branchState.branches();
-
-    if (cachedBranches.length > 0) {
-      this.dataSource.data =
-        cachedBranches;
-
-      return;
-    }
-
     this.branchService
-      .getBranches()
+      .getBranches(
+        this.pageIndex(),
+        this.pageSize()
+      )
       .subscribe({
 
-        next: branches => {
+        next: response => {
+          
           this.dataSource.data =
-            branches;
+            response.items;
 
-          this.branchState
-            .branches
-            .set(branches);
+          this.totalPages.set(
+            response.totalPages
+          );
+
+          this.totalElements.set(
+            response.totalElements
+          );
 
         }
 
       });
+
+  }
+
+  onPageChange(): void {
+
+    this.pageIndex.set(
+      this.paginator.pageIndex
+    );
+
+    this.pageSize.set(
+      this.paginator.pageSize
+    );
+
+    this.loadBranches();
 
   }
 

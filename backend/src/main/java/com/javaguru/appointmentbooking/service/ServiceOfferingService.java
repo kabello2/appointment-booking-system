@@ -9,6 +9,8 @@ import com.javaguru.appointmentbooking.utils.errorhandling.ServiceOfferingNotFou
 import com.javaguru.appointmentbooking.utils.mapper.ServiceOfferingMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,10 +38,9 @@ public class ServiceOfferingService {
     }
 
     @Transactional
-    public List<ServiceOfferingResponse>
-    getServices() {
+    public Page<ServiceOfferingResponse> getServices(Pageable pageable) {
 
-        return mapper.toResponseList(serviceOfferingRepository.findAll());
+        return serviceOfferingRepository.findAll(pageable).map(mapper::toResponse);
     }
 
     @Transactional

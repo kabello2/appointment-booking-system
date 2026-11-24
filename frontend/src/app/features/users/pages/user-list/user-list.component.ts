@@ -63,7 +63,7 @@ import {
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
-export class UserListComponent implements OnInit, AfterViewInit  {
+export class UserListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -80,6 +80,12 @@ export class UserListComponent implements OnInit, AfterViewInit  {
 
   readonly dataSource =
     new MatTableDataSource<UserResponse>();
+
+
+  totalElements = signal(0);
+  totalPages = signal(0);
+  pageIndex = signal(0);
+  pageSize = signal(10);
 
   displayedColumns = [
     'firstName',
@@ -101,37 +107,47 @@ export class UserListComponent implements OnInit, AfterViewInit  {
     this.dataSource.paginator =
       this.paginator;
 
-    this.dataSource.sort =
-      this.sort;
+    this.paginator.page.subscribe(
+      () => this.onPageChange()
+    );
+
+  }
+
+
+  onPageChange(): void {
+
+    this.pageIndex.set(
+      this.paginator.pageIndex
+    );
+
+    this.pageSize.set(
+      this.paginator.pageSize
+    );
+
+    this.loadUsers();
 
   }
 
   private loadUsers(): void {
-
     this.loading.set(true);
-
-    const cachedUsers =
-      this.userState
-        .users();
-
-    if (cachedUsers.length > 0) {
-
-      this.dataSource.data = cachedUsers;
-      return;
-
-    }
-
     this.userService
-      .getUsers()
+      .getUsers(
+        this.pageIndex(),
+        this.pageSize())
       .subscribe({
 
-        next: users => {
+        next: response => {
 
-          this.dataSource.data = users;
-          this.userState.users.set(users);
+          this.dataSource.data = response.items;
 
+          this.totalPages.set(
+            response.totalPages
+          );
+
+          this.totalElements.set(
+            response.totalElements
+          );
           this.loading.set(false);
-
         },
 
         error: () => {
@@ -147,7 +163,7 @@ export class UserListComponent implements OnInit, AfterViewInit  {
   filterUsers(
     event: Event
   ): void {
-    
+
     const filterValue =
       (event.target as HTMLInputElement)
         .value;

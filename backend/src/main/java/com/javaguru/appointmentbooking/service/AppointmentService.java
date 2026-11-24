@@ -19,6 +19,8 @@ import com.javaguru.appointmentbooking.utils.mapper.AppointmentMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -137,31 +139,39 @@ public class AppointmentService {
         return mapper.toResponse(appointment);
     }
 
-    public List<AppointmentResponse> getMyAppointments(Authentication authentication) {
+    public Page<AppointmentResponse> getMyAppointments(
+            Authentication authentication, Pageable pageable) {
 
         User user = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        List<Appointment> appointments;
+        Page<AppointmentResponse> appointments;
 
         if (user.getRole().equals(Role.ROLE_CONSULTANT)) {
 
             appointments = appointmentRepository
                     .findByConsultantIdOrderByAppointmentDateAscStartTimeAsc(
-                            user.getId()
-                    );
+                            user.getId(),
+                            pageable
+                    )
+                    .map(mapper::toResponse);
 
         } else if (user.getRole().equals(Role.ROLE_CUSTOMER)) {
 
             appointments = appointmentRepository
-                    .findByCustomerId(user.getId());
+                    .findByCustomerId(
+                            user.getId(),
+                            pageable
+                    )
+                    .map(mapper::toResponse);
         } else {
 
             appointments = appointmentRepository
-                    .findAll();
+                    .findAll(pageable)
+                    .map(mapper::toResponse);
         }
 
-        return mapper.toResponseList(appointments);
+        return appointments;
 
     }
 
@@ -329,12 +339,14 @@ public class AppointmentService {
                 ));
     }
 
-    public List<AppointmentResponse> getConsultantAppointments(UUID consultantId) {
+    public Page<AppointmentResponse> getConsultantAppointments(
+            UUID consultantId, Pageable pageable) {
 
-        return mapper.toResponseList(appointmentRepository
+        return appointmentRepository
                 .findByConsultantIdOrderByAppointmentDateAscStartTimeAsc(
-                        consultantId
-                ));
+                        consultantId,
+                        pageable
+                ).map(mapper::toResponse);
     }
 
     public MyDashboardResponse getCustomerDashboard(UUID customerId) {

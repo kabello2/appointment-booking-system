@@ -9,6 +9,8 @@ import com.javaguru.appointmentbooking.utils.errorhandling.BusinessRuleViolation
 import com.javaguru.appointmentbooking.utils.mapper.BranchMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,9 +65,9 @@ public class BranchService {
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
-    public List<BranchResponse> getBranches() {
+    public Page<BranchResponse> getBranches(Pageable pageable) {
 
-        return mapper.toResponseList(branchRepository.findAll());
+        return branchRepository.findAll(pageable).map(mapper::toResponse);
     }
 
     public void deactivateBranch(

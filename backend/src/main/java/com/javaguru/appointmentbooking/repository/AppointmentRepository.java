@@ -3,6 +3,8 @@ package com.javaguru.appointmentbooking.repository;
 import com.javaguru.appointmentbooking.entity.Appointment;
 import com.javaguru.appointmentbooking.entity.enums.AppointmentStatus;
 import com.javaguru.appointmentbooking.projection.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +19,7 @@ import java.util.UUID;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
 
-    List<Appointment> findByCustomerId(UUID customerId);
+    Page<Appointment> findByCustomerId(UUID customerId, Pageable pageable);
 
     @Query("""
        SELECT a
@@ -169,9 +171,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             LocalDate appointmentDate
     );
 
-    List<Appointment>
+    Page<Appointment>
     findByConsultantIdOrderByAppointmentDateAscStartTimeAsc(
-            UUID consultantId
+            UUID consultantId,
+            Pageable pageable
     );
 
     long countByCustomerIdAndStatus(

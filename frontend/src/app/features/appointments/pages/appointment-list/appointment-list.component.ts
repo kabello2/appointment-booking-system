@@ -71,7 +71,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './appointment-list.component.html'
 })
 export class AppointmentListComponent
-  implements OnInit, AfterViewInit  {
+  implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -92,6 +92,11 @@ export class AppointmentListComponent
   readonly dataSource =
     new MatTableDataSource<AppointmentResponse>();
 
+  totalElements = signal(0);
+  totalPages = signal(0);
+  pageIndex = signal(0);
+  pageSize = signal(10);
+
   displayedColumns = [
     'appointmentNumber',
     'appointmentDate',
@@ -106,46 +111,57 @@ export class AppointmentListComponent
     const mode = this.route.snapshot.data['mode'];
     this.mode.set(mode ?? 'CUSTOMER');
     this.mode.name;
-   
+
     this.loadAppointments();
 
   }
 
-  
-  ngAfterViewInit(): void {
 
-    this.dataSource.paginator =
-      this.paginator;
+  ngAfterViewInit(): void {
 
     this.dataSource.sort =
       this.sort;
+
+    this.paginator.page.subscribe(
+      () => this.onPageChange()
+    );
+
+  }
+
+  onPageChange(): void {
+
+    this.pageIndex.set(
+      this.paginator.pageIndex
+    );
+
+    this.pageSize.set(
+      this.paginator.pageSize
+    );
+
+    this.loadAppointments();
 
   }
 
   private loadAppointments(): void {
 
-    const cachedAppointments =
-      this.appointmentState
-        .appointments();
-
-    if (cachedAppointments.length > 0) {
-
-      this.dataSource.data = cachedAppointments;
-      return;
-
-    }
-
     this.appointmentService
-      .getAppointments()
+      .getAppointments(
+        this.pageIndex(),
+        this.pageSize())
       .subscribe({
 
-        next: appointments => {
+        next: response => {
 
-          this.dataSource.data = appointments;
+          this.dataSource.data =
+            response.items;
 
-          this.appointmentState
-            .appointments
-            .set(appointments);
+          this.totalPages.set(
+            response.totalPages
+          );
+
+          this.totalElements.set(
+            response.totalElements
+          );
 
         }
 
@@ -172,12 +188,6 @@ export class AppointmentListComponent
     event: Event
   ): void {
 
-    const value =
-      (event.target as HTMLInputElement)
-        .value
-        .toLowerCase();
-
-    
     const filterValue =
       (event.target as HTMLInputElement)
         .value;

@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -82,9 +84,9 @@ public class ServiceOfferingController {
     })
     @GetMapping
     @PreAuthorize("hasAuthority('SERVICE_VIEW')")
-    public ResponseEntity<List<ServiceOfferingResponse>> getServices() {
+    public ResponseEntity<Page<ServiceOfferingResponse>> getServices(Pageable pageable) {
 
-        return ResponseEntity.ok(serviceOfferingService.getServices());
+        return ResponseEntity.ok(serviceOfferingService.getServices(pageable));
     }
 
     @Operation(
