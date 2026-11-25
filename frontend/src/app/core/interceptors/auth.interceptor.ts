@@ -1,13 +1,23 @@
 import {
   HttpInterceptorFn
-}
-from '@angular/common/http';
+} from '@angular/common/http';
 
-import { inject }
-from '@angular/core';
+import {
+  inject
+} from '@angular/core';
 
-import { TokenService }
-from '../services/token.service';
+import {
+  Router
+} from '@angular/router';
+
+import {
+  catchError,
+  throwError
+} from 'rxjs';
+
+import {
+  TokenService
+} from '../services/token.service';
 
 export const authInterceptor: HttpInterceptorFn =
   (req, next) => {
@@ -15,25 +25,48 @@ export const authInterceptor: HttpInterceptorFn =
     const tokenService =
       inject(TokenService);
 
+    const router =
+      inject(Router);
+
     const token =
       tokenService.getToken();
 
-    if (!token) {
+    const request =
+      token
+        ? req.clone({
+            setHeaders: {
+              Authorization:
+                `Bearer ${token}`
+            }
+          })
+        : req;
 
-      return next(req);
+    return next(request)
+      .pipe(
 
-    }
+        catchError(error => {
 
-    const cloned =
-      req.clone({
+          const tokenExpired =
+            error?.status === 401 &&
+            error?.error?.errorCode ===
+              'TOKEN_EXPIRED';
 
-        setHeaders: {
-          Authorization:
-            `Bearer ${token}`
-        }
+          if (tokenExpired) {
 
-      });
+            tokenService.clearToken();
 
-    return next(cloned);
+            void router.navigate([
+              '/auth/login'
+            ]);
+
+          }
+
+          return throwError(
+            () => error
+          );
+
+        })
+
+      );
 
   };

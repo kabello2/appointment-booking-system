@@ -167,16 +167,6 @@ export class AppointmentService {
 
   }
 
-  getMyConsultantAppointments() {
-
-    return this.http.get<AppointmentResponse[]>(
-
-      `${this.apiUrl}/appointments/consultant/my`
-
-    );
-
-  }
-
   rescheduleAppointment(
     appointmentId: string,
     request: RescheduleAppointmentRequest

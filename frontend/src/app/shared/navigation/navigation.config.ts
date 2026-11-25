@@ -120,17 +120,8 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
 
   {
     label: 'My Schedule',
-    route: '/appointments/schedule',
+    route: '/appointments/consultant/schedule',
     icon: 'calendar_month',
-    roles: [
-      'ROLE_CONSULTANT'
-    ]
-  },
-
-  {
-    label: 'Notifications',
-    route: '/notifications',
-    icon: 'notifications',
     roles: [
       'ROLE_CONSULTANT'
     ]

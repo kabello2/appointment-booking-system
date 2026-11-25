@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>
+  Notification Details
+</h2>
+
+<mat-dialog-content class="notification-content">
+
+  <div class="detail-row">
+    <span class="label">Recipient</span>
+    <span>{{ data.recipient }}</span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Subject</span>
+    <span>{{ data.subject }}</span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Channel</span>
+    <span>{{ data.channel }}</span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Status</span>
+    <span class="status">
+      {{ data.status }}
+    </span>
+  </div>
+
+  <div class="message-section">
+
+    <h3>Message</h3>
+
+    <div class="message-box">
+      {{ data.message }}
+    </div>
+
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+  <button
+    mat-flat-button
+    color="primary"
+    [mat-dialog-close]="true">
+
+    Close
+
+  </button>
+
+</mat-dialog-actions>

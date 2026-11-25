@@ -12,6 +12,9 @@ import {
   NotificationSummaryResponse
 } from '../models/notification-summary-response.model';
 
+import { PageResponse } from '../../../core/models/page-response.model';
+import { Observable } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,12 +26,13 @@ export class NotificationService {
   private readonly apiUrl =
     environment.apiUrl;
 
-  getNotifications() {
+  getNotifications(
+    page: number = 0,
+    size: number = 10
+  ): Observable<PageResponse<NotificationResponse>> {
 
-    return this.http.get<
-      NotificationResponse[]
-    >(
-      `${this.apiUrl}/notifications`
+    return this.http.get<PageResponse<NotificationResponse>>(
+      `${this.apiUrl}/notifications?page=${page}&size=${size}`
     );
 
   }

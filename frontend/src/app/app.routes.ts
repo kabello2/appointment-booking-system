@@ -206,7 +206,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'appointments/schedule',
+        path: 'appointments/consultant/schedule',
         component: AppointmentScheduleComponent,
         canActivate: [authGuard]
       },

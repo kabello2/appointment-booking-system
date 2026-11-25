@@ -38,6 +38,11 @@ export class AppointmentScheduleComponent
   readonly appointments =
     signal<AppointmentResponse[]>([]);
 
+  totalElements = signal(0);
+  totalPages = signal(0);
+  pageIndex = signal(0);
+  pageSize = signal(10);
+
   readonly groupedAppointments =
     computed(() => {
 
@@ -77,17 +82,18 @@ export class AppointmentScheduleComponent
 
   }
 
-  private loadSchedule(): void {
 
+  private loadSchedule(): void {
+    
     this.appointmentService
-      .getMyConsultantAppointments()
+      .getAppointments(
+        this.pageIndex(),
+        this.pageSize())
       .subscribe({
 
-        next: appointments => {
-
-          this.appointments.set(
-            appointments
-          );
+        next: response => {
+          
+          this.appointments.set(response.items);
 
         }
 
