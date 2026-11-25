@@ -2,6 +2,7 @@ package com.javaguru.appointmentbooking.service;
 
 import com.javaguru.appointmentbooking.dto.request.BranchRequest;
 import com.javaguru.appointmentbooking.dto.response.BranchResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.entity.Branch;
 import com.javaguru.appointmentbooking.repository.BranchRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.BranchNotFoundException;
@@ -65,9 +66,17 @@ public class BranchService {
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
-    public Page<BranchResponse> getBranches(Pageable pageable) {
+    public PagedResponse<BranchResponse> getBranches(Pageable pageable) {
 
-        return branchRepository.findAll(pageable).map(mapper::toResponse);
+        Page<Branch> branchPages = branchRepository.findAll(pageable);
+        return new PagedResponse<>(
+                branchPages.map(mapper::toResponse)
+                        .getContent(),
+                branchPages.getTotalElements(),
+                branchPages.getTotalPages(),
+                branchPages.getNumber(),
+                branchPages.getSize()
+        );
     }
 
     public void deactivateBranch(

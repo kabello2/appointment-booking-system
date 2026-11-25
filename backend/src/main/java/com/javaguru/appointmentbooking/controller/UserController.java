@@ -2,6 +2,7 @@ package com.javaguru.appointmentbooking.controller;
 
 import com.javaguru.appointmentbooking.dto.request.CreateUserRequest;
 import com.javaguru.appointmentbooking.dto.request.UpdateUserRequest;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.dto.response.UserResponse;
 import com.javaguru.appointmentbooking.service.UserManagementService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -87,7 +88,7 @@ public class UserController {
     })
     @GetMapping
     @PreAuthorize("hasAuthority('USER_VIEW')")
-    public ResponseEntity<Page<UserResponse>> getUsers(Pageable pageable) {
+    public ResponseEntity<PagedResponse<UserResponse>> getUsers(Pageable pageable) {
 
         return ResponseEntity.ok(userManagementService.getUsers(pageable));
     }

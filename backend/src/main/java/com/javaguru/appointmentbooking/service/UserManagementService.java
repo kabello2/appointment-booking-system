@@ -5,6 +5,7 @@ import com.javaguru.appointmentbooking.dto.request.CreateConsultantRequest;
 import com.javaguru.appointmentbooking.dto.request.CreateUserRequest;
 import com.javaguru.appointmentbooking.dto.request.UpdateUserRequest;
 import com.javaguru.appointmentbooking.dto.response.ConsultantResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.dto.response.UserResponse;
 import com.javaguru.appointmentbooking.entity.Branch;
 import com.javaguru.appointmentbooking.entity.User;
@@ -104,9 +105,18 @@ public class UserManagementService {
     }
 
     @Transactional
-    public Page<UserResponse> getUsers(Pageable pageable) {
+    public PagedResponse<UserResponse> getUsers(Pageable pageable) {
 
-        return userRepository.findAll(pageable).map(mapper::toResponse);
+        Page<User> userPage = userRepository.findAll(pageable);
+
+        return new PagedResponse<>(
+                userPage.map(mapper::toResponse)
+                        .getContent(),
+                userPage.getTotalElements(),
+                userPage.getTotalPages(),
+                userPage.getNumber(),
+                userPage.getSize()
+        );
     }
 
     @Transactional

@@ -1,6 +1,7 @@
 package com.javaguru.appointmentbooking.service;
 
 import com.javaguru.appointmentbooking.dto.request.ServiceOfferingRequest;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.dto.response.ServiceOfferingResponse;
 import com.javaguru.appointmentbooking.entity.ServiceOffering;
 import com.javaguru.appointmentbooking.repository.ServiceOfferingRepository;
@@ -38,9 +39,18 @@ public class ServiceOfferingService {
     }
 
     @Transactional
-    public Page<ServiceOfferingResponse> getServices(Pageable pageable) {
+    public PagedResponse<ServiceOfferingResponse> getServices(Pageable pageable) {
 
-        return serviceOfferingRepository.findAll(pageable).map(mapper::toResponse);
+        Page<ServiceOffering> serviceOfferingPage = serviceOfferingRepository.findAll(pageable);
+
+        return new PagedResponse<>(
+                serviceOfferingPage.map(mapper::toResponse)
+                        .getContent(),
+                serviceOfferingPage.getTotalElements(),
+                serviceOfferingPage.getTotalPages(),
+                serviceOfferingPage.getNumber(),
+                serviceOfferingPage.getSize()
+        );
     }
 
     @Transactional

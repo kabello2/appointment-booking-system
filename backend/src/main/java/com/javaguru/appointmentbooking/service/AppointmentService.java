@@ -4,6 +4,7 @@ import com.javaguru.appointmentbooking.dto.request.BookAppointmentRequest;
 import com.javaguru.appointmentbooking.dto.request.RescheduleAppointmentRequest;
 import com.javaguru.appointmentbooking.dto.response.AppointmentResponse;
 import com.javaguru.appointmentbooking.dto.response.MyDashboardResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.entity.Appointment;
 import com.javaguru.appointmentbooking.entity.Branch;
 import com.javaguru.appointmentbooking.entity.ServiceOffering;
@@ -139,39 +140,42 @@ public class AppointmentService {
         return mapper.toResponse(appointment);
     }
 
-    public Page<AppointmentResponse> getMyAppointments(
+    public PagedResponse<AppointmentResponse> getMyAppointments(
             Authentication authentication, Pageable pageable) {
 
         User user = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-        Page<AppointmentResponse> appointments;
+        Page<Appointment> appointmentPages;
 
         if (user.getRole().equals(Role.ROLE_CONSULTANT)) {
 
-            appointments = appointmentRepository
+            appointmentPages = appointmentRepository
                     .findByConsultantIdOrderByAppointmentDateAscStartTimeAsc(
                             user.getId(),
                             pageable
-                    )
-                    .map(mapper::toResponse);
+                    );
 
         } else if (user.getRole().equals(Role.ROLE_CUSTOMER)) {
 
-            appointments = appointmentRepository
+            appointmentPages = appointmentRepository
                     .findByCustomerId(
                             user.getId(),
                             pageable
-                    )
-                    .map(mapper::toResponse);
+                    );
         } else {
 
-            appointments = appointmentRepository
-                    .findAll(pageable)
-                    .map(mapper::toResponse);
+            appointmentPages = appointmentRepository
+                    .findAll(pageable);
         }
 
-        return appointments;
+        return new PagedResponse<>(
+                appointmentPages.map(mapper::toResponse).getContent(),
+                appointmentPages.getTotalElements(),
+                appointmentPages.getTotalPages(),
+                appointmentPages.getNumber(),
+                appointmentPages.getSize()
+        );
 
     }
 
@@ -339,14 +343,23 @@ public class AppointmentService {
                 ));
     }
 
-    public Page<AppointmentResponse> getConsultantAppointments(
+    public PagedResponse<AppointmentResponse> getConsultantAppointments(
             UUID consultantId, Pageable pageable) {
 
-        return appointmentRepository
+        Page<Appointment> appointmentPage = appointmentRepository
                 .findByConsultantIdOrderByAppointmentDateAscStartTimeAsc(
                         consultantId,
                         pageable
-                ).map(mapper::toResponse);
+                );
+
+        return new PagedResponse<>(
+                appointmentPage.map(mapper::toResponse)
+                        .getContent(),
+                appointmentPage.getTotalElements(),
+                appointmentPage.getTotalPages(),
+                appointmentPage.getNumber(),
+                appointmentPage.getSize()
+        );
     }
 
     public MyDashboardResponse getCustomerDashboard(UUID customerId) {

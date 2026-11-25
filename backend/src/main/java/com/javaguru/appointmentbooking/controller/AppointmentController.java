@@ -5,6 +5,7 @@ import com.javaguru.appointmentbooking.dto.request.RescheduleAppointmentRequest;
 import com.javaguru.appointmentbooking.dto.response.AppointmentResponse;
 import com.javaguru.appointmentbooking.dto.response.AvailableSlotResponse;
 import com.javaguru.appointmentbooking.dto.response.MyDashboardResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.entity.enums.AppointmentStatus;
 import com.javaguru.appointmentbooking.service.AppointmentService;
 import com.javaguru.appointmentbooking.service.AvailabilityService;
@@ -99,7 +100,7 @@ public class AppointmentController {
     })
     @GetMapping
     @PreAuthorize("hasAnyAuthority('APPOINTMENT_VIEW_OWN', 'APPOINTMENT_VIEW')")
-    public ResponseEntity<Page<AppointmentResponse>> getMyAppointments(
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getMyAppointments(
             Authentication authentication, Pageable pageable) {
 
         return ResponseEntity.ok(appointmentService.getMyAppointments(authentication, pageable));
@@ -382,7 +383,7 @@ Only appointments that have not been completed can be cancelled.
     })
     @GetMapping("/consultant/my")
     @PreAuthorize("hasAuthority('APPOINTMENT_VIEW')")
-    public ResponseEntity<Page<AppointmentResponse>>
+    public ResponseEntity<PagedResponse<AppointmentResponse>>
     getConsultantAppointments(Authentication authentication, Pageable pageable) {
 
         UUID consultantId = userManagementService.getUserEntityByEmail(authentication.getName()).getId();

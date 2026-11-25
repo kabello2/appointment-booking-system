@@ -1,6 +1,7 @@
 package com.javaguru.appointmentbooking.controller;
 
 import com.javaguru.appointmentbooking.dto.request.ServiceOfferingRequest;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.dto.response.ServiceOfferingResponse;
 import com.javaguru.appointmentbooking.service.ServiceOfferingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -84,7 +85,7 @@ public class ServiceOfferingController {
     })
     @GetMapping
     @PreAuthorize("hasAuthority('SERVICE_VIEW')")
-    public ResponseEntity<Page<ServiceOfferingResponse>> getServices(Pageable pageable) {
+    public ResponseEntity<PagedResponse<ServiceOfferingResponse>> getServices(Pageable pageable) {
 
         return ResponseEntity.ok(serviceOfferingService.getServices(pageable));
     }

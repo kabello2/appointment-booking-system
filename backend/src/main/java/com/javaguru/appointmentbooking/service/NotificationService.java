@@ -2,6 +2,7 @@ package com.javaguru.appointmentbooking.service;
 
 import com.javaguru.appointmentbooking.dto.response.NotificationResponse;
 import com.javaguru.appointmentbooking.dto.response.NotificationSummaryResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.entity.Appointment;
 import com.javaguru.appointmentbooking.entity.Notification;
 import com.javaguru.appointmentbooking.entity.enums.NotificationChannel;
@@ -56,10 +57,17 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public Page<NotificationResponse> getNotifications(Pageable pageable) {
-        return notificationRepository.findAll(pageable)
-                .map(this::mapToResponse);
+    public PagedResponse<NotificationResponse> getNotifications(Pageable pageable) {
+        Page<Notification> notificationPages = notificationRepository.findAll(pageable);
 
+        return new PagedResponse<>(
+                notificationPages.map(this::mapToResponse)
+                        .getContent(),
+                notificationPages.getTotalElements(),
+                notificationPages.getTotalPages(),
+                notificationPages.getNumber(),
+                notificationPages.getSize()
+        );
     }
 
     @Transactional

@@ -2,6 +2,7 @@ package com.javaguru.appointmentbooking.controller;
 
 import com.javaguru.appointmentbooking.dto.request.BranchRequest;
 import com.javaguru.appointmentbooking.dto.response.BranchResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.service.BranchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -144,7 +145,7 @@ public class BranchController {
     })
     @GetMapping
     @PreAuthorize("hasAuthority('BRANCH_VIEW')")
-    public ResponseEntity<Page<BranchResponse>> getBranches(Pageable pageable) {
+    public ResponseEntity<PagedResponse<BranchResponse>> getBranches(Pageable pageable) {
 
         return ResponseEntity.ok(branchService.getBranches(pageable));
     }
