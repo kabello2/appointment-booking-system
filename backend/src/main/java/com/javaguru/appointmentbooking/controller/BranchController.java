@@ -2,6 +2,7 @@ package com.javaguru.appointmentbooking.controller;
 
 import com.javaguru.appointmentbooking.dto.request.BranchRequest;
 import com.javaguru.appointmentbooking.dto.response.BranchResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.service.BranchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -142,10 +145,9 @@ public class BranchController {
     })
     @GetMapping
     @PreAuthorize("hasAuthority('BRANCH_VIEW')")
-    public ResponseEntity<List<BranchResponse>>
-    getBranches() {
+    public ResponseEntity<PagedResponse<BranchResponse>> getBranches(Pageable pageable) {
 
-        return ResponseEntity.ok(branchService.getBranches());
+        return ResponseEntity.ok(branchService.getBranches(pageable));
     }
 
     @Operation(

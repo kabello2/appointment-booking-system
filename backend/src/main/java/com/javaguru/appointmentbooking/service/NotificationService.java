@@ -2,6 +2,7 @@ package com.javaguru.appointmentbooking.service;
 
 import com.javaguru.appointmentbooking.dto.response.NotificationResponse;
 import com.javaguru.appointmentbooking.dto.response.NotificationSummaryResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.entity.Appointment;
 import com.javaguru.appointmentbooking.entity.Notification;
 import com.javaguru.appointmentbooking.entity.enums.NotificationChannel;
@@ -10,6 +11,8 @@ import com.javaguru.appointmentbooking.repository.NotificationRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.NotificationNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,12 +57,17 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public List<NotificationResponse> getNotifications() {
-        return notificationRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+    public PagedResponse<NotificationResponse> getNotifications(Pageable pageable) {
+        Page<Notification> notificationPages = notificationRepository.findAll(pageable);
 
+        return new PagedResponse<>(
+                notificationPages.map(this::mapToResponse)
+                        .getContent(),
+                notificationPages.getTotalElements(),
+                notificationPages.getTotalPages(),
+                notificationPages.getNumber(),
+                notificationPages.getSize()
+        );
     }
 
     @Transactional

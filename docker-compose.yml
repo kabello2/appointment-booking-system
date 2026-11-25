@@ -1,0 +1,84 @@
+services:
+
+  appointment-postgres:
+
+    container_name: appointment-postgres
+
+    image: postgres:17
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    networks:
+      - appointment-network
+
+  appointment-booking-api:
+
+    container_name: appointment-booking-api
+
+    build:
+      context: ./backend
+
+    environment:
+
+      SPRING_PROFILES_ACTIVE: prod
+
+      DB_HOST: appointment-postgres
+      DB_PORT: 5432
+
+      DB_NAME: ${POSTGRES_DB}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD}
+
+    depends_on:
+
+      appointment-postgres:
+        condition: service_healthy
+
+    ports:
+      - "8088:8080"
+
+    networks:
+      - appointment-network
+
+  appointment-booking-ui:
+
+    container_name: appointment-booking-ui
+
+    build:
+      context: ./frontend
+
+    ports:
+      - "4200:80"
+
+    depends_on:
+      - appointment-booking-api
+
+    networks:
+      - appointment-network
+
+networks:
+  appointment-network:
+
+volumes:
+  postgres-data:

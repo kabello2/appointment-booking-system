@@ -177,9 +177,11 @@ export class UserCreateComponent {
       .getBranches()
       .subscribe({
 
-        next: branches => {
+        next: response => {
 
-          this.branches.set(branches);
+          this.branches.set(
+            response.items
+          );
 
         }
 

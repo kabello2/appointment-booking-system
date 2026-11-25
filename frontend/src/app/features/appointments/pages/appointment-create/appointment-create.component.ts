@@ -154,9 +154,11 @@ export class AppointmentCreateComponent
 
     this.branchService
       .getBranches()
-      .subscribe(branches => {
+      .subscribe(response => {
 
-        this.branches.set(branches);
+        this.branches.set(
+          response.items
+        );
 
       });
 
@@ -166,9 +168,11 @@ export class AppointmentCreateComponent
 
     this.serviceOfferingService
       .getServices()
-      .subscribe(services => {
+      .subscribe(response => {
 
-        this.services.set(services);
+        this.services.set(
+          response.items
+        );
 
       });
 

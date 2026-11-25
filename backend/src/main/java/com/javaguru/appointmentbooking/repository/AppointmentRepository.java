@@ -3,6 +3,8 @@ package com.javaguru.appointmentbooking.repository;
 import com.javaguru.appointmentbooking.entity.Appointment;
 import com.javaguru.appointmentbooking.entity.enums.AppointmentStatus;
 import com.javaguru.appointmentbooking.projection.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,23 +19,7 @@ import java.util.UUID;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
 
-    List<Appointment> findByCustomerId(UUID customerId);
-
-    @Query("""
-       SELECT a
-       FROM Appointment a
-       WHERE a.branch.id = :branchId
-       AND a.appointmentDate = :appointmentDate
-       AND a.status <> com.javaguru.appointmentbooking.entity.enums.AppointmentStatus.CANCELLED
-       """)
-    List<Appointment> findActiveAppointmentsForBranch(
-            @Param("branchId") UUID branchId,
-            @Param("appointmentDate") LocalDate appointmentDate);
-
-    List<Appointment> findByBranchIdAndAppointmentDate(
-            UUID branchId,
-            LocalDate appointmentDate
-    );
+    Page<Appointment> findByCustomerId(UUID customerId, Pageable pageable);
 
     long countByStatus(AppointmentStatus status);
     long countByAppointmentDate(LocalDate appointmentDate);
@@ -163,15 +149,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             UUID customerId
     );
 
-    List<Appointment>
-    findByConsultantIdAndAppointmentDate(
-            UUID consultantId,
-            LocalDate appointmentDate
-    );
 
-    List<Appointment>
+    Page<Appointment>
     findByConsultantIdOrderByAppointmentDateAscStartTimeAsc(
-            UUID consultantId
+            UUID consultantId,
+            Pageable pageable
     );
 
     long countByCustomerIdAndStatus(
@@ -199,6 +181,25 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
        """)
     List<Appointment> findActiveAppointmentsForCustomer(
             UUID customerId,
+            LocalDate appointmentDate
+    );
+
+    @Query("""
+    SELECT
+        a.consultant.id AS consultantId,
+        COUNT(a) AS workload
+    FROM Appointment a
+    WHERE a.consultant.branch.id = :branchId
+    AND a.appointmentDate = :appointmentDate
+    AND a.status <>
+        com.javaguru.appointmentbooking.entity.enums.AppointmentStatus.CANCELLED
+    GROUP BY a.consultant.id
+    """)
+    List<ConsultantWorkloadProjection>
+    getConsultantWorkloads(
+            @Param("branchId")
+            UUID branchId,
+            @Param("appointmentDate")
             LocalDate appointmentDate
     );
 

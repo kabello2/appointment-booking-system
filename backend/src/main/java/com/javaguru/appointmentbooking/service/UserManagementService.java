@@ -5,6 +5,7 @@ import com.javaguru.appointmentbooking.dto.request.CreateConsultantRequest;
 import com.javaguru.appointmentbooking.dto.request.CreateUserRequest;
 import com.javaguru.appointmentbooking.dto.request.UpdateUserRequest;
 import com.javaguru.appointmentbooking.dto.response.ConsultantResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.dto.response.UserResponse;
 import com.javaguru.appointmentbooking.entity.Branch;
 import com.javaguru.appointmentbooking.entity.User;
@@ -19,6 +20,8 @@ import com.javaguru.appointmentbooking.utils.mapper.AppointmentMapper;
 import com.javaguru.appointmentbooking.utils.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -102,9 +105,18 @@ public class UserManagementService {
     }
 
     @Transactional
-    public List<UserResponse> getUsers() {
+    public PagedResponse<UserResponse> getUsers(Pageable pageable) {
 
-        return mapper.toResponseList(userRepository.findAll());
+        Page<User> userPage = userRepository.findAll(pageable);
+
+        return new PagedResponse<>(
+                userPage.map(mapper::toResponse)
+                        .getContent(),
+                userPage.getTotalElements(),
+                userPage.getTotalPages(),
+                userPage.getNumber(),
+                userPage.getSize()
+        );
     }
 
     @Transactional

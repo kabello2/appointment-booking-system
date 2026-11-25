@@ -14,6 +14,8 @@ import { CreateUserRequest }
 import { UpdateUserRequest }
   from '../models/update-user-request.model';
 
+import { PageResponse } from '../../../core/models/page-response.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,12 +27,14 @@ export class UserService {
   private readonly apiUrl =
     environment.apiUrl;
 
-  getUsers():
-    Observable<UserResponse[]> {
+  getUsers(
+      page: number = 0,
+      size: number = 10
+    ): Observable<PageResponse<UserResponse>>  {
 
-    return this.http.get<UserResponse[]>(
+    return this.http.get<PageResponse<UserResponse>>(
 
-      `${this.apiUrl}/admin/users`
+      `${this.apiUrl}/admin/users?page=${page}&size=${size}`
 
     );
 

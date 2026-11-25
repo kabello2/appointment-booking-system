@@ -2,9 +2,12 @@ package com.javaguru.appointmentbooking.controller;
 
 import com.javaguru.appointmentbooking.dto.response.NotificationResponse;
 import com.javaguru.appointmentbooking.dto.response.NotificationSummaryResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.repository.NotificationRepository;
 import com.javaguru.appointmentbooking.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +24,9 @@ public class NotificationController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER_VIEW')")
-    public ResponseEntity<List<NotificationResponse>> getNotifications() {
+    public ResponseEntity<PagedResponse<NotificationResponse>> getNotifications(Pageable pageable) {
 
-        return ResponseEntity.ok(notificationService.getNotifications());
+        return ResponseEntity.ok(notificationService.getNotifications(pageable));
     }
 
     @PostMapping("/{notificationId}/retry")

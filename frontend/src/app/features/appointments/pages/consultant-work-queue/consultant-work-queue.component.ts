@@ -37,6 +37,16 @@ import {
   AppointmentResponse
 } from '../../models/appointment-response.model';
 
+import {
+  MatPaginator,
+  MatPaginatorModule
+} from '@angular/material/paginator';
+
+import {
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
+
 @Component({
   selector: 'app-consultant-work-queue',
   standalone: true,
@@ -46,13 +56,17 @@ import {
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatPaginatorModule
   ],
   templateUrl: './consultant-work-queue.component.html',
   styleUrl: './consultant-work-queue.component.scss'
 })
 export class ConsultantWorkQueueComponent
-implements OnInit {
+implements OnInit, AfterViewInit {
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
 
   private readonly appointmentService =
     inject(AppointmentService);
@@ -62,6 +76,11 @@ implements OnInit {
 
   readonly appointments =
     signal<AppointmentResponse[]>([]);
+
+  totalElements = signal(0);
+  totalPages = signal(0);
+  pageIndex = signal(0);
+  pageSize = signal(10);
 
   displayedColumns = [
     'appointmentNumber',
@@ -78,20 +97,52 @@ implements OnInit {
 
   }
 
+  ngAfterViewInit(): void {
+
+    this.paginator.page.subscribe(
+      () => this.onPageChange()
+    );
+
+  }
+
+  onPageChange(): void {
+
+    this.pageIndex.set(
+      this.paginator.pageIndex
+    );
+
+    this.pageSize.set(
+      this.paginator.pageSize
+    );
+
+    this.loadAppointments();
+
+  }
+
   private loadAppointments(): void {
 
     this.appointmentService
-      .getMyConsultantAppointments()
+      .getAppointments(
+        this.pageIndex(),
+        this.pageSize())
       .subscribe({
 
-        next: appointments => {
+        next: response => {
 
           this.allAppointments.set(
-            appointments
+            response.items
           );
 
           this.appointments.set(
-            appointments
+            response.items
+          );
+
+          this.totalPages.set(
+            response.totalPages
+          );
+
+          this.totalElements.set(
+            response.totalElements
           );
 
         }

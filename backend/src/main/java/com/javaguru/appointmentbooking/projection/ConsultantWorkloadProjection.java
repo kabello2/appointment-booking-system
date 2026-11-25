@@ -7,4 +7,5 @@ public interface ConsultantWorkloadProjection {
     String getFirstName();
     String getLastName();
     Long getAppointmentCount();
+    long getWorkload();
 }

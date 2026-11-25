@@ -2,6 +2,7 @@ package com.javaguru.appointmentbooking.service;
 
 import com.javaguru.appointmentbooking.dto.request.BranchRequest;
 import com.javaguru.appointmentbooking.dto.response.BranchResponse;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.entity.Branch;
 import com.javaguru.appointmentbooking.repository.BranchRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.BranchNotFoundException;
@@ -9,6 +10,8 @@ import com.javaguru.appointmentbooking.utils.errorhandling.BusinessRuleViolation
 import com.javaguru.appointmentbooking.utils.mapper.BranchMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,9 +66,17 @@ public class BranchService {
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
-    public List<BranchResponse> getBranches() {
+    public PagedResponse<BranchResponse> getBranches(Pageable pageable) {
 
-        return mapper.toResponseList(branchRepository.findAll());
+        Page<Branch> branchPages = branchRepository.findAll(pageable);
+        return new PagedResponse<>(
+                branchPages.map(mapper::toResponse)
+                        .getContent(),
+                branchPages.getTotalElements(),
+                branchPages.getTotalPages(),
+                branchPages.getNumber(),
+                branchPages.getSize()
+        );
     }
 
     public void deactivateBranch(

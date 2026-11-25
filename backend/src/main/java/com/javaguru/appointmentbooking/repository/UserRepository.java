@@ -27,4 +27,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             UUID branchId,
             Boolean enabled
     );
+
+    boolean existsByRole(Role role);
 }

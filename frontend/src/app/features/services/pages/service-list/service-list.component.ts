@@ -81,7 +81,7 @@ import { ServiceOfferingStateService } from '../../services/service-offering-sta
   templateUrl: './service-list.component.html',
   styleUrl: './service-list.component.scss'
 })
-export class ServiceListComponent implements OnInit, AfterViewInit  {
+export class ServiceListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -102,6 +102,11 @@ export class ServiceListComponent implements OnInit, AfterViewInit  {
   readonly dataSource =
     new MatTableDataSource<ServiceResponse>();
 
+  totalElements = signal(0);
+  totalPages = signal(0);
+  pageIndex = signal(0);
+  pageSize = signal(10);
+
   displayedColumns = [
     'serviceCode',
     'name',
@@ -116,20 +121,36 @@ export class ServiceListComponent implements OnInit, AfterViewInit  {
 
   }
 
-  
-  ngAfterViewInit(): void {
 
-    this.dataSource.paginator =
-      this.paginator;
+  ngAfterViewInit(): void {
 
     this.dataSource.sort =
       this.sort;
+
+    this.paginator.page.subscribe(
+      () => this.onPageChange()
+    );
+
+
+  }
+
+  onPageChange(): void {
+
+    this.pageIndex.set(
+      this.paginator.pageIndex
+    );
+
+    this.pageSize.set(
+      this.paginator.pageSize
+    );
+
+    this.loadServices();
 
   }
 
   private loadServices(): void {
 
-      this.loading.set(true);
+    this.loading.set(true);
 
     const cachedServices =
       this.serviceOfferingState
@@ -143,13 +164,22 @@ export class ServiceListComponent implements OnInit, AfterViewInit  {
     }
 
     this.serviceOfferingService
-      .getServices()
-      .subscribe(services => {
+      .getServices(
+        this.pageIndex(),
+        this.pageSize())
+      .subscribe(response => {
 
-          this.dataSource.data = services;
-          this.serviceOfferingState.services.set(services);
+        this.dataSource.data =
+          response.items;
 
-          this.loading.set(false);
+        this.totalPages.set(
+          response.totalPages
+        );
+
+        this.totalElements.set(
+          response.totalElements
+        );
+        this.loading.set(false);
 
       });
 
@@ -158,7 +188,7 @@ export class ServiceListComponent implements OnInit, AfterViewInit  {
   filterServices(
     event: Event
   ): void {
-    
+
     const filterValue =
       (event.target as HTMLInputElement)
         .value;

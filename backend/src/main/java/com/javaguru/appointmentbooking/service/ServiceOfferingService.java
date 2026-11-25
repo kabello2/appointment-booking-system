@@ -1,6 +1,7 @@
 package com.javaguru.appointmentbooking.service;
 
 import com.javaguru.appointmentbooking.dto.request.ServiceOfferingRequest;
+import com.javaguru.appointmentbooking.dto.response.PagedResponse;
 import com.javaguru.appointmentbooking.dto.response.ServiceOfferingResponse;
 import com.javaguru.appointmentbooking.entity.ServiceOffering;
 import com.javaguru.appointmentbooking.repository.ServiceOfferingRepository;
@@ -9,6 +10,8 @@ import com.javaguru.appointmentbooking.utils.errorhandling.ServiceOfferingNotFou
 import com.javaguru.appointmentbooking.utils.mapper.ServiceOfferingMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,10 +39,18 @@ public class ServiceOfferingService {
     }
 
     @Transactional
-    public List<ServiceOfferingResponse>
-    getServices() {
+    public PagedResponse<ServiceOfferingResponse> getServices(Pageable pageable) {
 
-        return mapper.toResponseList(serviceOfferingRepository.findAll());
+        Page<ServiceOffering> serviceOfferingPage = serviceOfferingRepository.findAll(pageable);
+
+        return new PagedResponse<>(
+                serviceOfferingPage.map(mapper::toResponse)
+                        .getContent(),
+                serviceOfferingPage.getTotalElements(),
+                serviceOfferingPage.getTotalPages(),
+                serviceOfferingPage.getNumber(),
+                serviceOfferingPage.getSize()
+        );
     }
 
     @Transactional

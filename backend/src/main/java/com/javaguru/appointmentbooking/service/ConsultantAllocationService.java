@@ -2,6 +2,7 @@ package com.javaguru.appointmentbooking.service;
 
 import com.javaguru.appointmentbooking.entity.User;
 import com.javaguru.appointmentbooking.entity.enums.Role;
+import com.javaguru.appointmentbooking.projection.ConsultantWorkloadProjection;
 import com.javaguru.appointmentbooking.repository.AppointmentRepository;
 import com.javaguru.appointmentbooking.repository.UserRepository;
 import com.javaguru.appointmentbooking.utils.errorhandling.BusinessRuleViolationException;
@@ -12,7 +13,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,14 +62,43 @@ public class ConsultantAllocationService {
                     "No consultant available for selected appointment slot.");
         }
 
-        return availableConsultants.stream()
-                .min(Comparator.comparingLong(consultant ->
-                        appointmentRepository.getConsultantActiveWorkload(
-                                consultant.getId(),
+        availableConsultants.forEach(consultant -> {
+
+            long workload =
+                    appointmentRepository
+                            .getConsultantActiveWorkload(
+                                    consultant.getId(),
+                                    appointmentDate
+                            );
+
+            System.out.printf(
+                    "%s -> %d%n",
+                    consultant.getEmail(),
+                    workload
+            );
+
+        });
+
+        Map<UUID, Long> workloads =
+                appointmentRepository
+                        .getConsultantWorkloads(
+                                branchId,
                                 appointmentDate
                         )
-                ))
-                .orElseThrow(() ->
-                        new BusinessRuleViolationException("Unable to allocate consultant."));
+                        .stream()
+                        .collect(
+                                Collectors.toMap(
+                                        ConsultantWorkloadProjection::getConsultantId,
+                                        ConsultantWorkloadProjection::getWorkload
+                                )
+                        );
+
+        return availableConsultants.stream()
+                .min(Comparator.comparingLong(
+                        consultant -> workloads.getOrDefault(
+                                consultant.getId(), 0L))
+                )
+                .orElseThrow(() -> new BusinessRuleViolationException("Unable to allocate consultant."));
+
     }
 }

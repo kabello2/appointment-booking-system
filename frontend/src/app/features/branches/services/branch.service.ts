@@ -7,6 +7,8 @@ import { environment } from '../../../../environments/environment';
 import { BranchResponse } from '../models/branch-response.model';
 
 import { BranchRequest } from '../models/branch-request.model';
+import { PageResponse } from '../../../core/models/page-response.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,14 +21,14 @@ export class BranchService {
   private readonly apiUrl =
     environment.apiUrl;
 
-  getBranches() {
+  getBranches(
+    page: number = 0,
+    size: number = 10
+  ): Observable<PageResponse<BranchResponse>> {
 
-    return this.http.get<BranchResponse[]>(
-
-      `${this.apiUrl}/branches`
-
+    return this.http.get<PageResponse<BranchResponse>>(
+      `${environment.apiUrl}/branches?page=${page}&size=${size}`
     );
-
   }
 
   getBranchById(
